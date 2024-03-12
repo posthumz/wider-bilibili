@@ -66,6 +66,11 @@ const options: Record<string, Option<any>> = {
     default: false,
     callback: init => onStyleValueChange(toggleStyle(styles.pauseShow, init)),
   },
+  显示观看信息: {
+    page: 'video',
+    default: true,
+    callback: init => onStyleValueChange(toggleStyle('.bpx-player-video-info{display:flex!important}', init)),
+  },
 }
 
 // 应用页面选项并监听变化

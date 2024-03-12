@@ -27,6 +27,7 @@
   --video-height: 100vh;
 }
 
+/* 使用div提高样式优先级 */
 div#playerWrap,
 div#bilibili-player-wrap {
   position: absolute;
@@ -42,6 +43,46 @@ div#bilibili-player {
   width: 100%;
   height: 100%;
   box-shadow: none !important;
+
+  /* Bilibili Evolved 夜间模式样式的优先级很高，所以要嵌套在#bilibili-player里面 */
+  .bpx-player-video-info {
+    color: hsla(0, 0%, 100%, .9) !important;
+    margin-right: 10px;
+  }
+
+  .bpx-player-video-btn-dm,
+  .bpx-player-dm-setting,
+  .bpx-player-dm-switch {
+    fill: hsla(0, 0%, 100%, .9) !important;
+  }
+}
+
+/* 加载动画强制显示 */
+.bpx-player-loading-panel-blur {
+  display: flex !important;
+}
+
+/* 强制显示播放器控件 */
+.bpx-player-top-left-title,
+.bpx-player-top-left-music,
+.bpx-player-top-mask {
+  display: block !important;
+}
+
+/* 不然会鬼畜 */
+.bpx-player-top-mask {
+  transition: none;
+}
+
+/* 原宽屏/网页全屏按钮不显示 */
+.bpx-player-ctrl-wide,
+.bpx-player-ctrl-web {
+  display: none;
+}
+
+/* 原弹幕发送区域不显示 */
+.bpx-player-sending-area {
+  display: none;
 }
 
 /* 导航栏 */
@@ -73,29 +114,6 @@ div#bilibili-player {
 .main-container,
 .playlist-container--left {
   position: static !important;
-}
-
-/* 加载动画强制显示 */
-.bpx-player-loading-panel-blur {
-  display: flex !important;
-}
-
-/* 强制显示播放器控件 */
-.bpx-player-top-left-title,
-.bpx-player-top-left-music,
-.bpx-player-top-mask {
-  display: block !important;
-}
-
-/* 原弹幕发送区域不显示 */
-.bpx-player-sending-area {
-  display: none;
-}
-
-/* 原宽屏/网页全屏按钮不显示 */
-.bpx-player-ctrl-wide,
-.bpx-player-ctrl-web {
-  display: none;
 }
 
 /* 视频页、番剧页、收藏/稍后再看页的下方容器 */
@@ -165,21 +183,6 @@ div[class^=navTools_floatNav] {
 /* Bilibili Evolved侧栏 */
 .be-settings .sidebar {
   z-index: 114514 !important;
-}
-
-/* Bilibili Evolved 夜间模式修正 */
-.bpx-player-container .bpx-player-sending-bar {
-  background-color: transparent !important;
-}
-
-.bpx-player-container .bpx-player-video-info {
-  color: hsla(0, 0%, 100%, .9) !important;
-}
-
-.bpx-player-container .bpx-player-sending-bar .bpx-player-video-btn-dm,
-.bpx-player-container .bpx-player-sending-bar .bpx-player-dm-setting,
-.bpx-player-container .bpx-player-sending-bar .bpx-player-dm-switch {
-  fill: hsla(0, 0%, 100%, .9) !important;
 }`,
     t: `/* 动态页 */
 
@@ -725,6 +728,7 @@ div#bilibili-player-wrap {
     <label data-key="小窗样式" data-hint="试试拉一下小窗左侧？"><input type="checkbox" checked></label>
     <label data-key="控件样式" data-hint="调节控件间距"><input type="checkbox" checked></label>
     <label data-key="暂停显示控件" data-hint="默认检测到鼠标活动显示控件&#10;需要一直显示请打开此选项"><input type="checkbox"></label>
+    <label data-key="显示观看信息" data-hint="在线人数/弹幕数"><input type="checkbox" checked></label>
   </fieldset>
 </div>`;
   GM_addStyle(styles.options);
@@ -781,6 +785,11 @@ div#bilibili-player-wrap {
       page: "video",
       default: false,
       callback: (init) => onStyleValueChange(toggleStyle(styles.pauseShow, init))
+    },
+    显示观看信息: {
+      page: "video",
+      default: true,
+      callback: (init) => onStyleValueChange(toggleStyle(".bpx-player-video-info{display:flex!important}", init))
     }
   };
   function activate(targetPage) {

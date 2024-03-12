@@ -50,8 +50,7 @@ export default defineConfig(({ mode }) => {
   const production = mode === 'production'
   return {
     server: { port: 2233 },
-    root: 'src',
-    build: { outDir: '../dist', target: 'es2020', emptyOutDir: false },
+    build: { outDir: './dist', target: 'es2020', emptyOutDir: false },
     plugins: [
       monkey({
         entry: 'src/main.ts',
