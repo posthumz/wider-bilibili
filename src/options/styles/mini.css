@@ -1,0 +1,25 @@
+/* 小窗 */
+.bpx-player-container[data-screen="mini"] {
+  /* 以视频长宽比为准，不显示黑边和阴影 */
+  height: auto !important;
+  box-shadow: none;
+  /* 修正小窗位置 */
+  translate: 32px 40px;
+}
+
+.bpx-player-container {
+  &[data-screen="mini"] {
+    width: var(--mini-width) !important;
+  }
+
+  /* 最小宽度，以防不可见 */
+  min-width: 180px;
+}
+
+.bpx-player-mini-resizer {
+  position: absolute;
+  left: 0;
+  width: 10px;
+  height: 100%;
+  cursor: ew-resize;
+}

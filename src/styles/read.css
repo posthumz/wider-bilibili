@@ -1,0 +1,17 @@
+/* 阅读页 */
+#app>.article-detail {
+  box-sizing: border-box;
+  border-width: 0 var(--layout-padding);
+  border-style: solid;
+  border-color: transparent;
+  width: 100%;
+
+  .article-up-info {
+    width: initial;
+    margin: 0 80px 20px;
+  }
+
+  .right-side-bar {
+    right: 0;
+  }
+}

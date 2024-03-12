@@ -1,0 +1,207 @@
+/* 脚本选项 */
+#wider-bilibili {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  height: fit-content;
+  max-height: 80vh;
+  left: 0;
+  right: 0;
+  width: fit-content;
+  max-width: 80vw;
+  z-index: 114514;
+  padding: 10px;
+  border-radius: 10px;
+  margin: auto;
+  box-sizing: border-box;
+  overflow: auto;
+  flex-direction: column;
+  gap: 10px;
+
+  outline: 2px solid var(--v_brand_blue);
+  outline-offset: 0;
+  background-color: var(--bg1);
+  color: var(--text1);
+  font-size: 20px;
+  font-family: "HarmonyOS_Regular", "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif !important;
+
+  opacity: 0.9;
+
+  &:hover {
+    opacity: 1
+  }
+
+  >header {
+    position: sticky;
+    z-index: 2;
+    top: -10px;
+    display: flex;
+    justify-content: space-between;
+    margin: -10px;
+    text-overflow: clip;
+    padding-left: 20px;
+    font-weight: bold;
+    background-color: var(--bg1);
+
+    &::before {
+      content: "Wider Bilibili 选项";
+      align-self: center;
+      flex: 1;
+    }
+  }
+
+
+  .wb-button-group {
+    display: flex;
+    margin-bottom: 10px;
+
+    >* {
+      height: 100%;
+    }
+  }
+
+  #wb-close {
+    box-sizing: border-box;
+    padding: 4px;
+    width: fit-content;
+    background-color: var(--v_stress_red);
+    fill: var(--text1);
+
+    &:hover {
+      background-color: var(--v_stress_red_hover);
+    }
+
+    &:active {
+      background-color: var(--v_stress_red_active);
+    }
+  }
+
+  button {
+    border: none;
+    padding: 4px 8px;
+    background: none;
+    color: var(--text_white);
+    transition: opacity .1s;
+    background-color: var(--v_brand_blue);
+    font-size: 16px;
+    text-wrap: nowrap;
+
+    &:hover {
+      background-color: var(--v_brand_blue_hover);
+    }
+
+    &:active {
+      background-color: var(--v_brand_blue_active);
+    }
+
+    >a {
+      color: inherit;
+      text-decoration: none;
+    }
+  }
+
+  >fieldset {
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 15px;
+    background-color: rgba(127, 127, 127, 0.1);
+
+    &::before {
+      content: attr(data-title);
+      border-radius: 4px 4px 0 0;
+      border-bottom: 2px solid rgba(127, 127, 127, 0.1);
+      grid-column: 1 / -1;
+    }
+  }
+
+  label {
+    display: inline-flex;
+    gap: 10px;
+    place-items: center;
+    position: relative;
+    text-wrap: nowrap;
+
+    &[data-hint]:hover::before {
+      position: absolute;
+      bottom: 110%;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      width: fit-content;
+      padding: 3px 5px;
+      border-radius: 5px;
+      content: attr(data-hint);
+      font-size: 12px;
+      background-color: var(--v_brand_blue);
+      white-space: pre-line;
+    }
+
+    &::after {
+      content: attr(data-key);
+    }
+  }
+
+  input {
+    box-sizing: content-box;
+    margin: 0;
+    padding: 4px;
+    height: 20px;
+    font-size: 16px;
+    transition: .2s;
+
+    &:hover {
+      box-shadow: 0 0 8px var(--v_brand_blue);
+    }
+
+    &[type=checkbox] {
+      box-sizing: content-box;
+      border-radius: 20px;
+      min-width: 40px;
+      background-color: #ccc;
+      appearance: none;
+      cursor: pointer;
+
+      &::before {
+        content: "";
+        position: relative;
+        display: block;
+        transition: 0.3s;
+
+        height: 100%;
+        aspect-ratio: 1/1;
+        border-radius: 50%;
+        background-color: #FFF;
+      }
+
+      &:checked {
+        background-color: var(--v_brand_blue);
+      }
+
+      &:checked::before {
+        transform: translateX(20px);
+      }
+
+      &:active {
+        opacity: 0.5;
+      }
+    }
+
+    &[type=number] {
+      width: 40px;
+      border: none;
+      border-radius: 5px;
+      outline: 2px solid var(--v_brand_blue);
+      background: none;
+      color: var(--text1);
+      appearance: textfield;
+
+      &::-webkit-inner-spin-button {
+        appearance: none;
+      }
+    }
+  }
+}

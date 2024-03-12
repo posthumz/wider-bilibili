@@ -1,0 +1,20 @@
+/* This overrides :root style */
+body {
+  --layout-padding: 30px;
+}
+
+html,
+body {
+  width: initial !important;
+  height: initial !important;
+}
+
+/* 搜索栏 */
+.center-search-container {
+  min-width: 0;
+}
+
+.nav-search-input {
+  width: 0 !important;
+  padding-right: 0 !important;
+}

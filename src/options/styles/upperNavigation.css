@@ -1,0 +1,15 @@
+/* 导航栏上置 (默认下置) */
+:root {
+  --video-height: calc(100vh - var(--navbar-height));
+}
+
+#biliMainHeader {
+  margin-top: 0;
+  margin-bottom: var(--video-height);
+}
+
+#playerWrap,
+#bilibili-player-wrap {
+  top: var(--navbar-height);
+  height: var(--video-height) !important;
+}

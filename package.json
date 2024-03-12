@@ -1,0 +1,25 @@
+{
+  "name": "wider-bilibili",
+  "private": true,
+  "version": "0.4.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "html": "vite -c vite.config.html.ts",
+    "release": "vite build && vite build -c vite.config.html.ts"
+  },
+  "devDependencies": {
+    "@stylistic/eslint-plugin": "^1.6.3",
+    "@types/node": "^20.11.25",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "glob": "^10.3.10",
+    "typescript": "^5.4.2",
+    "vite": "^5.1.6",
+    "vite-plugin-monkey": "^3.5.1"
+  },
+  "optionalDependencies": {
+    "@types/tampermonkey": "^5.0.2"
+  }
+}

@@ -1,0 +1,18 @@
+/* 首页 */
+.feed-card,
+.floor-single-card,
+.bili-video-card {
+  margin-top: 0px !important;
+}
+
+.feed-roll-btn {
+  /* left: initial !important;
+  right: calc(30px - var(--layout-padding)); */
+  /* 右下角已有刷新按键，何必呢 */
+  display: none;
+}
+
+.palette-button-wrap {
+  left: initial !important;
+  right: 30px;
+}

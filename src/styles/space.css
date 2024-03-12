@@ -1,0 +1,78 @@
+/* 空间页 */
+.wrapper,
+.search-page {
+  width: initial !important;
+  margin: 0 var(--layout-padding) !important;
+}
+
+/* 视频卡片 */
+.small-item {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+/* 主页, 动态 */
+#page-index,
+#page-dynamic {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+
+  &::before,
+  &::after {
+    content: none;
+  }
+
+  .col-1 {
+    flex: 1;
+
+    >.video>.content {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .section.coin>.content {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0;
+      width: initial !important;
+    }
+  }
+
+  .channel>.content {
+    width: initial !important;
+
+    .channel-video {
+      overflow-x: auto;
+    }
+  }
+
+  .fav-item {
+    margin-right: 20px !important;
+  }
+}
+
+/* 投稿, 搜索 */
+#page-video .col-full {
+  display: flex;
+
+  >.main-content {
+    flex: 1;
+
+    .cube-list {
+      width: initial !important;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }
+}
+
+/* 合集 */
+.channel-index {
+  width: 100% !important;
+}
+
+.feed-dynamic {
+  flex: 1;
+}

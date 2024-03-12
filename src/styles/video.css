@@ -1,0 +1,160 @@
+/* 播放器 */
+:root {
+  --navbar-height: 64px;
+  --video-height: 100vh;
+}
+
+div#playerWrap,
+div#bilibili-player-wrap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: var(--video-height);
+  /* 番剧页加载时会有右填充 */
+  padding-right: 0;
+}
+
+div#bilibili-player {
+  width: 100%;
+  height: 100%;
+  box-shadow: none !important;
+}
+
+/* 导航栏 */
+#biliMainHeader {
+  margin-top: var(--video-height);
+  margin-bottom: 0;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+
+.custom-navbar {
+  position: sticky !important;
+  z-index: 3 !important;
+}
+
+.bili-header.fixed-header {
+  min-height: initial !important;
+}
+
+.bili-header__bar {
+  position: relative !important;
+}
+
+/* 使用 static 才能让播放器的 absolute 正确定位 */
+/* 视频、番剧、收藏/稍后再看页 */
+.video-container-v1,
+.left-container,
+.main-container,
+.playlist-container--left {
+  position: static !important;
+}
+
+/* 加载动画强制显示 */
+.bpx-player-loading-panel-blur {
+  display: flex !important;
+}
+
+/* 强制显示播放器控件 */
+.bpx-player-top-left-title,
+.bpx-player-top-left-music,
+.bpx-player-top-mask {
+  display: block !important;
+}
+
+/* 原弹幕发送区域不显示 */
+.bpx-player-sending-area {
+  display: none;
+}
+
+/* 原宽屏/网页全屏按钮不显示 */
+.bpx-player-ctrl-wide,
+.bpx-player-ctrl-web {
+  display: none;
+}
+
+/* 视频页、番剧页、收藏/稍后再看页的下方容器 */
+.video-container-v1,
+.main-container,
+.playlist-container {
+  z-index: 0;
+  margin-top: var(--video-height);
+  padding: 0 var(--layout-padding);
+}
+
+.left-container,
+.plp-l,
+.playlist-container--left {
+  flex: 1;
+}
+
+.plp-r {
+  position: sticky !important;
+  /* 番剧页加载时不会先使用sticky */
+}
+
+/* 番剧/影视页下方容器 */
+.main-container {
+  width: 100%;
+  margin: 0;
+  padding-top: 15px;
+  padding-left: var(--layout-padding);
+  padding-right: var(--layout-padding);
+  box-sizing: border-box;
+  display: flex;
+}
+
+.player-left-components {
+  padding-right: 30px !important;
+}
+
+.toolbar {
+  padding-top: 0;
+}
+
+/* 视频标题换行显示 */
+#viewbox_report {
+  height: auto;
+}
+
+.video-title {
+  white-space: normal !important;
+}
+
+/* bgm浮窗 */
+#bgm-entry {
+  z-index: 114514 !important;
+  left: 0 !important;
+}
+
+/* 笔记浮窗 */
+.note-pc {
+  z-index: 114514 !important;
+}
+
+/* 番剧页右下方浮动按钮修正 */
+div[class^=navTools_floatNav] {
+  z-index: 2 !important;
+}
+
+/* Bilibili Evolved侧栏 */
+.be-settings .sidebar {
+  z-index: 114514 !important;
+}
+
+/* Bilibili Evolved 夜间模式修正 */
+.bpx-player-container .bpx-player-sending-bar {
+  background-color: transparent !important;
+}
+
+.bpx-player-container .bpx-player-video-info {
+  color: hsla(0, 0%, 100%, .9) !important;
+}
+
+.bpx-player-container .bpx-player-sending-bar .bpx-player-video-btn-dm,
+.bpx-player-container .bpx-player-sending-bar .bpx-player-dm-setting,
+.bpx-player-container .bpx-player-sending-bar .bpx-player-dm-switch {
+  fill: hsla(0, 0%, 100%, .9) !important;
+}

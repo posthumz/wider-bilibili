@@ -1,0 +1,25 @@
+/* 动态页 */
+
+#app .bg+.content {
+  box-sizing: border-box;
+  border-width: 10px var(--layout-padding);
+  border-style: solid;
+  border-color: transparent;
+  width: initial !important;
+
+  .sidebar-wrap {
+    right: 58px;
+  }
+}
+
+.bili-dyn-home--member {
+  margin: 0 var(--layout-padding) !important;
+
+  main {
+    flex: 1
+  }
+
+  .left {
+    display: none;
+  }
+}
