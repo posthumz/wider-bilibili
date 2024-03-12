@@ -8,8 +8,8 @@
   margin-bottom: var(--video-height);
 }
 
-#playerWrap,
-#bilibili-player-wrap {
+div#playerWrap,
+div#bilibili-player-wrap {
   top: var(--navbar-height);
   height: var(--video-height) !important;
 }

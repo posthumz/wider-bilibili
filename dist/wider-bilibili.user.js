@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wider Bilibili
 // @namespace    https://greasyfork.org/users/1125570
-// @version      0.4.0
+// @version      0.4.0.1
 // @author       posthumz
 // @description  哔哩哔哩宽屏体验
 // @license      MIT
@@ -353,8 +353,8 @@ body {
   margin-bottom: var(--video-height);
 }
 
-#playerWrap,
-#bilibili-player-wrap {
+div#playerWrap,
+div#bilibili-player-wrap {
   top: var(--navbar-height);
   height: var(--video-height) !important;
 }`,
