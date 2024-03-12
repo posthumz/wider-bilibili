@@ -32,6 +32,11 @@ div#bilibili-player {
   .bpx-player-dm-switch {
     fill: hsla(0, 0%, 100%, .9) !important;
   }
+
+  .bpx-player-dm-hint>a {
+    color: hsla(0, 0%, 100%, .6) !important;
+    fill: hsla(0, 0%, 100%, .6) !important;
+  }
 }
 
 /* 加载动画强制显示 */

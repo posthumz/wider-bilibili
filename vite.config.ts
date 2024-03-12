@@ -64,7 +64,7 @@ export default defineConfig(({ mode }) => {
           'match': ['http*://*.bilibili.com/*'],
           'exclude': [
             'http*://www.bilibili.com/correspond/*',
-            'http*://message.bilibili.com/pages/nav/header_sync',
+            'http*://message.bilibili.com/pages/nav/*_sync',
           ],
           'run-at': 'document-start',
         },

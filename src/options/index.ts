@@ -15,7 +15,8 @@ type ValueChangeListener = Parameters<typeof GM_addValueChangeListener>[1]
 
 interface Option<T> {
   page: string
-  default: T
+  /** default, using d because `default` is a reserved word */
+  d: T
   callback: (init: T) => ValueChangeListener
 }
 
@@ -28,14 +29,14 @@ function toggleStyle(s: string, init = true, flip = false) {
     : (enable: boolean) => { style.disabled = !enable }
 }
 function onStyleValueChange(toggle: ReturnType<typeof toggleStyle>): ValueChangeListener {
-  return (_k, _o, val) => toggle(val as boolean)
+  return (_k, _o, init) => toggle(init as boolean)
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const options: Record<string, Option<any>> = {
   左右边距: {
     page: 'common',
-    default: 30,
+    d: 30,
     callback: init => {
       document.body.style.setProperty('--layout-padding', `${init}px`)
       return (_k, _o, newVal) => document.body.style.setProperty('--layout-padding', `${newVal}px`)
@@ -43,12 +44,12 @@ const options: Record<string, Option<any>> = {
   },
   导航栏下置: {
     page: 'video',
-    default: true,
+    d: true,
     callback: init => onStyleValueChange(toggleStyle(styles.upperNavigation, init, true)),
   },
   小窗样式: {
     page: 'video',
-    default: true,
+    d: true,
     callback: init => {
       document.documentElement.style.setProperty('--mini-width', '320px')
       const toggle1 = toggleStyle(styles.mini, init)
@@ -56,26 +57,26 @@ const options: Record<string, Option<any>> = {
       return onStyleValueChange(enable => { toggle1(enable); toggle2(enable) })
     },
   },
-  控件样式: {
+  调节控件间距: {
     page: 'video',
-    default: true,
+    d: true,
     callback: init => onStyleValueChange(toggleStyle(styles.controls, init)),
   },
   暂停显示控件: {
     page: 'video',
-    default: false,
+    d: false,
     callback: init => onStyleValueChange(toggleStyle(styles.pauseShow, init)),
   },
   显示观看信息: {
     page: 'video',
-    default: true,
+    d: true,
     callback: init => onStyleValueChange(toggleStyle('.bpx-player-video-info{display:flex!important}', init)),
   },
 }
 
 // 应用页面选项并监听变化
 export default function activate(targetPage: string) {
-  for (const [name, { page, default: d, callback }] of Object.entries(options)) {
+  for (const [name, { page, d, callback }] of Object.entries(options)) {
     page === targetPage && GM_addValueChangeListener(name, callback(GM_getValue(name, d)))
   }
 }
@@ -97,11 +98,11 @@ waitReady().then(() => {
     const option = options[key]
     switch (input.type) {
       case 'checkbox':
-        input.checked = GM_getValue(key, option.default)
+        input.checked = GM_getValue(key, option.d)
         input.onchange = () => GM_setValue(key, input.checked)
         break
       case 'number':
-        input.value = GM_getValue(key, option.default)
+        input.value = GM_getValue(key, option.d)
         input.oninput = () => {
           const val = Number(input.value)
           Number.isInteger(val) && GM_setValue(key, val)
@@ -116,6 +117,7 @@ waitReady().then(() => {
   document.addEventListener('keyup', ev => {
     const { key } = ev
     if (key === comb[1] && modifiers.every(mod => comb[0].includes(mod) === ev[mod])) {
+      ev.stopPropagation()
       app.style.display = app.style.display === 'none' ? 'flex' : 'none'
     }
   })

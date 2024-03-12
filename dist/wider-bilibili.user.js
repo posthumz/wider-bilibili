@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         Wider Bilibili
 // @namespace    https://greasyfork.org/users/1125570
-// @version      0.4.0.1
+// @version      0.4.0.2
 // @author       posthumz
 // @description  哔哩哔哩宽屏体验
 // @license      MIT
 // @icon         https://www.bilibili.com/favicon.ico
 // @match        http*://*.bilibili.com/*
 // @exclude      http*://www.bilibili.com/correspond/*
-// @exclude      http*://message.bilibili.com/pages/nav/header_sync
+// @exclude      http*://message.bilibili.com/pages/nav/*_sync
 // @grant        GM_addStyle
 // @grant        GM_addValueChangeListener
 // @grant        GM_getValue
@@ -54,6 +54,11 @@ div#bilibili-player {
   .bpx-player-dm-setting,
   .bpx-player-dm-switch {
     fill: hsla(0, 0%, 100%, .9) !important;
+  }
+
+  .bpx-player-dm-hint>a {
+    color: hsla(0, 0%, 100%, .6) !important;
+    fill: hsla(0, 0%, 100%, .6) !important;
   }
 }
 
@@ -185,16 +190,17 @@ div[class^=navTools_floatNav] {
   z-index: 114514 !important;
 }`,
     t: `/* 动态页 */
-
 #app .bg+.content {
-  box-sizing: border-box;
-  border-width: 10px var(--layout-padding);
-  border-style: solid;
-  border-color: transparent;
-  width: initial !important;
+  width: initial;
+  margin: 10px 0;
 
-  .sidebar-wrap {
+  >.card {
+    margin: 0 var(--layout-padding)
+  }
+
+  >.sidebar-wrap {
     right: 58px;
+    margin-right: var(--layout-padding);
   }
 }
 
@@ -292,20 +298,20 @@ div[class^=navTools_floatNav] {
   padding: 0 var(--layout-padding);
 }`,
     read: `/* 阅读页 */
-#app>.article-detail {
-  box-sizing: border-box;
-  border-width: 0 var(--layout-padding);
-  border-style: solid;
-  border-color: transparent;
-  width: 100%;
+#app {
+  margin: 0 var(--layout-padding);
 
-  .article-up-info {
+  >.article-detail {
     width: initial;
-    margin: 0 80px 20px;
-  }
 
-  .right-side-bar {
-    right: 0;
+    .article-up-info {
+      width: initial;
+      margin: 0 80px 20px;
+    }
+
+    .right-side-bar {
+      right: 0;
+    }
   }
 }`,
     home: `/* 首页 */
@@ -391,6 +397,13 @@ div#bilibili-player-wrap {
 }`,
     options: `/* 脚本选项 */
 #wider-bilibili {
+  --wb-bg: var(--Wh0, #FFF);
+  --wb-fg: var(--Ga10, #18191C);
+  --wb-white: rgb(255, 255, 255);
+  --wb-blue: 0, 174, 236;
+  --wb-pink: 255, 102, 153;
+  --wb-red: 248, 90, 84;
+
   position: fixed;
   top: 0;
   bottom: 0;
@@ -409,10 +422,10 @@ div#bilibili-player-wrap {
   flex-direction: column;
   gap: 10px;
 
-  outline: 2px solid var(--v_brand_blue);
+  outline: 2px solid rgba(var(--wb-blue), 0.8);
   outline-offset: 0;
-  background-color: var(--bg1);
-  color: var(--text1);
+  background-color: var(--wb-bg);
+  color: var(--wb-fg);
   font-size: 20px;
   font-family: "HarmonyOS_Regular", "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif !important;
 
@@ -432,7 +445,7 @@ div#bilibili-player-wrap {
     text-overflow: clip;
     padding-left: 20px;
     font-weight: bold;
-    background-color: var(--bg1);
+    background-color: var(--wb-bg);
 
     &::before {
       content: "Wider Bilibili 选项";
@@ -455,15 +468,15 @@ div#bilibili-player-wrap {
     box-sizing: border-box;
     padding: 4px;
     width: fit-content;
-    background-color: var(--v_stress_red);
-    fill: var(--text1);
+    background-color: rgba(var(--wb-red), 0.5);
+    fill: var(--wb-fg);
 
     &:hover {
-      background-color: var(--v_stress_red_hover);
+      background-color: rgba(var(--wb-red), 0.75);
     }
 
     &:active {
-      background-color: var(--v_stress_red_active);
+      background-color: rgb(var(--wb-red));
     }
   }
 
@@ -471,18 +484,18 @@ div#bilibili-player-wrap {
     border: none;
     padding: 4px 8px;
     background: none;
-    color: var(--text_white);
+    color: var(--wb-fg);
     transition: opacity .1s;
-    background-color: var(--v_brand_blue);
+    background-color: rgba(var(--wb-blue), 0.5);
     font-size: 16px;
     text-wrap: nowrap;
 
     &:hover {
-      background-color: var(--v_brand_blue_hover);
+      background-color: rgba(var(--wb-blue), 0.75);
     }
 
     &:active {
-      background-color: var(--v_brand_blue_active);
+      background-color: rgb(var(--wb-blue));
     }
 
     >a {
@@ -527,7 +540,8 @@ div#bilibili-player-wrap {
       border-radius: 5px;
       content: attr(data-hint);
       font-size: 12px;
-      background-color: var(--v_brand_blue);
+      background-color: rgb(var(--wb-blue));
+      color: var(--wb-white);
       white-space: pre-line;
     }
 
@@ -545,7 +559,7 @@ div#bilibili-player-wrap {
     transition: .2s;
 
     &:hover {
-      box-shadow: 0 0 8px var(--v_brand_blue);
+      box-shadow: 0 0 8px rgb(var(--wb-blue));
     }
 
     &[type=checkbox] {
@@ -569,7 +583,7 @@ div#bilibili-player-wrap {
       }
 
       &:checked {
-        background-color: var(--v_brand_blue);
+        background-color: rgb(var(--wb-blue));
       }
 
       &:checked::before {
@@ -585,9 +599,9 @@ div#bilibili-player-wrap {
       width: 40px;
       border: none;
       border-radius: 5px;
-      outline: 2px solid var(--v_brand_blue);
+      outline: 2px solid rgb(var(--wb-blue));
       background: none;
-      color: var(--text1);
+      color: var(--wb-fg);
       appearance: textfield;
 
       &::-webkit-inner-spin-button {
@@ -726,7 +740,7 @@ div#bilibili-player-wrap {
   <fieldset data-title="播放器">
     <label data-key="导航栏下置"><input type="checkbox" checked></label>
     <label data-key="小窗样式" data-hint="试试拉一下小窗左侧？"><input type="checkbox" checked></label>
-    <label data-key="控件样式" data-hint="调节控件间距"><input type="checkbox" checked></label>
+    <label data-key="调节控件间距"><input type="checkbox" checked></label>
     <label data-key="暂停显示控件" data-hint="默认检测到鼠标活动显示控件&#10;需要一直显示请打开此选项"><input type="checkbox"></label>
     <label data-key="显示观看信息" data-hint="在线人数/弹幕数"><input type="checkbox" checked></label>
   </fieldset>
@@ -747,12 +761,12 @@ div#bilibili-player-wrap {
     };
   }
   function onStyleValueChange(toggle) {
-    return (_k, _o, val) => toggle(val);
+    return (_k, _o, init) => toggle(init);
   }
   const options = {
     左右边距: {
       page: "common",
-      default: 30,
+      d: 30,
       callback: (init) => {
         document.body.style.setProperty("--layout-padding", `${init}px`);
         return (_k, _o, newVal) => document.body.style.setProperty("--layout-padding", `${newVal}px`);
@@ -760,12 +774,12 @@ div#bilibili-player-wrap {
     },
     导航栏下置: {
       page: "video",
-      default: true,
+      d: true,
       callback: (init) => onStyleValueChange(toggleStyle(styles.upperNavigation, init, true))
     },
     小窗样式: {
       page: "video",
-      default: true,
+      d: true,
       callback: (init) => {
         document.documentElement.style.setProperty("--mini-width", "320px");
         const toggle1 = toggleStyle(styles.mini, init);
@@ -776,24 +790,24 @@ div#bilibili-player-wrap {
         });
       }
     },
-    控件样式: {
+    调节控件间距: {
       page: "video",
-      default: true,
+      d: true,
       callback: (init) => onStyleValueChange(toggleStyle(styles.controls, init))
     },
     暂停显示控件: {
       page: "video",
-      default: false,
+      d: false,
       callback: (init) => onStyleValueChange(toggleStyle(styles.pauseShow, init))
     },
     显示观看信息: {
       page: "video",
-      default: true,
+      d: true,
       callback: (init) => onStyleValueChange(toggleStyle(".bpx-player-video-info{display:flex!important}", init))
     }
   };
   function activate(targetPage) {
-    for (const [name, { page, default: d, callback }] of Object.entries(options)) {
+    for (const [name, { page, d, callback }] of Object.entries(options)) {
       page === targetPage && GM_addValueChangeListener(name, callback(GM_getValue(name, d)));
     }
   }
@@ -814,11 +828,11 @@ div#bilibili-player-wrap {
       const option = options[key];
       switch (input.type) {
         case "checkbox":
-          input.checked = GM_getValue(key, option.default);
+          input.checked = GM_getValue(key, option.d);
           input.onchange = () => GM_setValue(key, input.checked);
           break;
         case "number":
-          input.value = GM_getValue(key, option.default);
+          input.value = GM_getValue(key, option.d);
           input.oninput = () => {
             const val = Number(input.value);
             Number.isInteger(val) && GM_setValue(key, val);
@@ -831,6 +845,7 @@ div#bilibili-player-wrap {
     document.addEventListener("keyup", (ev) => {
       const { key } = ev;
       if (key === comb[1] && modifiers.every((mod) => comb[0].includes(mod) === ev[mod])) {
+        ev.stopPropagation();
         app.style.display = app.style.display === "none" ? "flex" : "none";
       }
     });
