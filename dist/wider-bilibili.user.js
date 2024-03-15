@@ -446,10 +446,6 @@ div#bilibili-player-wrap {
     padding-left: 20px;
     background-color: var(--wb-bg);
     font-weight: bold;
-<<<<<<< HEAD
-=======
-    background-color: var(--wb-bg);
->>>>>>> 522d378ccc107ace0ab034e1002616e6bd5c5efc
 
     &::before {
       content: "Wider Bilibili 选项";
@@ -472,7 +468,6 @@ div#bilibili-player-wrap {
   button {
     border: none;
     padding: 4px;
-<<<<<<< HEAD
     background: none;
     color: var(--wb-fg);
     display: flex;
@@ -509,42 +504,6 @@ div#bilibili-player-wrap {
 
     &:active {
       background-color: rgba(var(--wb-red), 0.75);
-=======
-    width: fit-content;
-    background-color: rgba(var(--wb-red), 0.5);
-    fill: var(--wb-fg);
-
-    &:hover {
-      background-color: rgba(var(--wb-red), 0.75);
-    }
-
-    &:active {
-      background-color: rgb(var(--wb-red));
-    }
-  }
-
-  button {
-    border: none;
-    padding: 4px 8px;
-    background: none;
-    color: var(--wb-fg);
-    transition: opacity .1s;
-    background-color: rgba(var(--wb-blue), 0.5);
-    font-size: 16px;
-    text-wrap: nowrap;
-
-    &:hover {
-      background-color: rgba(var(--wb-blue), 0.75);
-    }
-
-    &:active {
-      background-color: rgb(var(--wb-blue));
-    }
-
-    >a {
-      color: inherit;
-      text-decoration: none;
->>>>>>> 522d378ccc107ace0ab034e1002616e6bd5c5efc
     }
   }
 
@@ -789,19 +748,11 @@ div#bilibili-player-wrap {
     <label data-hint="可使用滚轮调节"><input type="number" min="0" />左右边距</label>
   </fieldset>
   <fieldset data-title="播放器">
-<<<<<<< HEAD
     <label><input type="checkbox" />导航栏下置</label>
     <label data-hint="试试拉一下小窗左侧？"><input type="checkbox" />小窗样式</label>
     <label><input type="checkbox" />调节控件间距</label>
     <label data-hint="默认检测到鼠标活动显示控件&#10;需要一直显示请打开此选项/"><input type="checkbox">暂停显示控件</label>
     <label data-hint="在线人数/弹幕数"><input type="checkbox" />显示观看信息</label>
-=======
-    <label data-key="导航栏下置"><input type="checkbox" checked></label>
-    <label data-key="小窗样式" data-hint="试试拉一下小窗左侧？"><input type="checkbox" checked></label>
-    <label data-key="调节控件间距"><input type="checkbox" checked></label>
-    <label data-key="暂停显示控件" data-hint="默认检测到鼠标活动显示控件&#10;需要一直显示请打开此选项"><input type="checkbox"></label>
-    <label data-key="显示观看信息" data-hint="在线人数/弹幕数"><input type="checkbox" checked></label>
->>>>>>> 522d378ccc107ace0ab034e1002616e6bd5c5efc
   </fieldset>
 </div>`;
   GM_addStyle(styles.options);
