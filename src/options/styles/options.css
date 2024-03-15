@@ -47,8 +47,12 @@
     margin: -10px;
     text-overflow: clip;
     padding-left: 20px;
-    font-weight: bold;
     background-color: var(--wb-bg);
+    font-weight: bold;
+<<<<<<< HEAD
+=======
+    background-color: var(--wb-bg);
+>>>>>>> 522d378ccc107ace0ab034e1002616e6bd5c5efc
 
     &::before {
       content: "Wider Bilibili 选项";
@@ -67,9 +71,48 @@
     }
   }
 
-  #wb-close {
-    box-sizing: border-box;
+  a,
+  button {
+    border: none;
     padding: 4px;
+<<<<<<< HEAD
+    background: none;
+    color: var(--wb-fg);
+    display: flex;
+    font-size: 16px;
+    text-wrap: nowrap;
+    transition: opacity .1s;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.75;
+    }
+
+    &:active {
+      opacity: 0.5;
+    }
+
+    >svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+      fill-rule: evenodd;
+      clip-rule: evenodd;
+    }
+  }
+
+  #wb-close {
+    width: fit-content;
+    height: fit-content;
+    opacity: 1 !important;
+
+    &:hover {
+      background-color: rgb(var(--wb-red));
+    }
+
+    &:active {
+      background-color: rgba(var(--wb-red), 0.75);
+=======
     width: fit-content;
     background-color: rgba(var(--wb-red), 0.5);
     fill: var(--wb-fg);
@@ -104,6 +147,7 @@
     >a {
       color: inherit;
       text-decoration: none;
+>>>>>>> 522d378ccc107ace0ab034e1002616e6bd5c5efc
     }
   }
 
@@ -146,10 +190,6 @@
       background-color: rgb(var(--wb-blue));
       color: var(--wb-white);
       white-space: pre-line;
-    }
-
-    &::after {
-      content: attr(data-key);
     }
   }
 

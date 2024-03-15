@@ -37,7 +37,6 @@ function custom({
 // Load with multiline string, i.e. backticks. Escape characters are not handled for now
 const multiline: Plugin = {
   name: 'multiline',
-  // escape characters are not handled for now
   transform(code, id) {
     const relative = path.relative(__dirname, id)
     if (relative.endsWith('?multiline'))

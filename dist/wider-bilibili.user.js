@@ -76,7 +76,7 @@ div#bilibili-player {
 
 /* 不然会鬼畜 */
 .bpx-player-top-mask {
-  transition: none;
+  transition-property: none !important;
 }
 
 /* 原宽屏/网页全屏按钮不显示 */
@@ -444,8 +444,12 @@ div#bilibili-player-wrap {
     margin: -10px;
     text-overflow: clip;
     padding-left: 20px;
-    font-weight: bold;
     background-color: var(--wb-bg);
+    font-weight: bold;
+<<<<<<< HEAD
+=======
+    background-color: var(--wb-bg);
+>>>>>>> 522d378ccc107ace0ab034e1002616e6bd5c5efc
 
     &::before {
       content: "Wider Bilibili 选项";
@@ -464,9 +468,48 @@ div#bilibili-player-wrap {
     }
   }
 
-  #wb-close {
-    box-sizing: border-box;
+  a,
+  button {
+    border: none;
     padding: 4px;
+<<<<<<< HEAD
+    background: none;
+    color: var(--wb-fg);
+    display: flex;
+    font-size: 16px;
+    text-wrap: nowrap;
+    transition: opacity .1s;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.75;
+    }
+
+    &:active {
+      opacity: 0.5;
+    }
+
+    >svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+      fill-rule: evenodd;
+      clip-rule: evenodd;
+    }
+  }
+
+  #wb-close {
+    width: fit-content;
+    height: fit-content;
+    opacity: 1 !important;
+
+    &:hover {
+      background-color: rgb(var(--wb-red));
+    }
+
+    &:active {
+      background-color: rgba(var(--wb-red), 0.75);
+=======
     width: fit-content;
     background-color: rgba(var(--wb-red), 0.5);
     fill: var(--wb-fg);
@@ -501,6 +544,7 @@ div#bilibili-player-wrap {
     >a {
       color: inherit;
       text-decoration: none;
+>>>>>>> 522d378ccc107ace0ab034e1002616e6bd5c5efc
     }
   }
 
@@ -543,10 +587,6 @@ div#bilibili-player-wrap {
       background-color: rgb(var(--wb-blue));
       color: var(--wb-white);
       white-space: pre-line;
-    }
-
-    &::after {
-      content: attr(data-key);
     }
   }
 
@@ -692,12 +732,11 @@ div#bilibili-player-wrap {
           return resolve(res);
         }
         if (--retry === 0) {
-          console.error("页面加载超时");
           clearInterval(intervalID);
-          return reject(new Error("timeout"));
+          return reject(new Error("页面加载超时"));
         }
         if (retry % 10 === 0) {
-          console.debug(`等待${desc}`);
+          console.debug(`${desc}等待加载`);
         }
       }, interval);
     });
@@ -728,21 +767,41 @@ div#bilibili-player-wrap {
   const html = `<div id="wider-bilibili" style="display: none;">
   <header>
     <div class="wb-button-group">
-      <button><a target="_blank" href="https://greasyfork.org/scripts/474507">发布</a></button>
-      <button><a target="_blank" href="https://github.com/posthumz/wider-bilibili">主页</a></button>
-      <button><a target="_blank" href="https://github.com/posthumz/wider-bilibili/issues">反馈</a></button>
-      <svg id="wb-close" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
+      <a target="_blank" href="https://greasyfork.org/users/1125570">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 96 96">
+          <!-- Based on https://github.com/denilsonsa/denilsonsa.github.io -->
+          <circle fill="#000" r="48" cy="48" cx="48"/>
+          <path fill="#000" stroke="#000" stroke-width="4" d="M 44,29  a6.36396,6.36396 0,0,1 0,9  l36,36  a3.25,3.25 0,0,1 -6.5,6.5  l-36,-36  a6.36396,6.36396 0,0,1 -9,0  l-19,-19  a1.76777,1.76777 0,0,1 0,-2.5  l13.0,-13  a1.76777,1.76777 0,0,1 2.5,0  z"/>
+          <path fill="#fff" d="M 44,29  a6.36396,6.36396 0,0,1 0,9  l36,36  a3.25,3.25 0,0,1 -6.5,6.5  l-36,-36  a6.36396,6.36396 0,0,1 -9,0  l-19,-19  a1.76777,1.76777 0,0,1 2.5,-2.5  l14,14 4,-4 -14,-14  a1.76777,1.76777 0,0,1 2.5,-2.5  l14,14 4,-4 -14,-14  a1.76777,1.76777 0,0,1 2.5,-2.5  z"/>
+        </svg>
+      </a>
+      <a target="_blank" href="https://github.com/posthumz/wider-bilibili">
+        <!-- From https://www.radix-ui.com/icons -->
+        <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><path d="M7.49933 0.25C3.49635 0.25 0.25 3.49593 0.25 7.50024C0.25 10.703 2.32715 13.4206 5.2081 14.3797C5.57084 14.446 5.70302 14.2222 5.70302 14.0299C5.70302 13.8576 5.69679 13.4019 5.69323 12.797C3.67661 13.235 3.25112 11.825 3.25112 11.825C2.92132 10.9874 2.44599 10.7644 2.44599 10.7644C1.78773 10.3149 2.49584 10.3238 2.49584 10.3238C3.22353 10.375 3.60629 11.0711 3.60629 11.0711C4.25298 12.1788 5.30335 11.8588 5.71638 11.6732C5.78225 11.205 5.96962 10.8854 6.17658 10.7043C4.56675 10.5209 2.87415 9.89918 2.87415 7.12104C2.87415 6.32925 3.15677 5.68257 3.62053 5.17563C3.54576 4.99226 3.29697 4.25521 3.69174 3.25691C3.69174 3.25691 4.30015 3.06196 5.68522 3.99973C6.26337 3.83906 6.8838 3.75895 7.50022 3.75583C8.1162 3.75895 8.73619 3.83906 9.31523 3.99973C10.6994 3.06196 11.3069 3.25691 11.3069 3.25691C11.7026 4.25521 11.4538 4.99226 11.3795 5.17563C11.8441 5.68257 12.1245 6.32925 12.1245 7.12104C12.1245 9.9063 10.4292 10.5192 8.81452 10.6985C9.07444 10.9224 9.30633 11.3648 9.30633 12.0413C9.30633 13.0102 9.29742 13.7922 9.29742 14.0299C9.29742 14.2239 9.42828 14.4496 9.79591 14.3788C12.6746 13.4179 14.75 10.7025 14.75 7.50024C14.75 3.49593 11.5036 0.25 7.49933 0.25Z"></path></svg>
+      </a>
+      <button id="wb-close">
+        <!-- From https://www.radix-ui.com/icons -->
+        <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><path d="M12.8536 2.85355C13.0488 2.65829 13.0488 2.34171 12.8536 2.14645C12.6583 1.95118 12.3417 1.95118 12.1464 2.14645L7.5 6.79289L2.85355 2.14645C2.65829 1.95118 2.34171 1.95118 2.14645 2.14645C1.95118 2.34171 1.95118 2.65829 2.14645 2.85355L6.79289 7.5L2.14645 12.1464C1.95118 12.3417 1.95118 12.6583 2.14645 12.8536C2.34171 13.0488 2.65829 13.0488 2.85355 12.8536L7.5 8.20711L12.1464 12.8536C12.3417 13.0488 12.6583 13.0488 12.8536 12.8536C13.0488 12.6583 13.0488 12.3417 12.8536 12.1464L8.20711 7.5L12.8536 2.85355Z"></path></svg>
+      </button>
     </div>
   </header>
   <fieldset data-title="通用">
-    <label data-key="左右边距" data-hint="可使用滚轮调节"><input type="number" min="0" value="30"></label>
+    <label data-hint="可使用滚轮调节"><input type="number" min="0" />左右边距</label>
   </fieldset>
   <fieldset data-title="播放器">
+<<<<<<< HEAD
+    <label><input type="checkbox" />导航栏下置</label>
+    <label data-hint="试试拉一下小窗左侧？"><input type="checkbox" />小窗样式</label>
+    <label><input type="checkbox" />调节控件间距</label>
+    <label data-hint="默认检测到鼠标活动显示控件&#10;需要一直显示请打开此选项/"><input type="checkbox">暂停显示控件</label>
+    <label data-hint="在线人数/弹幕数"><input type="checkbox" />显示观看信息</label>
+=======
     <label data-key="导航栏下置"><input type="checkbox" checked></label>
     <label data-key="小窗样式" data-hint="试试拉一下小窗左侧？"><input type="checkbox" checked></label>
     <label data-key="调节控件间距"><input type="checkbox" checked></label>
     <label data-key="暂停显示控件" data-hint="默认检测到鼠标活动显示控件&#10;需要一直显示请打开此选项"><input type="checkbox"></label>
     <label data-key="显示观看信息" data-hint="在线人数/弹幕数"><input type="checkbox" checked></label>
+>>>>>>> 522d378ccc107ace0ab034e1002616e6bd5c5efc
   </fieldset>
 </div>`;
   GM_addStyle(styles.options);
@@ -821,7 +880,7 @@ div#bilibili-player-wrap {
       app.style.display = "none";
     });
     for (const input of app.getElementsByTagName("input")) {
-      const key = input.parentElement?.dataset.key;
+      const key = input.parentElement?.textContent;
       if (!key) {
         continue;
       }

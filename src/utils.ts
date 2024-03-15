@@ -1,4 +1,4 @@
-/** 等待条件满足并返回结果 */
+/** 等待条件满足并返回结果。检测成功后返回元素；超时停止检测。 */
 export function waitFor<T>(loaded: () => T, desc = '页面加载', retry = 100, interval = 100):
 Promise<NonNullable<T>> {
   return new Promise((resolve, reject) => {
@@ -9,16 +9,15 @@ Promise<NonNullable<T>> {
         return resolve(res)
       }
       if (--retry === 0) {
-        console.error('页面加载超时')
         clearInterval(intervalID)
-        return reject(new Error('timeout'))
+        return reject(new Error('页面加载超时'))
       }
-      if (retry % 10 === 0) { console.debug(`等待${desc}`) }
+      if (retry % 10 === 0) { console.debug(`${desc}等待加载`) }
     }, interval)
   })
 }
 
-/** 直接获取元素或等待元素被添加 */
+/** 直接获取元素或等待元素被添加。检测成功后停止观察并返回元素。 */
 export function observeFor(className: string, parent: Element): Promise<Element> {
   return new Promise(resolve => {
     const elem = parent.getElementsByClassName(className)[0]
@@ -36,6 +35,7 @@ export function observeFor(className: string, parent: Element): Promise<Element>
   })
 }
 
+/** 等待DOMContentLoaded */
 export function waitReady() {
   return new Promise<void>(resolve => {
     document.readyState === 'loading'

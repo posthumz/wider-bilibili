@@ -93,7 +93,7 @@ waitReady().then(() => {
   document.getElementById('wb-close')?.addEventListener('click', () => { app.style.display = 'none' })
 
   for (const input of app.getElementsByTagName('input')) {
-    const key = input.parentElement?.dataset.key
+    const key = input.parentElement?.textContent
     if (!key) { continue }
     const option = options[key]
     switch (input.type) {

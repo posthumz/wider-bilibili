@@ -53,7 +53,7 @@ div#bilibili-player {
 
 /* 不然会鬼畜 */
 .bpx-player-top-mask {
-  transition: none;
+  transition-property: none !important;
 }
 
 /* 原宽屏/网页全屏按钮不显示 */
