@@ -1,20 +1,18 @@
 /* 小窗 */
-.bpx-player-container[data-screen="mini"] {
-  /* 以视频长宽比为准，不显示黑边和阴影 */
-  height: auto !important;
-  box-shadow: none;
-  /* 修正小窗位置 */
-  translate: 32px 40px;
-  /* 以防竖屏视频超出：导航栏64px，上下各额外留8px */
-  max-height: calc(100vh - 80px);
-}
-
 .bpx-player-container {
+  --mini-width: 320px;
   /* 最小宽度，以防不可见 */
   min-width: 180px;
 
   &[data-screen="mini"] {
     width: var(--mini-width) !important;
+    /* 自动高度 (不显示黑边和阴影) */
+    height: auto !important;
+    box-shadow: none;
+    /* 修正小窗位置 */
+    translate: 32px 40px;
+    /* 以防竖屏视频超出：导航栏64px，上下各额外留8px */
+    max-height: calc(100vh - 80px);
   }
 }
 

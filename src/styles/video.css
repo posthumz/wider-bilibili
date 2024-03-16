@@ -39,10 +39,8 @@
   }
 }
 
-#bilibili-player-wrap {
-  .bpx-docker {
-    height: auto;
-  }
+#bilibili-player-wrap .bpx-docker:has(>.bpx-player-container[data-screen="mini"]) {
+  height: var(--player-height);
 }
 
 /* 限制高度上限100vh */

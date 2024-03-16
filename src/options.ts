@@ -51,9 +51,8 @@ const options: Record<string, Option<any>> = {
     page: 'video',
     d: true,
     callback: init => {
-      document.documentElement.style.setProperty('--mini-width', '320px')
       const toggle1 = toggleStyle(styles.mini, init)
-      const toggle2 = toggleStyle('.bpx-player-container { --mini-width: initial }', init, true)
+      const toggle2 = toggleStyle('.bpx-player-container { --mini-width: initial !important }', init, true)
       return onStyleValueChange(enable => { toggle1(enable); toggle2(enable) })
     },
   },

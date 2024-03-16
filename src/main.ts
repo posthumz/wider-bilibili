@@ -33,9 +33,9 @@ switch (url.host) {
     // 自动高度 (也就是说，不会有上下黑边)
     new ResizeObserver(entries => {
       const height = entries[0]?.contentRect.height
-      if (height) { document.documentElement.style.setProperty('--player-height', `${height}px`) }
+      if (height) { document.body.style.setProperty('--player-height', `${height}px`) }
     }).observe(player)
-    document.documentElement.style.setProperty('--player-height', `${player.getBoundingClientRect().height}px`)
+    document.body.style.setProperty('--player-height', `${player.getBoundingClientRect().height}px`)
 
     // 默认顶栏
     const header = document.getElementById('biliMainHeader')
@@ -59,7 +59,7 @@ switch (url.host) {
       ev.stopImmediatePropagation()
       ev.preventDefault()
       const resize = (ev: MouseEvent) => {
-        document.documentElement.style.setProperty('--mini-width', `${
+        container.style.setProperty('--mini-width', `${
           Math.max(container.offsetWidth + container.getBoundingClientRect().x - ev.x + 5, 0) // 不设为<0的无效值
         }px`)
       }

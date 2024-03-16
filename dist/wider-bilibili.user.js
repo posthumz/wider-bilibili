@@ -62,10 +62,8 @@
   }
 }
 
-#bilibili-player-wrap {
-  .bpx-docker {
-    height: auto;
-  }
+#bilibili-player-wrap .bpx-docker:has(>.bpx-player-container[data-screen="mini"]) {
+  height: var(--player-height);
 }
 
 /* 限制高度上限100vh */
@@ -415,8 +413,6 @@ body {
     display: flex;
     justify-content: space-between;
     margin: -10px;
-    text-overflow: clip;
-    padding-left: 20px;
     background-color: var(--wb-bg);
     font-weight: bold;
 
@@ -424,9 +420,10 @@ body {
       content: "Wider Bilibili 选项";
       align-self: center;
       flex: 1;
+      padding-left: 20px;
+      text-overflow: clip;
     }
   }
-
 
   .wb-button-group {
     display: flex;
@@ -628,22 +625,20 @@ body {
   }
 }`,
     mini: `/* 小窗 */
-.bpx-player-container[data-screen="mini"] {
-  /* 以视频长宽比为准，不显示黑边和阴影 */
-  height: auto !important;
-  box-shadow: none;
-  /* 修正小窗位置 */
-  translate: 32px 40px;
-  /* 以防竖屏视频超出：导航栏64px，上下各额外留8px */
-  max-height: calc(100vh - 80px);
-}
-
 .bpx-player-container {
+  --mini-width: 320px;
   /* 最小宽度，以防不可见 */
   min-width: 180px;
 
   &[data-screen="mini"] {
     width: var(--mini-width) !important;
+    /* 自动高度 (不显示黑边和阴影) */
+    height: auto !important;
+    box-shadow: none;
+    /* 修正小窗位置 */
+    translate: 32px 40px;
+    /* 以防竖屏视频超出：导航栏64px，上下各额外留8px */
+    max-height: calc(100vh - 80px);
   }
 }
 
@@ -689,7 +684,6 @@ body {
   .bpx-player-ctrl-btn {
     margin: 0 !important;
     width: fit-content !important;
-    text-wrap: nowrap;
   }
 
   /* 时间控件 */
@@ -819,9 +813,8 @@ body {
       page: "video",
       d: true,
       callback: (init) => {
-        document.documentElement.style.setProperty("--mini-width", "320px");
         const toggle1 = toggleStyle(styles.mini, init);
-        const toggle2 = toggleStyle(".bpx-player-container { --mini-width: initial }", init, true);
+        const toggle2 = toggleStyle(".bpx-player-container { --mini-width: initial !important }", init, true);
         return onStyleValueChange((enable) => {
           toggle1(enable);
           toggle2(enable);
@@ -914,10 +907,10 @@ body {
       new ResizeObserver((entries) => {
         const height = entries[0]?.contentRect.height;
         if (height) {
-          document.documentElement.style.setProperty("--player-height", `${height}px`);
+          document.body.style.setProperty("--player-height", `${height}px`);
         }
       }).observe(player);
-      document.documentElement.style.setProperty("--player-height", `${player.getBoundingClientRect().height}px`);
+      document.body.style.setProperty("--player-height", `${player.getBoundingClientRect().height}px`);
       const header = document.getElementById("biliMainHeader");
       observeFor("custom-navbar", document.body).then((nav) => header?.after(nav));
       const container = await( waitFor(() => player.getElementsByClassName("bpx-player-container")[0], "播放器内容器"));
@@ -933,7 +926,7 @@ body {
         ev.stopImmediatePropagation();
         ev.preventDefault();
         const resize = (ev2) => {
-          document.documentElement.style.setProperty("--mini-width", `${Math.max(container.offsetWidth + container.getBoundingClientRect().x - ev2.x + 5, 0)}px`);
+          container.style.setProperty("--mini-width", `${Math.max(container.offsetWidth + container.getBoundingClientRect().x - ev2.x + 5, 0)}px`);
         };
         document.addEventListener("mousemove", resize);
         document.addEventListener("mouseup", () => document.removeEventListener("mousemove", resize), { once: true });
