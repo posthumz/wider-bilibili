@@ -5,9 +5,9 @@ import {
   GM_addValueChangeListener,
   GM_registerMenuCommand,
 } from '$'
-import styles from '../styles'
-import { waitReady } from '../utils'
-import html from './options.html?multiline'
+import styles from './styles'
+import { waitReady } from './utils'
+import html from './pages/options.html?multiline'
 
 GM_addStyle(styles.options)
 

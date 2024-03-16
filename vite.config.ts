@@ -7,8 +7,8 @@ import path from 'node:path'
 
 // OK but I really don't want the boilerplate in the distribution code 😭
 function custom({
-  styles = ['src/styles/*.css', 'src/options/styles/*.css'],
-  scripts = ['src/main.ts', 'src/options/index.ts'],
+  styles = ['src/styles/**/*.css'],
+  scripts = ['src/*.ts'],
   transformer = (code: string) => code.replace(/import \{.*?\} from "\$";?\n/s, ''),
 } = {}): Plugin {
   styles = glob(styles)
@@ -19,15 +19,13 @@ function custom({
       const relative = path.relative(__dirname, id)
       // load css statically instead of globbing at runtime
       if (relative === 'src\\styles.ts') {
-        const entries = styles.map(style =>
-          [path.basename(style).slice(0, -4), fs.readFileSync(style, 'utf-8')])
+        const entries = styles.map(style => [path.basename(style).slice(0, -4), fs.readFileSync(style, 'utf-8')])
         return `export default {${entries.map(([key, style]) => `${key}:\`${style}\`,`).join('\n')}}`
       }
     },
     /** removes the _GM_* aliases */
     transform(code, id) {
-      const relative = path.relative(__dirname, id)
-      if (scripts.some(script => script === relative)) {
+      if (scripts.includes(path.relative(__dirname, id))) {
         return { code: transformer(code) }
       }
     },
@@ -49,7 +47,7 @@ export default defineConfig(({ mode }) => {
   const production = mode === 'production'
   return {
     server: { port: 2233 },
-    build: { outDir: './dist', target: 'es2020', emptyOutDir: false },
+    build: { outDir: 'dist', target: 'es2020' },
     plugins: [
       monkey({
         entry: 'src/main.ts',

@@ -26,13 +26,21 @@ switch (url.host) {
     const style = GM_addStyle(styles.video)
     // 等待页面加载完成，因为使用了run-at document-body
     await waitReady()
+    activate('video')
     const player = document.getElementById('bilibili-player')
     if (!player) { style.remove(); break }
-    activate('video')
 
+    // 自动高度 (也就是说，不会有上下黑边)
+    new ResizeObserver(entries => {
+      const height = entries[0]?.contentRect.height
+      if (height) { document.documentElement.style.setProperty('--player-height', `${height}px`) }
+    }).observe(player)
+    document.documentElement.style.setProperty('--player-height', `${player.getBoundingClientRect().height}px`)
+
+    // 默认顶栏
+    const header = document.getElementById('biliMainHeader')
     // 将bilibili-evolved自定义顶栏插入默认顶栏后
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    observeFor('custom-navbar', document.body).then(nav => document.getElementById('biliMainHeader')!.insertAdjacentElement('beforeend', nav))
+    observeFor('custom-navbar', document.body).then(nav => header?.after(nav))
 
     // 播放器内容器 (番剧页面需要额外等待)
     const container = await waitFor(() => player.getElementsByClassName('bpx-player-container')[0], '播放器内容器') as HTMLDivElement
@@ -50,10 +58,11 @@ switch (url.host) {
     miniResizer.onmousedown = ev => {
       ev.stopImmediatePropagation()
       ev.preventDefault()
-
-      const resize = (ev: MouseEvent) => document.documentElement.style.setProperty('--mini-width',
-        `${container.offsetWidth + container.offsetLeft - ev.x + 1}px`)
-
+      const resize = (ev: MouseEvent) => {
+        document.documentElement.style.setProperty('--mini-width', `${
+          Math.max(container.offsetWidth + container.getBoundingClientRect().x - ev.x + 5, 0) // 不设为<0的无效值
+        }px`)
+      }
       document.addEventListener('mousemove', resize)
       document.addEventListener('mouseup', () => document.removeEventListener('mousemove', resize), { once: true })
     }
@@ -62,7 +71,7 @@ switch (url.host) {
     if (!videoArea) { console.error('页面加载错误：视频区域不存在'); break }
     observeFor('bpx-player-mini-warp', videoArea).then(wrap => wrap.appendChild(miniResizer))
 
-    const sendingBar = player.getElementsByClassName('bpx-player-sending-bar')[0]
+    const sendingBar = player.getElementsByClassName('bpx-player-sending-bar')[0] as HTMLElement
     if (!sendingBar) { console.error('页面加载错误：发送框不存在'); break }
     // 等待人数加载完成，再进行弹幕框的操作
     const danmaku = (await observeFor('bpx-player-video-info', sendingBar)).parentElement

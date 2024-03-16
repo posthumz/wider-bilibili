@@ -1,6 +1,19 @@
 /* 动态页 */
+.bili-dyn-home--member {
+  margin: 0 var(--layout-padding) !important;
+
+  .left {
+    display: none;
+  }
+
+  main {
+    flex: 1
+  }
+}
+
+/* 单个动态 */
 #app .bg+.content {
-  width: initial;
+  width: auto;
   margin: 10px 0;
 
   >.card {
@@ -10,17 +23,5 @@
   >.sidebar-wrap {
     right: 58px;
     margin-right: var(--layout-padding);
-  }
-}
-
-.bili-dyn-home--member {
-  margin: 0 var(--layout-padding) !important;
-
-  main {
-    flex: 1
-  }
-
-  .left {
-    display: none;
   }
 }

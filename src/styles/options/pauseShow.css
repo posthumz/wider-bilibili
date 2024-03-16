@@ -19,7 +19,7 @@
     opacity: 1 !important;
     left: 0;
     right: 0;
-    width: initial !important;
+    width: auto !important;
 
     .bpx-player-pbp-pin {
       opacity: 1 !important;

@@ -9,8 +9,26 @@
   <link rel="icon" href="https://www.bilibili.com/favicon.ico">
   <title>选项</title>
   <style>
-    @import url("./styles/options.css");
-    @import url("./index.css");
+    @import url("../styles/common.css");
+
+    :root {
+      --Wh0: #FFFFFF;
+      --Ga10: #18191C;
+
+      @media (prefers-color-scheme: dark) {
+        --Wh0: #17181A;
+        --Ga10: #E7E9EB;
+      }
+    }
+
+    body {
+      background-color: var(--Wh0);
+    }
+
+    #wider-bilibili {
+      display: flex !important;
+      opacity: 1;
+    }
   </style>
 </head>
 

@@ -5,15 +5,17 @@
   box-shadow: none;
   /* 修正小窗位置 */
   translate: 32px 40px;
+  /* 以防竖屏视频超出：导航栏64px，上下各额外留8px */
+  max-height: calc(100vh - 80px);
 }
 
 .bpx-player-container {
+  /* 最小宽度，以防不可见 */
+  min-width: 180px;
+
   &[data-screen="mini"] {
     width: var(--mini-width) !important;
   }
-
-  /* 最小宽度，以防不可见 */
-  min-width: 180px;
 }
 
 .bpx-player-mini-resizer {

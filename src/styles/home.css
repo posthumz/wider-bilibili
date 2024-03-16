@@ -6,8 +6,6 @@
 }
 
 .feed-roll-btn {
-  /* left: initial !important;
-  right: calc(30px - var(--layout-padding)); */
   /* 右下角已有刷新按键，何必呢 */
   display: none;
 }

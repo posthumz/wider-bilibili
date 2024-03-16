@@ -1,27 +1,27 @@
 /* 播放器 */
 :root {
   --navbar-height: 64px;
-  --video-height: 100vh;
+  --player-height: 100vh;
+  --player-max-height: 100vh;
 }
 
-/* 使用div提高样式优先级 */
-div#playerWrap,
-div#bilibili-player-wrap {
+#playerWrap.player-wrap,
+#bilibili-player-wrap {
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
-  height: var(--video-height);
-  /* 番剧页加载时会有右填充 */
+  height: fit-content;
+  /* 番剧页加载时播放器会有右填充 */
   padding-right: 0;
 }
 
-div#bilibili-player {
-  width: 100%;
-  height: 100%;
+#bilibili-player {
+  height: auto !important;
+  width: 100% !important;
   box-shadow: none !important;
 
-  /* Bilibili Evolved 夜间模式样式的优先级很高，所以要嵌套在#bilibili-player里面 */
+  /* Bilibili Evolved 夜间模式样式的优先级很高，所以嵌套在#bilibili-player里面 */
   .bpx-player-video-info {
     color: hsla(0, 0%, 100%, .9) !important;
     margin-right: 10px;
@@ -37,6 +37,23 @@ div#bilibili-player {
     color: hsla(0, 0%, 100%, .6) !important;
     fill: hsla(0, 0%, 100%, .6) !important;
   }
+}
+
+#bilibili-player-wrap {
+  .bpx-docker {
+    height: auto;
+  }
+}
+
+/* 限制高度上限100vh */
+.bpx-player-video-area,
+.bpx-player-video-wrap>video {
+  max-height: var(--player-max-height);
+}
+
+/* 加载时强制占用全屏 */
+.bpx-player-video-area:has(>.bpx-state-loading) video {
+  min-height: var(--player-max-height);
 }
 
 /* 加载动画强制显示 */
@@ -56,10 +73,10 @@ div#bilibili-player {
   transition-property: none !important;
 }
 
-/* 原宽屏/网页全屏按钮不显示 */
-.bpx-player-ctrl-wide,
-.bpx-player-ctrl-web {
-  display: none;
+/* 弹幕发送框区域 */
+.bpx-player-sending-bar {
+  background-color: transparent !important;
+  width: fit-content !important;
 }
 
 /* 原弹幕发送区域不显示 */
@@ -67,13 +84,20 @@ div#bilibili-player {
   display: none;
 }
 
+/* 原宽屏/网页全屏按钮不显示 */
+.bpx-player-ctrl-wide,
+.bpx-player-ctrl-web {
+  display: none;
+}
+
 /* 导航栏 */
 #biliMainHeader {
-  margin-top: var(--video-height);
+  margin-top: var(--player-height);
   margin-bottom: 0;
   position: sticky;
   top: 0;
-  z-index: 3;
+  /* 其他元素 z-index 基本是<100 */
+  z-index: 100;
 }
 
 .custom-navbar {
@@ -102,8 +126,6 @@ div#bilibili-player {
 .video-container-v1,
 .main-container,
 .playlist-container {
-  z-index: 0;
-  margin-top: var(--video-height);
   padding: 0 var(--layout-padding);
 }
 
@@ -158,7 +180,7 @@ div#bilibili-player {
 }
 
 /* 番剧页右下方浮动按钮修正 */
-div[class^=navTools_floatNav] {
+.main-container>:last-child[class^=navTools_floatNavExp] {
   z-index: 2 !important;
 }
 

@@ -3,10 +3,10 @@
   margin: 0 var(--layout-padding);
 
   >.article-detail {
-    width: initial;
+    width: auto;
 
     .article-up-info {
-      width: initial;
+      width: auto;
       margin: 0 80px 20px;
     }
 

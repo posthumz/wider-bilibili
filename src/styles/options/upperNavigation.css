@@ -1,0 +1,17 @@
+/* 导航栏上置 (默认下置) */
+:root {
+  --player-max-height: calc(100vh - var(--navbar-height));
+}
+
+#biliMainHeader {
+  margin-top: 0;
+  margin-bottom: var(--player-height);
+  /* 播放器的 z-index 是100000 */
+  z-index: 114514;
+}
+
+#playerWrap.player-wrap,
+#bilibili-player-wrap {
+  top: var(--navbar-height);
+  height: var(--player-height) !important;
+}

@@ -1,14 +1,13 @@
 {
   "name": "wider-bilibili",
   "private": true,
-  "version": "0.4.0.2",
+  "version": "0.4.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "html": "vite -c vite.config.html.ts",
-    "release": "vite build && vite build -c vite.config.html.ts"
+    "html": "vite -c vite.config.html.ts"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^1.6.3",

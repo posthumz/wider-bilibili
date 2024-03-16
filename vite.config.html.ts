@@ -1,24 +1,29 @@
 import { defineConfig } from 'vite'
 import fs from 'node:fs'
+import path from 'node:path'
 
 export default defineConfig({
   server: { port: 2333 },
-  root: 'src/options',
+  root: 'src/pages',
   build: {
     outDir: '../../dist',
     emptyOutDir: false,
-    rollupOptions: { output: { entryFileNames: '[name].js', assetFileNames: '[name].[ext]' } },
+    rollupOptions: {
+      output: { entryFileNames: '[name].js', assetFileNames: '[name].[ext]' },
+    },
   },
   plugins: [
     {
       name: 'html-transform',
-      transformIndexHtml: (html, i) => (i.path === '/index.html'
-        ? html.replace(/<body>.*<\/body>/s, `<body>
-${fs.readFileSync('src/options/options.html', 'utf-8').replace(/^/mg, '  ')}
-</body>`)
-        : html),
+      transformIndexHtml: (html, ctx) => {
+        return ctx.path === '/index.html'
+          ? html.replace(/<body>.*<\/body>/s, `<body>
+  ${fs.readFileSync('src/pages/options.html', 'utf-8').replace(/^/mg, '  ')}
+  </body>`)
+          : html
+      },
       handleHotUpdate: ({ file, server }) => {
-        if (file.endsWith('/options.html'))
+        if (file === 'src\\pages\\options.html')
           server.hot.send({ type: 'full-reload' })
       },
     },

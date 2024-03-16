@@ -1,7 +1,7 @@
 /* 空间页 */
 .wrapper,
 .search-page {
-  width: initial !important;
+  width: auto !important;
   margin: 0 var(--layout-padding) !important;
 }
 
@@ -35,12 +35,12 @@
       display: flex;
       flex-wrap: wrap;
       margin: 0;
-      width: initial !important;
+      width: auto !important;
     }
   }
 
   .channel>.content {
-    width: initial !important;
+    width: auto !important;
 
     .channel-video {
       overflow-x: auto;
@@ -60,7 +60,7 @@
     flex: 1;
 
     .cube-list {
-      width: initial !important;
+      width: auto !important;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;

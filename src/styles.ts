@@ -1,9 +1,7 @@
-const glob = import.meta.glob(['./styles/*.css', './options/styles/*.css'], { eager: true, query: '?raw' }) as Record<string, { default: string }>
+const glob = import.meta.glob(['./styles/**/*.css'], { eager: true, query: '?raw' }) as Record<string, { default: string }>
+const nameMatch = /.*\/(.*)\.css$/
+const entries = Object.entries(glob)
+const mapped = entries.map(([key, value]) => [nameMatch.exec(key)?.[1], value.default])
+const styles = Object.fromEntries(mapped)
 
-const regex = /styles\/(.*)\.css$/
-console.log(Object.fromEntries(
-  Object.entries(glob).map(([key, value]) => [regex.exec(key)?.[1], value.default]),
-))
-export default Object.fromEntries(
-  Object.entries(glob).map(([key, value]) => [regex.exec(key)?.[1], value.default]),
-)
+export default styles
