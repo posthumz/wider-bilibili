@@ -11,8 +11,11 @@
     box-shadow: none;
     /* 修正小窗位置 */
     translate: 32px 40px;
+
     /* 以防竖屏视频超出：导航栏64px，上下各额外留8px */
-    max-height: calc(100vh - 80px);
+    video {
+      max-height: calc(100vh - 80px);
+    }
   }
 }
 

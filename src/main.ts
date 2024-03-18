@@ -37,11 +37,6 @@ switch (url.host) {
     }).observe(player)
     document.body.style.setProperty('--player-height', `${player.getBoundingClientRect().height}px`)
 
-    // 默认顶栏
-    const header = document.getElementById('biliMainHeader')
-    // 将bilibili-evolved自定义顶栏插入默认顶栏后
-    observeFor('custom-navbar', document.body).then(nav => header?.after(nav))
-
     // 播放器内容器 (番剧页面需要额外等待)
     const container = await waitFor(() => player.getElementsByClassName('bpx-player-container')[0], '播放器内容器') as HTMLDivElement
     // 立即使用宽屏样式 (除非当前是小窗模式)
@@ -88,6 +83,10 @@ switch (url.host) {
     })
     // 立即将弹幕框移至播放器下方一次
     bottomCenter.replaceChildren(danmaku)
+    // 默认顶栏
+    const header = document.getElementById('biliMainHeader')
+    // 将bilibili-evolved自定义顶栏插入默认顶栏后
+    observeFor('custom-navbar', document.body).then(nav => header?.append(nav))
 
     console.info('宽屏模式成功启用')
     // #endregion
@@ -95,9 +94,9 @@ switch (url.host) {
   }
   case 't.bilibili.com':
     GM_addStyle(styles.t)
-    waitFor(() => document.getElementsByClassName('right')[0], '动态右栏').then(right => {
-      right.prepend(...document.getElementsByClassName('left')[0]?.childNodes ?? [])
-    })
+    waitFor(() => document.getElementsByClassName('right')[0], '动态右栏').then(right =>
+      right.prepend(...document.getElementsByClassName('left')[0]?.childNodes ?? []),
+    )
     console.info('使用动态样式')
     break
   case 'space.bilibili.com':

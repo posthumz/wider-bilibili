@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wider Bilibili
 // @namespace    https://greasyfork.org/users/1125570
-// @version      0.4.1
+// @version      0.4.1.1
 // @author       posthumz
 // @description  哔哩哔哩宽屏体验
 // @license      MIT
@@ -147,7 +147,7 @@
 .video-container-v1,
 .main-container,
 .playlist-container {
-  padding: 0 var(--layout-padding);
+  padding: 0 var(--layout-padding) !important;
 }
 
 .left-container,
@@ -316,7 +316,8 @@
 }`,
     search: `/* 搜索页 */
 .i_wrapper {
-  padding: 0 var(--layout-padding);
+  padding-left: var(--layout-padding) !important;
+  padding-right: var(--layout-padding) !important;
 }`,
     read: `/* 阅读页 */
 #app {
@@ -637,8 +638,11 @@ body {
     box-shadow: none;
     /* 修正小窗位置 */
     translate: 32px 40px;
+
     /* 以防竖屏视频超出：导航栏64px，上下各额外留8px */
-    max-height: calc(100vh - 80px);
+    video {
+      max-height: calc(100vh - 80px);
+    }
   }
 }
 
@@ -911,8 +915,6 @@ body {
         }
       }).observe(player);
       document.body.style.setProperty("--player-height", `${player.getBoundingClientRect().height}px`);
-      const header = document.getElementById("biliMainHeader");
-      observeFor("custom-navbar", document.body).then((nav) => header?.after(nav));
       const container = await( waitFor(() => player.getElementsByClassName("bpx-player-container")[0], "播放器内容器"));
       if (container.getAttribute("data-screen") !== "mini") {
         container.setAttribute("data-screen", "web");
@@ -954,14 +956,16 @@ body {
         }
       });
       bottomCenter.replaceChildren(danmaku);
+      const header = document.getElementById("biliMainHeader");
+      observeFor("custom-navbar", document.body).then((nav) => header?.append(nav));
       console.info("宽屏模式成功启用");
       break;
     }
     case "t.bilibili.com":
       GM_addStyle(styles.t);
-      waitFor(() => document.getElementsByClassName("right")[0], "动态右栏").then((right) => {
-        right.prepend(...document.getElementsByClassName("left")[0]?.childNodes ?? []);
-      });
+      waitFor(() => document.getElementsByClassName("right")[0], "动态右栏").then(
+        (right) => right.prepend(...document.getElementsByClassName("left")[0]?.childNodes ?? [])
+      );
       console.info("使用动态样式");
       break;
     case "space.bilibili.com":

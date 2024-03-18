@@ -124,7 +124,7 @@
 .video-container-v1,
 .main-container,
 .playlist-container {
-  padding: 0 var(--layout-padding);
+  padding: 0 var(--layout-padding) !important;
 }
 
 .left-container,
