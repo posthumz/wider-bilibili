@@ -12,6 +12,7 @@ import html from './pages/options.html?multiline'
 GM_addStyle(styles.options)
 
 type ValueChangeListener = Parameters<typeof GM_addValueChangeListener>[1]
+type Toggle = (enable: boolean) => void
 
 interface Option<T> {
   page: string
@@ -20,7 +21,7 @@ interface Option<T> {
   callback: (init: T) => ValueChangeListener
 }
 
-function toggleStyle(s: string, init = true, flip = false) {
+function styleToggle(s: string, init = true, flip = false): Toggle {
   if (flip) { init = !init }
   const style = GM_addStyle(s)
   if (!init) { style.disabled = true }
@@ -28,8 +29,9 @@ function toggleStyle(s: string, init = true, flip = false) {
     ? (enable: boolean) => { style.disabled = enable }
     : (enable: boolean) => { style.disabled = !enable }
 }
-function onStyleValueChange(toggle: ReturnType<typeof toggleStyle>): ValueChangeListener {
-  return (_k, _o, init) => toggle(init as boolean)
+
+function onStyleValueChange(toggle: Toggle): ValueChangeListener {
+  return (_k, _o, newVal) => toggle(newVal as boolean)
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -38,38 +40,58 @@ const options: Record<string, Option<any>> = {
     page: 'common',
     d: 30,
     callback: init => {
-      document.body.style.setProperty('--layout-padding', `${init}px`)
-      return (_k, _o, newVal) => document.body.style.setProperty('--layout-padding', `${newVal}px`)
+      document.documentElement.style.setProperty('--layout-padding', `${init}px`)
+      return (_k, _o, newVal) => document.documentElement.style.setProperty('--layout-padding', `${newVal}px`)
     },
   },
   导航栏下置: {
     page: 'video',
     d: true,
-    callback: init => onStyleValueChange(toggleStyle(styles.upperNavigation, init, true)),
+    callback: init => onStyleValueChange(styleToggle(styles.upperNavigation, init, true)),
+  },
+  显示观看信息: {
+    page: 'video',
+    d: true,
+    callback: init => onStyleValueChange(styleToggle('.bpx-player-video-info{display:flex!important}', init)),
   },
   小窗样式: {
     page: 'video',
     d: true,
     callback: init => {
-      const toggle1 = toggleStyle(styles.mini, init)
-      const toggle2 = toggleStyle('.bpx-player-container { --mini-width: initial !important }', init, true)
-      return onStyleValueChange(enable => { toggle1(enable); toggle2(enable) })
+      const toggle1 = styleToggle(styles.mini, init)
+      const toggle2 = styleToggle('.bpx-player-container { --mini-width: initial !important }', init, true)
+      return onStyleValueChange(enable => (toggle1(enable), toggle2(enable)))
+    },
+  },
+  自动高度: { // 也就是说，不会有上下黑边
+    page: 'video',
+    d: false,
+    callback: init => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const player = document.getElementById('bilibili-player')!
+      const observer = new ResizeObserver(entries => {
+        const height = entries[0]?.contentRect.height
+        if (height) { document.documentElement.style.setProperty('--player-height', `${height}px`) }
+      })
+      const toggle = styleToggle(styles.autoHeight, init)
+      init && observer.observe(player)
+      return onStyleValueChange(enable => {
+        toggle(enable)
+        enable
+          ? observer.observe(player)
+          : observer.disconnect(), document.documentElement.style.removeProperty('--player-height')
+      })
     },
   },
   调节控件间距: {
     page: 'video',
     d: true,
-    callback: init => onStyleValueChange(toggleStyle(styles.controls, init)),
+    callback: init => onStyleValueChange(styleToggle(styles.controls, init)),
   },
   暂停显示控件: {
     page: 'video',
     d: false,
-    callback: init => onStyleValueChange(toggleStyle(styles.pauseShow, init)),
-  },
-  显示观看信息: {
-    page: 'video',
-    d: true,
-    callback: init => onStyleValueChange(toggleStyle('.bpx-player-video-info{display:flex!important}', init)),
+    callback: init => onStyleValueChange(styleToggle(styles.pauseShow, init)),
   },
 }
 
@@ -116,6 +138,7 @@ waitReady().then(() => {
   document.addEventListener('keyup', ev => {
     const { key } = ev
     if (key === comb[1] && modifiers.every(mod => comb[0].includes(mod) === ev[mod])) {
+      ev.stopImmediatePropagation()
       ev.stopPropagation()
       app.style.display = app.style.display === 'none' ? 'flex' : 'none'
     }

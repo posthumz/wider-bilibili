@@ -30,13 +30,6 @@ switch (url.host) {
     const player = document.getElementById('bilibili-player')
     if (!player) { style.remove(); break }
 
-    // 自动高度 (也就是说，不会有上下黑边)
-    new ResizeObserver(entries => {
-      const height = entries[0]?.contentRect.height
-      if (height) { document.body.style.setProperty('--player-height', `${height}px`) }
-    }).observe(player)
-    document.body.style.setProperty('--player-height', `${player.getBoundingClientRect().height}px`)
-
     // 播放器内容器 (番剧页面需要额外等待)
     const container = await waitFor(() => player.getElementsByClassName('bpx-player-container')[0], '播放器内容器') as HTMLDivElement
     // 立即使用宽屏样式 (除非当前是小窗模式)

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wider Bilibili
 // @namespace    https://greasyfork.org/users/1125570
-// @version      0.4.1.1
+// @version      0.4.1.2
 // @author       posthumz
 // @description  哔哩哔哩宽屏体验
 // @license      MIT
@@ -25,7 +25,6 @@
 :root {
   --navbar-height: 64px;
   --player-height: 100vh;
-  --player-max-height: 100vh;
 }
 
 #playerWrap.player-wrap,
@@ -34,13 +33,13 @@
   left: 0;
   right: 0;
   top: 0;
-  height: fit-content;
+  height: var(--player-height);
   /* 番剧页加载时播放器会有右填充 */
   padding-right: 0;
 }
 
 #bilibili-player {
-  height: auto !important;
+  height: 100% !important;
   width: 100% !important;
   box-shadow: none !important;
 
@@ -66,15 +65,9 @@
   height: var(--player-height);
 }
 
-/* 限制高度上限100vh */
-.bpx-player-video-area,
-.bpx-player-video-wrap>video {
-  max-height: var(--player-max-height);
-}
-
 /* 加载时强制占用全屏 */
 .bpx-player-video-area:has(>.bpx-state-loading) video {
-  min-height: var(--player-max-height);
+  min-height: var(--player-height);
 }
 
 /* 加载动画强制显示 */
@@ -161,15 +154,19 @@
   /* 番剧页加载时不会先使用sticky */
 }
 
-/* 番剧/影视页下方容器 */
+/* 番剧页下方容器 */
 .main-container {
   width: 100%;
-  margin: 0;
-  padding-top: 15px;
+  margin: 0 !important;
   padding-left: var(--layout-padding);
   padding-right: var(--layout-padding);
   box-sizing: border-box;
   display: flex;
+
+  /* 番剧页右下方浮动按钮位置 */
+  &>:last-child[class^=navTools_floatNavExp] {
+    z-index: 2 !important;
+  }
 }
 
 .player-left-components {
@@ -180,11 +177,13 @@
   padding-top: 0;
 }
 
-/* 视频标题换行显示 */
-#viewbox_report {
+/* 视频标题自动高度 */
+#viewbox_report,
+.video-info-container {
   height: auto;
 }
 
+/* 视频标题换行显示 */
 .video-title {
   white-space: normal !important;
 }
@@ -198,11 +197,6 @@
 /* 笔记浮窗 */
 .note-pc {
   z-index: 114514 !important;
-}
-
-/* 番剧页右下方浮动按钮修正 */
-.main-container>:last-child[class^=navTools_floatNavExp] {
-  z-index: 2 !important;
 }
 
 /* Bilibili Evolved侧栏 */
@@ -582,7 +576,7 @@ body {
 }`,
     upperNavigation: `/* 导航栏上置 (默认下置) */
 :root {
-  --player-max-height: calc(100vh - var(--navbar-height));
+  --player-height: calc(100vh - var(--navbar-height));
 }
 
 #biliMainHeader {
@@ -706,6 +700,21 @@ body {
   .bpx-player-video-inputbar-wrap {
     width: auto;
   }
+}`,
+    autoHeight: `/* 自适应高度 */
+#playerWrap.player-wrap,
+#bilibili-player-wrap {
+  height: fit-content;
+}
+
+#bilibili-player {
+  height: auto !important;
+}
+
+/* 限制高度上限100vh */
+.bpx-player-video-area,
+.bpx-player-video-wrap>video {
+  max-height: 100vh;
 }`
   };
   function waitFor(loaded, desc = "页面加载", retry = 100, interval = 100) {
@@ -776,13 +785,14 @@ body {
   <fieldset data-title="播放器">
     <label><input type="checkbox" />导航栏下置</label>
     <label data-hint="试试拉一下小窗左侧？"><input type="checkbox" />小窗样式</label>
+    <label data-hint="在线人数/弹幕数"><input type="checkbox" />显示观看信息</label>
+    <label data-hint="播放器无上下黑边"><input type="checkbox" />自动高度</label>
     <label><input type="checkbox" />调节控件间距</label>
     <label data-hint="默认检测到鼠标活动显示控件&#10;需要一直显示请打开此选项/"><input type="checkbox">暂停显示控件</label>
-    <label data-hint="在线人数/弹幕数"><input type="checkbox" />显示观看信息</label>
   </fieldset>
 </div>`;
   GM_addStyle(styles.options);
-  function toggleStyle(s, init = true, flip = false) {
+  function styleToggle(s, init = true, flip = false) {
     if (flip) {
       init = !init;
     }
@@ -797,48 +807,65 @@ body {
     };
   }
   function onStyleValueChange(toggle) {
-    return (_k, _o, init) => toggle(init);
+    return (_k, _o, newVal) => toggle(newVal);
   }
   const options = {
     左右边距: {
       page: "common",
       d: 30,
       callback: (init) => {
-        document.body.style.setProperty("--layout-padding", `${init}px`);
-        return (_k, _o, newVal) => document.body.style.setProperty("--layout-padding", `${newVal}px`);
+        document.documentElement.style.setProperty("--layout-padding", `${init}px`);
+        return (_k, _o, newVal) => document.documentElement.style.setProperty("--layout-padding", `${newVal}px`);
       }
     },
     导航栏下置: {
       page: "video",
       d: true,
-      callback: (init) => onStyleValueChange(toggleStyle(styles.upperNavigation, init, true))
+      callback: (init) => onStyleValueChange(styleToggle(styles.upperNavigation, init, true))
+    },
+    显示观看信息: {
+      page: "video",
+      d: true,
+      callback: (init) => onStyleValueChange(styleToggle(".bpx-player-video-info{display:flex!important}", init))
     },
     小窗样式: {
       page: "video",
       d: true,
       callback: (init) => {
-        const toggle1 = toggleStyle(styles.mini, init);
-        const toggle2 = toggleStyle(".bpx-player-container { --mini-width: initial !important }", init, true);
+        const toggle1 = styleToggle(styles.mini, init);
+        const toggle2 = styleToggle(".bpx-player-container { --mini-width: initial !important }", init, true);
+        return onStyleValueChange((enable) => (toggle1(enable), toggle2(enable)));
+      }
+    },
+    自动高度: {
+      // 也就是说，不会有上下黑边
+      page: "video",
+      d: false,
+      callback: (init) => {
+        const player = document.getElementById("bilibili-player");
+        const observer = new ResizeObserver((entries) => {
+          const height = entries[0]?.contentRect.height;
+          if (height) {
+            document.documentElement.style.setProperty("--player-height", `${height}px`);
+          }
+        });
+        const toggle = styleToggle(styles.autoHeight, init);
+        init && observer.observe(player);
         return onStyleValueChange((enable) => {
-          toggle1(enable);
-          toggle2(enable);
+          toggle(enable);
+          enable ? observer.observe(player) : observer.disconnect(), document.documentElement.style.removeProperty("--player-height");
         });
       }
     },
     调节控件间距: {
       page: "video",
       d: true,
-      callback: (init) => onStyleValueChange(toggleStyle(styles.controls, init))
+      callback: (init) => onStyleValueChange(styleToggle(styles.controls, init))
     },
     暂停显示控件: {
       page: "video",
       d: false,
-      callback: (init) => onStyleValueChange(toggleStyle(styles.pauseShow, init))
-    },
-    显示观看信息: {
-      page: "video",
-      d: true,
-      callback: (init) => onStyleValueChange(toggleStyle(".bpx-player-video-info{display:flex!important}", init))
+      callback: (init) => onStyleValueChange(styleToggle(styles.pauseShow, init))
     }
   };
   function activate(targetPage) {
@@ -880,6 +907,7 @@ body {
     document.addEventListener("keyup", (ev) => {
       const { key } = ev;
       if (key === comb[1] && modifiers.every((mod) => comb[0].includes(mod) === ev[mod])) {
+        ev.stopImmediatePropagation();
         ev.stopPropagation();
         app.style.display = app.style.display === "none" ? "flex" : "none";
       }
@@ -908,13 +936,6 @@ body {
         style.remove();
         break;
       }
-      new ResizeObserver((entries) => {
-        const height = entries[0]?.contentRect.height;
-        if (height) {
-          document.body.style.setProperty("--player-height", `${height}px`);
-        }
-      }).observe(player);
-      document.body.style.setProperty("--player-height", `${player.getBoundingClientRect().height}px`);
       const container = await( waitFor(() => player.getElementsByClassName("bpx-player-container")[0], "播放器内容器"));
       if (container.getAttribute("data-screen") !== "mini") {
         container.setAttribute("data-screen", "web");
