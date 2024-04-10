@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wider Bilibili
 // @namespace    https://greasyfork.org/users/1125570
-// @version      0.4.1.2
+// @version      0.4.1.3
 // @author       posthumz
 // @description  哔哩哔哩宽屏体验
 // @license      MIT
@@ -61,13 +61,24 @@
   }
 }
 
+/* 限制高度上限100vh */
+.bpx-player-video-area,
+.bpx-player-video-wrap>video {
+  max-height: 100vh;
+}
+
 #bilibili-player-wrap .bpx-docker:has(>.bpx-player-container[data-screen="mini"]) {
   height: var(--player-height);
 }
 
 /* 加载时强制占用全屏 */
 .bpx-player-video-area:has(>.bpx-state-loading) video {
-  min-height: var(--player-height);
+  min-height: 100vh;
+}
+
+/* 这啥? */
+.bpx-player-cmd-dm-wrap {
+  display: none;
 }
 
 /* 加载动画强制显示 */
@@ -85,12 +96,6 @@
 /* 不然会鬼畜 */
 .bpx-player-top-mask {
   transition-property: none !important;
-}
-
-/* 弹幕发送框区域 */
-.bpx-player-sending-bar {
-  background-color: transparent !important;
-  width: fit-content !important;
 }
 
 /* 原弹幕发送区域不显示 */
@@ -114,17 +119,21 @@
   z-index: 100;
 }
 
-.custom-navbar {
-  position: sticky !important;
-  z-index: 3 !important;
-}
-
 .bili-header.fixed-header {
   min-height: initial !important;
+  min-width: initial !important;
 }
 
 .bili-header__bar {
   position: relative !important;
+}
+
+.custom-navbar {
+  z-index: 3 !important;
+}
+
+#biliMainHeader>.custom-navbar {
+  position: relative;
 }
 
 /* 使用 static 才能让播放器的 absolute 正确定位 */
@@ -141,6 +150,7 @@
 .main-container,
 .playlist-container {
   padding: 0 var(--layout-padding) !important;
+  min-width: initial !important;
 }
 
 .left-container,
@@ -164,7 +174,7 @@
   display: flex;
 
   /* 番剧页右下方浮动按钮位置 */
-  &>:last-child[class^=navTools_floatNavExp] {
+  >:last-child[class^=navTools_floatNavExp] {
     z-index: 2 !important;
   }
 }
@@ -203,44 +213,54 @@
 .be-settings .sidebar {
   z-index: 114514 !important;
 }`,
-    t: `/* 动态页 */
-.bili-dyn-home--member {
-  margin: 0 var(--layout-padding) !important;
+    t: `#app {
 
-  .left {
-    display: none;
+  /* 单个动态 */
+  >.bg+.content {
+    width: auto;
+    margin: 10px 0;
+
+    >.card {
+      margin: 0 var(--layout-padding)
+    }
+
+    >.sidebar-wrap {
+      right: 58px;
+      margin-right: var(--layout-padding);
+    }
   }
 
-  main {
-    flex: 1
-  }
-}
+  /* 动态页 */
+  >.bili-dyn-home--member {
+    margin: 0 var(--layout-padding);
 
-/* 单个动态 */
-#app .bg+.content {
-  width: auto;
-  margin: 10px 0;
+    .left {
+      display: none;
+    }
 
-  >.card {
-    margin: 0 var(--layout-padding)
-  }
+    main {
+      flex: 1
+    }
 
-  >.sidebar-wrap {
-    right: 58px;
-    margin-right: var(--layout-padding);
+    .bili-dyn-sidebar {
+      right: var(--layout-padding);
+      transform: none;
+    }
   }
 }`,
     space: `/* 空间页 */
-.wrapper,
-.search-page {
-  width: auto !important;
-  margin: 0 var(--layout-padding) !important;
+#app {
+  margin: 0 var(--layout-padding);
 }
 
-/* 视频卡片 */
-.small-item {
-  padding-left: 10px !important;
-  padding-right: 10px !important;
+#biliMainHeader {
+  height: initial !important;
+}
+
+div.wrapper,
+.search-page {
+  width: auto !important;
+  margin: 0;
 }
 
 /* 主页, 动态 */
@@ -258,29 +278,48 @@
   .col-1 {
     flex: 1;
 
-    >.video>.content {
-      display: flex;
-      flex-wrap: wrap;
+    /* 视频卡片 */
+    .small-item {
+      float: none;
+      display: inline-block !important;
+      padding: 10px !important;
+      scroll-snap-align: start;
     }
 
-    .section.coin>.content {
-      display: flex;
-      flex-wrap: wrap;
-      margin: 0;
-      width: auto !important;
+    #i-masterpiece .small-item {
+      padding-top: 0 !important;
     }
-  }
 
-  .channel>.content {
-    width: auto !important;
+    /* 投稿、投币、点赞 */
+    >:is(.video, .coin)>.content {
+      margin: 0 -10px;
+      overflow-y: auto;
+      scroll-snap-type: y mandatory;
 
-    .channel-video {
-      overflow-x: auto;
+      &::before,
+      &::after {
+        content: none;
+      }
     }
-  }
 
-  .fav-item {
-    margin-right: 20px !important;
+    .section>.content {
+      width: fit-content !important;
+      max-width: 100%;
+
+      .channel-video {
+        margin: 0 -10px;
+        overflow-x: auto !important;
+        scroll-snap-type: x mandatory;
+      }
+    }
+
+    .article-content {
+      width: calc(100% - 135px);
+    }
+
+    .fav-item {
+      margin-right: 20px !important;
+    }
   }
 }
 
@@ -302,7 +341,20 @@
 
 /* 合集 */
 .channel-index {
-  width: 100% !important;
+  width: auto !important;
+
+  .channel-list {
+    gap: 20px;
+
+    &::before,
+    &::after {
+      content: none;
+    }
+
+    .channel-item {
+      margin: 0 !important;
+    }
+  }
 }
 
 .feed-dynamic {
@@ -330,6 +382,18 @@
     }
   }
 }`,
+    message: `#message-navbar {
+  display: none;
+}
+
+.container {
+  max-width: initial !important;
+  width: auto !important;
+}
+
+.space-right-top {
+  padding-top: 0 !important;
+}`,
     home: `/* 首页 */
 .feed-card,
 .floor-single-card,
@@ -338,8 +402,8 @@
 }
 
 .feed-roll-btn {
-  /* 右下角已有刷新按键，何必呢 */
-  display: none;
+  left: unset !important;
+  right: 0;
 }
 
 .palette-button-wrap {
@@ -589,7 +653,6 @@ body {
 #playerWrap.player-wrap,
 #bilibili-player-wrap {
   top: var(--navbar-height);
-  height: var(--player-height) !important;
 }`,
     pauseShow: `/* 暂停显示控件 */
 .bpx-state-paused {
@@ -651,7 +714,7 @@ body {
 .bpx-player-control-bottom {
   padding: 0 20px !important;
 
-  &>* {
+  >* {
     flex: initial !important;
   }
 
@@ -696,25 +759,25 @@ body {
     text-indent: 0 !important;
   }
 
-  /*  */
+  /* 弹幕发送框区域 */
+  .bpx-player-sending-bar {
+    background-color: transparent !important;
+    max-width: 90% !important;
+  }
+
+  .bpx-player-video-inputbar {
+    max-width: initial !important;
+  }
+
   .bpx-player-video-inputbar-wrap {
     width: auto;
   }
 }`,
     autoHeight: `/* 自适应高度 */
 #playerWrap.player-wrap,
-#bilibili-player-wrap {
-  height: fit-content;
-}
-
+#bilibili-player-wrap,
 #bilibili-player {
-  height: auto !important;
-}
-
-/* 限制高度上限100vh */
-.bpx-player-video-area,
-.bpx-player-video-wrap>video {
-  max-height: 100vh;
+  height: fit-content !important;
 }`
   };
   function waitFor(loaded, desc = "页面加载", retry = 100, interval = 100) {
@@ -888,6 +951,9 @@ body {
         continue;
       }
       const option = options[key];
+      if (!option) {
+        continue;
+      }
       switch (input.type) {
         case "checkbox":
           input.checked = GM_getValue(key, option.d);
@@ -930,12 +996,12 @@ body {
       }
       const style = GM_addStyle(styles.video);
       await( waitReady());
-      activate("video");
       const player = document.getElementById("bilibili-player");
       if (!player) {
         style.remove();
         break;
       }
+      activate("video");
       const container = await( waitFor(() => player.getElementsByClassName("bpx-player-container")[0], "播放器内容器"));
       if (container.getAttribute("data-screen") !== "mini") {
         container.setAttribute("data-screen", "web");
@@ -951,6 +1017,8 @@ body {
         const resize = (ev2) => {
           container.style.setProperty("--mini-width", `${Math.max(container.offsetWidth + container.getBoundingClientRect().x - ev2.x + 5, 0)}px`);
         };
+        if (ev.button !== 0)
+          return;
         document.addEventListener("mousemove", resize);
         document.addEventListener("mouseup", () => document.removeEventListener("mousemove", resize), { once: true });
       };
@@ -971,11 +1039,7 @@ body {
         console.error("页面加载错误：弹幕框不存在");
         break;
       }
-      document.addEventListener("fullscreenchange", () => {
-        if (!document.fullscreenElement) {
-          bottomCenter.replaceChildren(danmaku);
-        }
-      });
+      document.addEventListener("fullscreenchange", () => document.fullscreenElement || bottomCenter.replaceChildren(danmaku));
       bottomCenter.replaceChildren(danmaku);
       const header = document.getElementById("biliMainHeader");
       observeFor("custom-navbar", document.body).then((nav) => header?.append(nav));
@@ -992,6 +1056,10 @@ body {
     case "space.bilibili.com":
       GM_addStyle(styles.space);
       console.info("使用空间样式");
+      break;
+    case "message.bilibili.com":
+      GM_addStyle(styles.message);
+      console.info("使用通知样式");
       break;
     case "search.bilibili.com":
       GM_addStyle(styles.search);

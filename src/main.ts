@@ -26,9 +26,9 @@ switch (url.host) {
     const style = GM_addStyle(styles.video)
     // 等待页面加载完成，因为使用了run-at document-body
     await waitReady()
-    activate('video')
     const player = document.getElementById('bilibili-player')
     if (!player) { style.remove(); break }
+    activate('video')
 
     // 播放器内容器 (番剧页面需要额外等待)
     const container = await waitFor(() => player.getElementsByClassName('bpx-player-container')[0], '播放器内容器') as HTMLDivElement
@@ -51,6 +51,7 @@ switch (url.host) {
           Math.max(container.offsetWidth + container.getBoundingClientRect().x - ev.x + 5, 0) // 不设为<0的无效值
         }px`)
       }
+      if (ev.button !== 0) return
       document.addEventListener('mousemove', resize)
       document.addEventListener('mouseup', () => document.removeEventListener('mousemove', resize), { once: true })
     }
@@ -71,11 +72,10 @@ switch (url.host) {
     }
 
     // 退出全屏时弹幕框移至播放器下方
-    document.addEventListener('fullscreenchange', () => {
-      if (!document.fullscreenElement) { bottomCenter.replaceChildren(danmaku) }
-    })
+    document.addEventListener('fullscreenchange', () => document.fullscreenElement || bottomCenter.replaceChildren(danmaku))
     // 立即将弹幕框移至播放器下方一次
     bottomCenter.replaceChildren(danmaku)
+
     // 默认顶栏
     const header = document.getElementById('biliMainHeader')
     // 将bilibili-evolved自定义顶栏插入默认顶栏后
@@ -95,6 +95,10 @@ switch (url.host) {
   case 'space.bilibili.com':
     GM_addStyle(styles.space)
     console.info('使用空间样式')
+    break
+  case 'message.bilibili.com':
+    GM_addStyle(styles.message)
+    console.info('使用通知样式')
     break
   case 'search.bilibili.com':
     GM_addStyle(styles.search)

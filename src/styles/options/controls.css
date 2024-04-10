@@ -2,7 +2,7 @@
 .bpx-player-control-bottom {
   padding: 0 20px !important;
 
-  &>* {
+  >* {
     flex: initial !important;
   }
 
@@ -47,7 +47,16 @@
     text-indent: 0 !important;
   }
 
-  /*  */
+  /* 弹幕发送框区域 */
+  .bpx-player-sending-bar {
+    background-color: transparent !important;
+    max-width: 90% !important;
+  }
+
+  .bpx-player-video-inputbar {
+    max-width: initial !important;
+  }
+
   .bpx-player-video-inputbar-wrap {
     width: auto;
   }

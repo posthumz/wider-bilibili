@@ -1,27 +1,35 @@
-/* 动态页 */
-.bili-dyn-home--member {
-  margin: 0 var(--layout-padding) !important;
+#app {
 
-  .left {
-    display: none;
+  /* 单个动态 */
+  >.bg+.content {
+    width: auto;
+    margin: 10px 0;
+
+    >.card {
+      margin: 0 var(--layout-padding)
+    }
+
+    >.sidebar-wrap {
+      right: 58px;
+      margin-right: var(--layout-padding);
+    }
   }
 
-  main {
-    flex: 1
-  }
-}
+  /* 动态页 */
+  >.bili-dyn-home--member {
+    margin: 0 var(--layout-padding);
 
-/* 单个动态 */
-#app .bg+.content {
-  width: auto;
-  margin: 10px 0;
+    .left {
+      display: none;
+    }
 
-  >.card {
-    margin: 0 var(--layout-padding)
-  }
+    main {
+      flex: 1
+    }
 
-  >.sidebar-wrap {
-    right: 58px;
-    margin-right: var(--layout-padding);
+    .bili-dyn-sidebar {
+      right: var(--layout-padding);
+      transform: none;
+    }
   }
 }

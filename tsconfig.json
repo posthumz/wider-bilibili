@@ -14,6 +14,7 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "noUncheckedIndexedAccess": true,
     "sourceMap": true,
   },
   "include": [ "src" ]

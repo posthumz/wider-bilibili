@@ -13,5 +13,4 @@
 #playerWrap.player-wrap,
 #bilibili-player-wrap {
   top: var(--navbar-height);
-  height: var(--player-height) !important;
 }

@@ -117,6 +117,7 @@ waitReady().then(() => {
     const key = input.parentElement?.textContent
     if (!key) { continue }
     const option = options[key]
+    if (!option) { continue }
     switch (input.type) {
       case 'checkbox':
         input.checked = GM_getValue(key, option.d)

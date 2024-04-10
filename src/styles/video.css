@@ -38,13 +38,24 @@
   }
 }
 
+/* 限制高度上限100vh */
+.bpx-player-video-area,
+.bpx-player-video-wrap>video {
+  max-height: 100vh;
+}
+
 #bilibili-player-wrap .bpx-docker:has(>.bpx-player-container[data-screen="mini"]) {
   height: var(--player-height);
 }
 
 /* 加载时强制占用全屏 */
 .bpx-player-video-area:has(>.bpx-state-loading) video {
-  min-height: var(--player-height);
+  min-height: 100vh;
+}
+
+/* 这啥? */
+.bpx-player-cmd-dm-wrap {
+  display: none;
 }
 
 /* 加载动画强制显示 */
@@ -62,12 +73,6 @@
 /* 不然会鬼畜 */
 .bpx-player-top-mask {
   transition-property: none !important;
-}
-
-/* 弹幕发送框区域 */
-.bpx-player-sending-bar {
-  background-color: transparent !important;
-  width: fit-content !important;
 }
 
 /* 原弹幕发送区域不显示 */
@@ -91,17 +96,21 @@
   z-index: 100;
 }
 
-.custom-navbar {
-  position: sticky !important;
-  z-index: 3 !important;
-}
-
 .bili-header.fixed-header {
   min-height: initial !important;
+  min-width: initial !important;
 }
 
 .bili-header__bar {
   position: relative !important;
+}
+
+.custom-navbar {
+  z-index: 3 !important;
+}
+
+#biliMainHeader>.custom-navbar {
+  position: relative;
 }
 
 /* 使用 static 才能让播放器的 absolute 正确定位 */
@@ -118,6 +127,7 @@
 .main-container,
 .playlist-container {
   padding: 0 var(--layout-padding) !important;
+  min-width: initial !important;
 }
 
 .left-container,
@@ -141,7 +151,7 @@
   display: flex;
 
   /* 番剧页右下方浮动按钮位置 */
-  &>:last-child[class^=navTools_floatNavExp] {
+  >:last-child[class^=navTools_floatNavExp] {
     z-index: 2 !important;
   }
 }

@@ -6,8 +6,8 @@
 }
 
 .feed-roll-btn {
-  /* 右下角已有刷新按键，何必呢 */
-  display: none;
+  left: unset !important;
+  right: 0;
 }
 
 .palette-button-wrap {

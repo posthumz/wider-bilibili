@@ -1,14 +1,16 @@
 /* 空间页 */
-.wrapper,
-.search-page {
-  width: auto !important;
-  margin: 0 var(--layout-padding) !important;
+#app {
+  margin: 0 var(--layout-padding);
 }
 
-/* 视频卡片 */
-.small-item {
-  padding-left: 10px !important;
-  padding-right: 10px !important;
+#biliMainHeader {
+  height: initial !important;
+}
+
+div.wrapper,
+.search-page {
+  width: auto !important;
+  margin: 0;
 }
 
 /* 主页, 动态 */
@@ -26,29 +28,48 @@
   .col-1 {
     flex: 1;
 
-    >.video>.content {
-      display: flex;
-      flex-wrap: wrap;
+    /* 视频卡片 */
+    .small-item {
+      float: none;
+      display: inline-block !important;
+      padding: 10px !important;
+      scroll-snap-align: start;
     }
 
-    .section.coin>.content {
-      display: flex;
-      flex-wrap: wrap;
-      margin: 0;
-      width: auto !important;
+    #i-masterpiece .small-item {
+      padding-top: 0 !important;
     }
-  }
 
-  .channel>.content {
-    width: auto !important;
+    /* 投稿、投币、点赞 */
+    >:is(.video, .coin)>.content {
+      margin: 0 -10px;
+      overflow-y: auto;
+      scroll-snap-type: y mandatory;
 
-    .channel-video {
-      overflow-x: auto;
+      &::before,
+      &::after {
+        content: none;
+      }
     }
-  }
 
-  .fav-item {
-    margin-right: 20px !important;
+    .section>.content {
+      width: fit-content !important;
+      max-width: 100%;
+
+      .channel-video {
+        margin: 0 -10px;
+        overflow-x: auto !important;
+        scroll-snap-type: x mandatory;
+      }
+    }
+
+    .article-content {
+      width: calc(100% - 135px);
+    }
+
+    .fav-item {
+      margin-right: 20px !important;
+    }
   }
 }
 
@@ -70,7 +91,20 @@
 
 /* 合集 */
 .channel-index {
-  width: 100% !important;
+  width: auto !important;
+
+  .channel-list {
+    gap: 20px;
+
+    &::before,
+    &::after {
+      content: none;
+    }
+
+    .channel-item {
+      margin: 0 !important;
+    }
+  }
 }
 
 .feed-dynamic {
