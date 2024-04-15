@@ -278,39 +278,67 @@ div.wrapper,
   .col-1 {
     flex: 1;
 
-    /* 视频卡片 */
-    .small-item {
-      float: none;
-      display: inline-block !important;
-      padding: 10px !important;
-      scroll-snap-align: start;
-    }
-
     #i-masterpiece .small-item {
       padding-top: 0 !important;
     }
 
-    /* 投稿、投币、点赞 */
-    >:is(.video, .coin)>.content {
-      margin: 0 -10px;
-      overflow-y: auto;
-      scroll-snap-type: y mandatory;
-
-      &::before,
-      &::after {
-        content: none;
+    .section {
+      >.content {
+        width: auto;
       }
-    }
 
-    .section>.content {
-      width: fit-content !important;
-      max-width: 100%;
-
+      /* 投稿、投币、点赞 */
+      &:is(.video, .coin)>.content,
       .channel-video {
         margin: 0 -10px;
-        overflow-x: auto !important;
-        scroll-snap-type: x mandatory;
+        overflow: auto;
+        scroll-snap-type: both mandatory;
+
+        /* 视频卡片 */
+        .small-item {
+          padding: 10px !important;
+          scroll-snap-align: start;
+        }
+
+        &::after {
+          content: none;
+        }
       }
+
+      &.video>.content {
+        flex-wrap: wrap;
+      }
+
+      &.fav>.content {
+        margin: -10px;
+
+        >.fav-item {
+          margin: 14px 10px;
+        }
+      }
+
+      &.bangumi>.content>.large-item {
+        margin-right: 0;
+      }
+
+      /* 合集 */
+      .channel-index {
+        width: auto !important;
+
+        .channel-list {
+          gap: 20px;
+
+          &::before,
+          &::after {
+            content: none;
+          }
+
+          .channel-item {
+            margin: 0 !important;
+          }
+        }
+      }
+
     }
 
     .article-content {
@@ -339,20 +367,35 @@ div.wrapper,
   }
 }
 
-/* 合集 */
-.channel-index {
-  width: auto !important;
+/* 收藏夹, 关注 */
+#page-fav,
+#page-follow {
+  .col-full {
+    display: flex !important;
 
-  .channel-list {
-    gap: 20px;
-
-    &::before,
-    &::after {
-      content: none;
+    .fav-main,
+    .follow-main {
+      flex: 1;
     }
+  }
 
-    .channel-item {
-      margin: 0 !important;
+  .fav-video-list.content {
+    margin: 10px;
+
+    >.small-item {
+      margin: 10px !important;
+    }
+  }
+}
+
+/* 追番 */
+#page-bangumi,
+#page-pgc {
+  .section>.content {
+    width: initial;
+
+    .pgc-space-follow-page {
+      padding-left: 0;
     }
   }
 }
@@ -411,7 +454,7 @@ div.wrapper,
   right: 30px;
 }`,
     common: `/* This overrides :root style */
-body {
+html {
   --layout-padding: 30px;
 }
 

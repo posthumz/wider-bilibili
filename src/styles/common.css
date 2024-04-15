@@ -1,5 +1,5 @@
 /* This overrides :root style */
-body {
+html {
   --layout-padding: 30px;
 }
 
