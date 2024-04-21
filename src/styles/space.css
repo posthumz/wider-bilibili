@@ -41,7 +41,7 @@ div.wrapper,
       &:is(.video, .coin)>.content,
       .channel-video {
         margin: 0 -10px;
-        overflow: auto;
+        overflow: auto !important;
         scroll-snap-type: both mandatory;
 
         /* 视频卡片 */

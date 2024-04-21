@@ -41,15 +41,17 @@ switch (url.host) {
     })
 
     // 添加拖动调整大小的部件
+    GM_addValueChangeListener('小窗宽度', (_k, _o, newVal) =>
+      container.style.setProperty('--mini-width', `${newVal}px`),
+    )
     const miniResizer = document.createElement('div')
     miniResizer.className = 'bpx-player-mini-resizer'
     miniResizer.onmousedown = ev => {
       ev.stopImmediatePropagation()
       ev.preventDefault()
       const resize = (ev: MouseEvent) => {
-        container.style.setProperty('--mini-width', `${
-          Math.max(container.offsetWidth + container.getBoundingClientRect().x - ev.x + 5, 0) // 不设为<0的无效值
-        }px`)
+        const miniWidth = Math.max(container.offsetWidth + container.getBoundingClientRect().x - ev.x + 5, 0) // 不设为<0的无效值
+        GM_setValue('小窗宽度', miniWidth)
       }
       if (ev.button !== 0) return
       document.addEventListener('mousemove', resize)

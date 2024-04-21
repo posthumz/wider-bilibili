@@ -10,7 +10,14 @@
   z-index: 114514;
 }
 
+
 #playerWrap.player-wrap,
 #bilibili-player-wrap {
   top: var(--navbar-height);
+}
+
+/* 限制高度上限 */
+.bpx-player-video-area,
+.bpx-player-video-wrap>video {
+  max-height: calc(100vh - var(--navbar-height));
 }

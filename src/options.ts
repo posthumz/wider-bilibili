@@ -18,7 +18,7 @@ interface Option<T> {
   page: string
   /** default, using d because `default` is a reserved word */
   d: T
-  callback: (init: T) => ValueChangeListener
+  callback: (init: T, elem?: HTMLElement) => ValueChangeListener
 }
 
 function styleToggle(s: string, init = true, flip = false): Toggle {
@@ -34,73 +34,92 @@ function onStyleValueChange(toggle: Toggle): ValueChangeListener {
   return (_k, _o, newVal) => toggle(newVal as boolean)
 }
 
+type Page = 'common' | 'video'
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const options: Record<string, Option<any>> = {
-  左右边距: {
-    page: 'common',
-    d: 30,
-    callback: init => {
-      document.documentElement.style.setProperty('--layout-padding', `${init}px`)
-      return (_k, _o, newVal) => document.documentElement.style.setProperty('--layout-padding', `${newVal}px`)
+const options: Record<Page, Record<string, Option<any>>> = {
+  common: {
+    左右边距: {
+      page: 'common',
+      d: 30,
+      callback: init => {
+        document.documentElement.style.setProperty('--layout-padding', `${init}px`)
+        return (_k, _o, newVal) => document.documentElement.style.setProperty('--layout-padding', `${newVal}px`)
+      },
     },
   },
-  导航栏下置: {
-    page: 'video',
-    d: true,
-    callback: init => onStyleValueChange(styleToggle(styles.upperNavigation, init, true)),
-  },
-  显示观看信息: {
-    page: 'video',
-    d: true,
-    callback: init => onStyleValueChange(styleToggle('.bpx-player-video-info{display:flex!important}', init)),
-  },
-  小窗样式: {
-    page: 'video',
-    d: true,
-    callback: init => {
-      const toggle1 = styleToggle(styles.mini, init)
-      const toggle2 = styleToggle('.bpx-player-container { --mini-width: initial !important }', init, true)
-      return onStyleValueChange(enable => (toggle1(enable), toggle2(enable)))
+  video: {
+    导航栏下置: {
+      page: 'video',
+      d: true,
+      callback: init => onStyleValueChange(styleToggle(styles.upperNavigation, init, true)),
     },
-  },
-  自动高度: { // 也就是说，不会有上下黑边
-    page: 'video',
-    d: false,
-    callback: init => {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const player = document.getElementById('bilibili-player')!
-      const observer = new ResizeObserver(entries => {
-        const height = entries[0]?.contentRect.height
-        if (height) { document.documentElement.style.setProperty('--player-height', `${height}px`) }
-      })
-      const toggle = styleToggle(styles.autoHeight, init)
-      init && observer.observe(player)
-      return onStyleValueChange(enable => {
-        toggle(enable)
-        enable
-          ? observer.observe(player)
-          : observer.disconnect(), document.documentElement.style.removeProperty('--player-height')
-      })
+    显示观看信息: {
+      page: 'video',
+      d: true,
+      callback: init => onStyleValueChange(styleToggle('.bpx-player-video-info{display:flex!important}', init)),
     },
-  },
-  调节控件间距: {
-    page: 'video',
-    d: true,
-    callback: init => onStyleValueChange(styleToggle(styles.controls, init)),
-  },
-  暂停显示控件: {
-    page: 'video',
-    d: false,
-    callback: init => onStyleValueChange(styleToggle(styles.pauseShow, init)),
+    小窗样式: {
+      page: 'video',
+      d: true,
+      callback: init => {
+        const toggle1 = styleToggle(styles.mini, init)
+        const toggle2 = styleToggle('.bpx-player-container { --mini-width: initial !important }', init, true)
+        return onStyleValueChange(enable => (toggle1(enable), toggle2(enable)))
+      },
+    },
+    小窗宽度: {
+      page: 'video',
+      d: 320,
+      callback: init => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const container = document.getElementsByClassName('bpx-player-container')[0]! as HTMLElement
+        container.style.setProperty('--mini-width', `${init}px`)
+        return (_k, _o, newVal) => container.style.setProperty('--mini-width', `${newVal}px`)
+      },
+    },
+    自动高度: { // 也就是说，不会有上下黑边
+      page: 'video',
+      d: false,
+      callback: init => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const player = document.getElementById('bilibili-player')!
+        const observer = new ResizeObserver(entries => {
+          const height = entries[0]?.contentRect.height
+          if (height) { document.documentElement.style.setProperty('--player-height', `${height}px`) }
+        })
+        const toggle = styleToggle(styles.autoHeight, init)
+        init && observer.observe(player)
+        return onStyleValueChange(enable => {
+          toggle(enable)
+          enable
+            ? observer.observe(player)
+            : observer.disconnect(), document.documentElement.style.removeProperty('--player-height')
+        })
+      },
+    },
+    调节控件间距: {
+      page: 'video',
+      d: true,
+      callback: init => onStyleValueChange(styleToggle(styles.controls, init)),
+    },
+    暂停显示控件: {
+      page: 'video',
+      d: false,
+      callback: init => onStyleValueChange(styleToggle(styles.pauseShow, init)),
+    },
   },
 }
 
 // 应用页面选项并监听变化
-export default function activate(targetPage: string) {
-  for (const [name, { page, d, callback }] of Object.entries(options)) {
-    page === targetPage && GM_addValueChangeListener(name, callback(GM_getValue(name, d)))
+export default function activate(page: Page) {
+  for (const [name, { d, callback }] of Object.entries(options[page])) {
+    GM_addValueChangeListener(name, callback(GM_getValue(name, d)))
   }
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const optionsFlat: Record<string, Option<any>> = { ...options.common, ...options.video }
 
 // 页面加载完成后插入设置选项
 waitReady().then(() => {
@@ -116,7 +135,7 @@ waitReady().then(() => {
   for (const input of app.getElementsByTagName('input')) {
     const key = input.parentElement?.textContent
     if (!key) { continue }
-    const option = options[key]
+    const option = optionsFlat[key]
     if (!option) { continue }
     switch (input.type) {
       case 'checkbox':
