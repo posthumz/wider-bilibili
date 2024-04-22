@@ -1,4 +1,4 @@
-import { GM_addStyle } from '$'
+import { GM_addStyle, GM_addValueChangeListener } from '$'
 import styles from './styles'
 import activate from './options'
 import { waitFor, observeFor, waitReady } from './utils'
@@ -39,6 +39,7 @@ switch (url.host) {
       apply: (target, thisArg, [name, val]) =>
         target.apply(thisArg, [name, name === 'data-screen' && val !== 'mini' ? 'web' : val]),
     })
+    // debugger
 
     // 添加拖动调整大小的部件
     GM_addValueChangeListener('小窗宽度', (_k, _o, newVal) =>

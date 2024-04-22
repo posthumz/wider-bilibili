@@ -68,16 +68,16 @@ const options: Record<Page, Record<string, Option<any>>> = {
         return onStyleValueChange(enable => (toggle1(enable), toggle2(enable)))
       },
     },
-    小窗宽度: {
-      page: 'video',
-      d: 320,
-      callback: init => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const container = document.getElementsByClassName('bpx-player-container')[0]! as HTMLElement
-        container.style.setProperty('--mini-width', `${init}px`)
-        return (_k, _o, newVal) => container.style.setProperty('--mini-width', `${newVal}px`)
-      },
-    },
+    // 小窗宽度: {
+    //   page: 'video',
+    //   d: 320,
+    //   callback: init => {
+    //     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    //     const container = document.getElementsByClassName('bpx-player-container')[0]! as HTMLElement
+    //     container.style.setProperty('--mini-width', `${init}px`)
+    //     return (_k, _o, newVal) => container.style.setProperty('--mini-width', `${newVal}px`)
+    //   },
+    // },
     自动高度: { // 也就是说，不会有上下黑边
       page: 'video',
       d: false,

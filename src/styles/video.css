@@ -138,6 +138,10 @@ body>.custom-navbar {
   min-width: initial !important;
 }
 
+.main-container {
+  padding-top: 15px !important;
+}
+
 .left-container,
 .plp-l,
 .playlist-container--left {
