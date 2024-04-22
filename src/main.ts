@@ -1,6 +1,6 @@
 import { GM_addStyle, GM_addValueChangeListener } from '$'
 import styles from './styles'
-import activate from './options'
+import listenOptions, { videoOptions } from './options'
 import { waitFor, observeFor, waitReady } from './utils'
 
 GM_addStyle(styles.common)
@@ -28,7 +28,7 @@ switch (url.host) {
     await waitReady()
     const player = document.getElementById('bilibili-player')
     if (!player) { style.remove(); break }
-    activate('video')
+    listenOptions(videoOptions)
 
     // 播放器内容器 (番剧页面需要额外等待)
     const container = await waitFor(() => player.getElementsByClassName('bpx-player-container')[0], '播放器内容器') as HTMLDivElement
@@ -39,12 +39,12 @@ switch (url.host) {
       apply: (target, thisArg, [name, val]) =>
         target.apply(thisArg, [name, name === 'data-screen' && val !== 'mini' ? 'web' : val]),
     })
-    // debugger
+
+    // 初始化以及监听小窗宽度选项
+    container.style.setProperty('--mini-width', `${GM_getValue('小窗宽度', 320)}px`)
+    GM_addValueChangeListener('小窗宽度', (_k, _o, newVal) => container.style.setProperty('--mini-width', `${newVal}px`))
 
     // 添加拖动调整大小的部件
-    GM_addValueChangeListener('小窗宽度', (_k, _o, newVal) =>
-      container.style.setProperty('--mini-width', `${newVal}px`),
-    )
     const miniResizer = document.createElement('div')
     miniResizer.className = 'bpx-player-mini-resizer'
     miniResizer.onmousedown = ev => {
@@ -52,7 +52,7 @@ switch (url.host) {
       ev.preventDefault()
       const resize = (ev: MouseEvent) => {
         const miniWidth = Math.max(container.offsetWidth + container.getBoundingClientRect().x - ev.x + 5, 0) // 不设为<0的无效值
-        GM_setValue('小窗宽度', miniWidth)
+        GM_setValue('小窗宽度', Math.round(miniWidth))
       }
       if (ev.button !== 0) return
       document.addEventListener('mousemove', resize)

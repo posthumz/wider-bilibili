@@ -73,7 +73,7 @@
 
 /* 加载时强制占用全屏 */
 .bpx-player-video-area:has(>.bpx-state-loading) video {
-  min-height: 100vh;
+  height: 100vh;
 }
 
 /* 这啥? */
@@ -126,7 +126,7 @@
       position: relative !important;
     }
 
-    /* 自定义顶栏加载后前，强制显示原生顶栏 */
+    /* 自定义顶栏加载前，强制显示原生顶栏 */
     &:not(:has(+.custom-navbar))>.bili-header__bar {
       display: flex !important;
     }
@@ -161,10 +161,6 @@ body>.custom-navbar {
   min-width: initial !important;
 }
 
-.main-container {
-  padding-top: 15px !important;
-}
-
 .left-container,
 .plp-l,
 .playlist-container--left {
@@ -172,20 +168,17 @@ body>.custom-navbar {
 }
 
 .plp-r {
-  position: sticky !important;
   /* 番剧页加载时不会先使用sticky */
+  position: sticky !important;
 }
 
 /* 番剧页下方容器 */
 .main-container {
   width: 100%;
-  margin: 0 !important;
-  padding-left: var(--layout-padding);
-  padding-right: var(--layout-padding);
   box-sizing: border-box;
   display: flex;
 
-  /* 番剧页右下方浮动按钮位置 */
+  /* 右下方浮动按钮位置 */
   >:last-child[class^=navTools_floatNavExp] {
     z-index: 2 !important;
   }
@@ -914,7 +907,6 @@ html {
     <label data-hint="播放器无上下黑边"><input type="checkbox">自动高度</label>
     <label><input type="checkbox">调节控件间距</label>
     <label data-hint="默认检测到鼠标活动显示控件&#10;需要一直显示请打开此选项"><input type="checkbox">暂停显示控件</label>
-    <label><input type="number" min="0" name="小窗宽度">小窗宽度</label>
   </fieldset>
 </div>`;
   GM_addStyle(styles.options);
@@ -935,85 +927,66 @@ html {
   function onStyleValueChange(toggle) {
     return (_k, _o, newVal) => toggle(newVal);
   }
-  const options = {
-    common: {
-      左右边距: {
-        page: "common",
-        d: 30,
-        callback: (init) => {
-          document.documentElement.style.setProperty("--layout-padding", `${init}px`);
-          return (_k, _o, newVal) => document.documentElement.style.setProperty("--layout-padding", `${newVal}px`);
-        }
-      }
-    },
-    video: {
-      导航栏下置: {
-        page: "video",
-        d: true,
-        callback: (init) => onStyleValueChange(styleToggle(styles.upperNavigation, init, true))
-      },
-      显示观看信息: {
-        page: "video",
-        d: true,
-        callback: (init) => onStyleValueChange(styleToggle(".bpx-player-video-info{display:flex!important}", init))
-      },
-      小窗样式: {
-        page: "video",
-        d: true,
-        callback: (init) => {
-          const toggle1 = styleToggle(styles.mini, init);
-          const toggle2 = styleToggle(".bpx-player-container { --mini-width: initial !important }", init, true);
-          return onStyleValueChange((enable) => (toggle1(enable), toggle2(enable)));
-        }
-      },
-      // 小窗宽度: {
-      //   page: 'video',
-      //   d: 320,
-      //   callback: init => {
-      //     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      //     const container = document.getElementsByClassName('bpx-player-container')[0]! as HTMLElement
-      //     container.style.setProperty('--mini-width', `${init}px`)
-      //     return (_k, _o, newVal) => container.style.setProperty('--mini-width', `${newVal}px`)
-      //   },
-      // },
-      自动高度: {
-        // 也就是说，不会有上下黑边
-        page: "video",
-        d: false,
-        callback: (init) => {
-          const player = document.getElementById("bilibili-player");
-          const observer = new ResizeObserver((entries) => {
-            const height = entries[0]?.contentRect.height;
-            if (height) {
-              document.documentElement.style.setProperty("--player-height", `${height}px`);
-            }
-          });
-          const toggle = styleToggle(styles.autoHeight, init);
-          init && observer.observe(player);
-          return onStyleValueChange((enable) => {
-            toggle(enable);
-            enable ? observer.observe(player) : observer.disconnect(), document.documentElement.style.removeProperty("--player-height");
-          });
-        }
-      },
-      调节控件间距: {
-        page: "video",
-        d: true,
-        callback: (init) => onStyleValueChange(styleToggle(styles.controls, init))
-      },
-      暂停显示控件: {
-        page: "video",
-        d: false,
-        callback: (init) => onStyleValueChange(styleToggle(styles.pauseShow, init))
+  const commonOptions = {
+    左右边距: {
+      default_: 30,
+      callback: (init) => {
+        document.documentElement.style.setProperty("--layout-padding", `${init}px`);
+        return (_k, _o, newVal) => document.documentElement.style.setProperty("--layout-padding", `${newVal}px`);
       }
     }
   };
-  function activate(page) {
-    for (const [name, { d, callback }] of Object.entries(options[page])) {
-      GM_addValueChangeListener(name, callback(GM_getValue(name, d)));
+  const videoOptions = {
+    导航栏下置: {
+      default_: true,
+      callback: (init) => onStyleValueChange(styleToggle(styles.upperNavigation, init, true))
+    },
+    显示观看信息: {
+      default_: true,
+      callback: (init) => onStyleValueChange(styleToggle(".bpx-player-video-info{display:flex!important}", init))
+    },
+    小窗样式: {
+      default_: true,
+      callback: (init) => {
+        const toggle1 = styleToggle(styles.mini, init);
+        const toggle2 = styleToggle(".bpx-player-container { --mini-width: initial !important }", init, true);
+        return onStyleValueChange((enable) => (toggle1(enable), toggle2(enable)));
+      }
+    },
+    自动高度: {
+      // 也就是说，不会有上下黑边
+      default_: false,
+      callback: (init) => {
+        const player = document.getElementById("bilibili-player");
+        const observer = new ResizeObserver((entries) => {
+          const height = entries[0]?.contentRect.height;
+          if (height) {
+            document.documentElement.style.setProperty("--player-height", `${height}px`);
+          }
+        });
+        const toggle = styleToggle(styles.autoHeight, init);
+        init && observer.observe(player);
+        return onStyleValueChange((enable) => {
+          toggle(enable);
+          enable ? observer.observe(player) : observer.disconnect(), document.documentElement.style.removeProperty("--player-height");
+        });
+      }
+    },
+    调节控件间距: {
+      default_: true,
+      callback: (init) => onStyleValueChange(styleToggle(styles.controls, init))
+    },
+    暂停显示控件: {
+      default_: false,
+      callback: (init) => onStyleValueChange(styleToggle(styles.pauseShow, init))
+    }
+  };
+  function listenOptions(options) {
+    for (const [name, { default_, callback }] of Object.entries(options)) {
+      callback && GM_addValueChangeListener(name, callback(GM_getValue(name, default_)));
     }
   }
-  const optionsFlat = { ...options.common, ...options.video };
+  const optionsFlat = { ...commonOptions, ...videoOptions };
   waitReady().then(() => {
     document.body.insertAdjacentHTML("beforeend", html);
     const app = document.getElementById("wider-bilibili");
@@ -1022,6 +995,16 @@ html {
     });
     document.getElementById("wb-close")?.addEventListener("click", () => {
       app.style.display = "none";
+    });
+    const modifiers = ["ctrlKey", "altKey", "shiftKey", "metaKey"];
+    const comb = [["altKey", "shiftKey"], "W"];
+    document.addEventListener("keyup", (ev) => {
+      const { key } = ev;
+      if (key === comb[1] && modifiers.every((mod) => comb[0].includes(mod) === ev[mod])) {
+        ev.stopImmediatePropagation();
+        ev.stopPropagation();
+        app.style.display = app.style.display === "none" ? "flex" : "none";
+      }
     });
     for (const input of app.getElementsByTagName("input")) {
       const key = input.parentElement?.textContent;
@@ -1034,11 +1017,11 @@ html {
       }
       switch (input.type) {
         case "checkbox":
-          input.checked = GM_getValue(key, option.d);
+          input.checked = GM_getValue(key, option.default_);
           input.onchange = () => GM_setValue(key, input.checked);
           break;
         case "number":
-          input.value = GM_getValue(key, option.d);
+          input.value = GM_getValue(key, option.default_);
           input.oninput = () => {
             const val = Number(input.value);
             Number.isInteger(val) && GM_setValue(key, val);
@@ -1046,17 +1029,7 @@ html {
           break;
       }
     }
-    const modifiers = ["ctrlKey", "altKey", "shiftKey", "metaKey"];
-    const comb = [["altKey", "shiftKey"], "W"];
-    document.addEventListener("keyup", (ev) => {
-      const { key } = ev;
-      if (key === comb[1] && modifiers.every((mod) => comb[0].includes(mod) === ev[mod])) {
-        ev.stopImmediatePropagation();
-        ev.stopPropagation();
-        app.style.display = app.style.display === "none" ? "flex" : "none";
-      }
-    });
-    activate("common");
+    GM_addValueChangeListener("左右边距", (_k, _o, newVal) => document.documentElement.style.setProperty("--layout-padding", `${newVal}px`));
   });
   GM_addStyle(styles.common);
   const url = new URL(window.location.href);
@@ -1079,7 +1052,7 @@ html {
         style.remove();
         break;
       }
-      activate("video");
+      listenOptions(videoOptions);
       const container = await( waitFor(() => player.getElementsByClassName("bpx-player-container")[0], "播放器内容器"));
       if (container.getAttribute("data-screen") !== "mini") {
         container.setAttribute("data-screen", "web");
@@ -1087,10 +1060,8 @@ html {
       container.setAttribute = new Proxy(container.setAttribute, {
         apply: (target, thisArg, [name, val]) => target.apply(thisArg, [name, name === "data-screen" && val !== "mini" ? "web" : val])
       });
-      GM_addValueChangeListener(
-        "小窗宽度",
-        (_k, _o, newVal) => container.style.setProperty("--mini-width", `${newVal}px`)
-      );
+      container.style.setProperty("--mini-width", `${GM_getValue("小窗宽度", 320)}px`);
+      GM_addValueChangeListener("小窗宽度", (_k, _o, newVal) => container.style.setProperty("--mini-width", `${newVal}px`));
       const miniResizer = document.createElement("div");
       miniResizer.className = "bpx-player-mini-resizer";
       miniResizer.onmousedown = (ev) => {
@@ -1098,7 +1069,7 @@ html {
         ev.preventDefault();
         const resize = (ev2) => {
           const miniWidth = Math.max(container.offsetWidth + container.getBoundingClientRect().x - ev2.x + 5, 0);
-          GM_setValue("小窗宽度", miniWidth);
+          GM_setValue("小窗宽度", Math.round(miniWidth));
         };
         if (ev.button !== 0)
           return;

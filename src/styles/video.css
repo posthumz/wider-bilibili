@@ -50,7 +50,7 @@
 
 /* 加载时强制占用全屏 */
 .bpx-player-video-area:has(>.bpx-state-loading) video {
-  min-height: 100vh;
+  height: 100vh;
 }
 
 /* 这啥? */
@@ -103,7 +103,7 @@
       position: relative !important;
     }
 
-    /* 自定义顶栏加载后前，强制显示原生顶栏 */
+    /* 自定义顶栏加载前，强制显示原生顶栏 */
     &:not(:has(+.custom-navbar))>.bili-header__bar {
       display: flex !important;
     }
@@ -138,10 +138,6 @@ body>.custom-navbar {
   min-width: initial !important;
 }
 
-.main-container {
-  padding-top: 15px !important;
-}
-
 .left-container,
 .plp-l,
 .playlist-container--left {
@@ -149,20 +145,17 @@ body>.custom-navbar {
 }
 
 .plp-r {
-  position: sticky !important;
   /* 番剧页加载时不会先使用sticky */
+  position: sticky !important;
 }
 
 /* 番剧页下方容器 */
 .main-container {
   width: 100%;
-  margin: 0 !important;
-  padding-left: var(--layout-padding);
-  padding-right: var(--layout-padding);
   box-sizing: border-box;
   display: flex;
 
-  /* 番剧页右下方浮动按钮位置 */
+  /* 右下方浮动按钮位置 */
   >:last-child[class^=navTools_floatNavExp] {
     z-index: 2 !important;
   }
