@@ -81,7 +81,11 @@ switch (url.host) {
     // 默认顶栏
     const header = document.getElementById('biliMainHeader')
     // 将bilibili-evolved自定义顶栏插入默认顶栏后
-    observeFor('custom-navbar', document.body).then(nav => header?.append(nav))
+    observeFor('custom-navbar', document.body).then(async nav => {
+      // 等待默认顶栏加载完成
+      await waitFor(() => document.getElementById('nav-searchform'))
+      header?.append(nav)
+    })
 
     console.info('宽屏模式成功启用')
     // #endregion

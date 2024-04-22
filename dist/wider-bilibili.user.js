@@ -117,28 +117,31 @@
   top: 0;
   /* 其他元素 z-index 基本是<100 */
   z-index: 100;
+
+  >.bili-header.fixed-header {
+    min-height: initial !important;
+    min-width: initial !important;
+
+    >.bili-header__bar {
+      position: relative !important;
+    }
+
+    /* 自定义顶栏加载后前，强制显示原生顶栏 */
+    &:not(:has(+.custom-navbar))>.bili-header__bar {
+      display: flex !important;
+    }
+  }
+
+  /* 自定义顶栏加载后 */
+  >.custom-navbar {
+    position: relative;
+    z-index: 3 !important;
+  }
 }
 
-.bili-header.fixed-header {
-  min-height: initial !important;
-  min-width: initial !important;
-}
-
-.bili-header__bar {
-  position: relative !important;
-}
-
+/* 自定义顶栏加载前 */
 body>.custom-navbar {
   z-index: 0 !important;
-}
-
-.custom-navbar {
-  z-index: 3 !important;
-}
-
-#biliMainHeader>.custom-navbar {
-  display: flex;
-  position: relative;
 }
 
 /* 使用 static 才能让播放器的 absolute 正确定位 */
@@ -1117,7 +1120,10 @@ html {
       document.addEventListener("fullscreenchange", () => document.fullscreenElement || bottomCenter.replaceChildren(danmaku));
       bottomCenter.replaceChildren(danmaku);
       const header = document.getElementById("biliMainHeader");
-      observeFor("custom-navbar", document.body).then((nav) => header?.append(nav));
+      observeFor("custom-navbar", document.body).then(async (nav) => {
+        await waitFor(() => document.getElementById("nav-searchform"));
+        header?.append(nav);
+      });
       console.info("宽屏模式成功启用");
       break;
     }
