@@ -144,7 +144,7 @@ waitReady().then(() => {
     }
   }
 
-  GM_addValueChangeListener('左右边距', (_k, _o, newVal) => document.documentElement.style.setProperty('--layout-padding', `${newVal}px`))
+  listenOptions(commonOptions)
 })
 
-export { styleToggle, videoOptions }
+export { videoOptions }

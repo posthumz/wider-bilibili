@@ -1029,7 +1029,7 @@ html {
           break;
       }
     }
-    GM_addValueChangeListener("左右边距", (_k, _o, newVal) => document.documentElement.style.setProperty("--layout-padding", `${newVal}px`));
+    listenOptions(commonOptions);
   });
   GM_addStyle(styles.common);
   const url = new URL(window.location.href);
