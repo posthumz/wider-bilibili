@@ -105,11 +105,16 @@
   position: relative !important;
 }
 
+body>.custom-navbar {
+  z-index: 0 !important;
+}
+
 .custom-navbar {
   z-index: 3 !important;
 }
 
 #biliMainHeader>.custom-navbar {
+  display: flex;
   position: relative;
 }
 
