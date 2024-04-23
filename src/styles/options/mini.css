@@ -9,12 +9,10 @@
     /* 自动高度 (不显示黑边和阴影) */
     height: auto !important;
     box-shadow: none;
-    /* 修正小窗位置 */
-    translate: 32px 40px;
 
-    /* 以防竖屏视频超出：导航栏64px，上下各额外留8px */
-    video {
-      max-height: calc(100vh - 80px);
+    /* 以防竖屏视频超出：留出导航栏高度+16px */
+    .bpx-player-video-wrap>video {
+      max-height: calc(100vh - 16px - var(--navbar-height));
     }
   }
 }

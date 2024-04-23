@@ -1,4 +1,9 @@
-import { GM_addStyle, GM_getValue, GM_addValueChangeListener } from '$'
+import {
+  GM_addStyle,
+  GM_setValue,
+  GM_getValue,
+  GM_addValueChangeListener,
+} from '$'
 import styles from './styles'
 import listenOptions, { videoOptions } from './options'
 import { waitFor, observeFor, waitReady } from './utils'
@@ -43,6 +48,21 @@ switch (url.host) {
     // 初始化以及监听小窗宽度选项
     container.style.setProperty('--mini-width', `${GM_getValue('小窗宽度', 320)}px`)
     GM_addValueChangeListener('小窗宽度', (_k, _o, newVal) => container.style.setProperty('--mini-width', `${newVal}px`))
+
+    // 初始化以及监听小窗位置
+    GM_addStyle(`.bpx-player-container[data-screen="mini"] {
+  translate: ${84 - GM_getValue('小窗右', 52)}px ${48 - GM_getValue('小窗下', 8)}px;
+}`)
+    new MutationObserver(() => {
+      // 非小窗时不处理
+      if (container.dataset.screen != 'mini') return
+      // 初始位置不记录
+      if (container.style.right === '84px' && container.style.bottom === '48px') return
+      // 小窗位置变化时记录
+      const { right, bottom } = container.getBoundingClientRect()
+      GM_setValue('小窗右', Math.round(window.innerWidth - right))
+      GM_setValue('小窗下', Math.round(window.innerHeight - bottom))
+    }).observe(container, { attributes: true, attributeFilter: ['style'] })
 
     // 添加拖动调整大小的部件
     const miniResizer = document.createElement('div')

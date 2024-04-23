@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 import fs from 'node:fs'
-import path from 'node:path'
 
 export default defineConfig({
   server: { port: 2333 },

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wider Bilibili
 // @namespace    https://greasyfork.org/users/1125570
-// @version      0.4.1.3
+// @version      0.4.2
 // @author       posthumz
 // @description  哔哩哔哩宽屏体验
 // @license      MIT
@@ -749,12 +749,10 @@ html {
     /* 自动高度 (不显示黑边和阴影) */
     height: auto !important;
     box-shadow: none;
-    /* 修正小窗位置 */
-    translate: 32px 40px;
 
-    /* 以防竖屏视频超出：导航栏64px，上下各额外留8px */
-    video {
-      max-height: calc(100vh - 80px);
+    /* 以防竖屏视频超出：留出导航栏高度+16px */
+    .bpx-player-video-wrap>video {
+      max-height: calc(100vh - 16px - var(--navbar-height));
     }
   }
 }
@@ -1063,6 +1061,18 @@ html {
       });
       container.style.setProperty("--mini-width", `${GM_getValue("小窗宽度", 320)}px`);
       GM_addValueChangeListener("小窗宽度", (_k, _o, newVal) => container.style.setProperty("--mini-width", `${newVal}px`));
+      GM_addStyle(`.bpx-player-container[data-screen="mini"] {
+  translate: ${84 - GM_getValue("小窗右", 52)}px ${48 - GM_getValue("小窗下", 8)}px;
+}`);
+      new MutationObserver(() => {
+        if (container.dataset.screen != "mini")
+          return;
+        if (container.style.right === "84px" && container.style.bottom === "48px")
+          return;
+        const { right, bottom } = container.getBoundingClientRect();
+        GM_setValue("小窗右", Math.round(window.innerWidth - right));
+        GM_setValue("小窗下", Math.round(window.innerHeight - bottom));
+      }).observe(container, { attributes: true, attributeFilter: ["style"] });
       const miniResizer = document.createElement("div");
       miniResizer.className = "bpx-player-mini-resizer";
       miniResizer.onmousedown = (ev) => {
