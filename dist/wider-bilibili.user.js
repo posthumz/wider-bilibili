@@ -111,6 +111,7 @@
 
 /* 导航栏 */
 #biliMainHeader {
+  height: auto !important;
   margin-top: var(--player-height);
   margin-bottom: 0;
   position: sticky;
@@ -123,6 +124,7 @@
     min-width: initial !important;
 
     >.bili-header__bar {
+      height: var(--navbar-height);
       position: relative !important;
     }
 
@@ -705,7 +707,7 @@ html {
 }
 
 /* 限制高度上限 */
-.bpx-player-container {
+.bpx-player-container:not(:fullscreen) .bpx-player-video-wrap>video {
   max-height: calc(100vh - var(--navbar-height));
 }`,
     pauseShow: `/* 暂停显示控件 */
