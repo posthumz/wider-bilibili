@@ -39,7 +39,7 @@
 }
 
 /* 限制高度上限100vh */
-.bpx-player-video-area,
+
 .bpx-player-video-wrap>video {
   max-height: 100vh;
 }

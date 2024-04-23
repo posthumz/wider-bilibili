@@ -17,7 +17,6 @@
 }
 
 /* 限制高度上限 */
-.bpx-player-video-area,
-.bpx-player-video-wrap>video {
+.bpx-player-container:not(:fullscreen) .bpx-player-video-wrap>video {
   max-height: calc(100vh - var(--navbar-height));
 }

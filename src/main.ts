@@ -1,4 +1,4 @@
-import { GM_addStyle, GM_addValueChangeListener } from '$'
+import { GM_addStyle, GM_getValue, GM_addValueChangeListener } from '$'
 import styles from './styles'
 import listenOptions, { videoOptions } from './options'
 import { waitFor, observeFor, waitReady } from './utils'

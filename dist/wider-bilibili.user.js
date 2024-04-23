@@ -62,7 +62,7 @@
 }
 
 /* 限制高度上限100vh */
-.bpx-player-video-area,
+
 .bpx-player-video-wrap>video {
   max-height: 100vh;
 }
@@ -705,8 +705,7 @@ html {
 }
 
 /* 限制高度上限 */
-.bpx-player-video-area,
-.bpx-player-video-wrap>video {
+.bpx-player-container {
   max-height: calc(100vh - var(--navbar-height));
 }`,
     pauseShow: `/* 暂停显示控件 */
@@ -902,7 +901,7 @@ html {
   </fieldset>
   <fieldset data-title="播放器">
     <label><input type="checkbox">导航栏下置</label>
-    <label data-hint="试试拉一下小窗左侧？"><input type="checkbox">小窗样式</label>
+    <label data-hint="试试拉一下小窗左侧？&#10;上次使用的宽度会被记录"><input type="checkbox">小窗样式</label>
     <label data-hint="在线人数/弹幕数"><input type="checkbox">显示观看信息</label>
     <label data-hint="播放器无上下黑边"><input type="checkbox">自动高度</label>
     <label><input type="checkbox">调节控件间距</label>
