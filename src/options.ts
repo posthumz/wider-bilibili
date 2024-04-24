@@ -58,7 +58,7 @@ const videoOptions: Options = {
     default_: true,
     callback: init => {
       const toggle1 = styleToggle(styles.mini, init)
-      const toggle2 = styleToggle('.bpx-player-container { --mini-width: initial !important }', init, true)
+      const toggle2 = styleToggle('.bpx-player-container{--mini-width:initial}', init, true)
       return onStyleValueChange(enable => (toggle1(enable), toggle2(enable)))
     },
   },
@@ -71,7 +71,7 @@ const videoOptions: Options = {
         const height = entries[0]?.contentRect.height
         if (height) { document.documentElement.style.setProperty('--player-height', `${height}px`) }
       })
-      const toggle = styleToggle(styles.autoHeight, init)
+      const toggle = styleToggle(styles.fixHeight, init, true)
       init && observer.observe(player)
       return onStyleValueChange(enable => {
         toggle(enable)

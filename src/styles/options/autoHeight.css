@@ -1,6 +1,0 @@
-/* 自适应高度 */
-#playerWrap.player-wrap,
-#bilibili-player-wrap,
-#bilibili-player {
-  height: fit-content !important;
-}

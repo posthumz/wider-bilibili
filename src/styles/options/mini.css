@@ -5,10 +5,9 @@
   min-width: 180px;
 
   &[data-screen="mini"] {
-    width: var(--mini-width) !important;
-    /* 自动高度 (不显示黑边和阴影) */
+    max-width: var(--mini-width) !important;
+    width: auto !important;
     height: auto !important;
-    box-shadow: none;
 
     /* 以防竖屏视频超出：留出导航栏高度+16px */
     .bpx-player-video-wrap>video {

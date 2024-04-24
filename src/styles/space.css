@@ -7,7 +7,7 @@
   height: initial !important;
 }
 
-div.wrapper,
+.wrapper,
 .search-page {
   width: auto !important;
   margin: 0;

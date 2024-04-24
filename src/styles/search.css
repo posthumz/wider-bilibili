@@ -1,5 +1,4 @@
 /* 搜索页 */
 .i_wrapper {
-  padding-left: var(--layout-padding) !important;
-  padding-right: var(--layout-padding) !important;
+  padding: 0 var(--layout-padding) !important;
 }

@@ -33,7 +33,7 @@
   left: 0;
   right: 0;
   top: 0;
-  height: var(--player-height);
+  height: auto;
   /* 番剧页加载时播放器会有右填充 */
   padding-right: 0;
 }
@@ -42,6 +42,10 @@
   height: 100% !important;
   width: 100% !important;
   box-shadow: none !important;
+
+  .bpx-player-container {
+    box-shadow: none;
+  }
 
   /* Bilibili Evolved 夜间模式样式的优先级很高，所以嵌套在#bilibili-player里面 */
   .bpx-player-video-info {
@@ -62,7 +66,6 @@
 }
 
 /* 限制高度上限100vh */
-
 .bpx-player-video-wrap>video {
   max-height: 100vh;
 }
@@ -76,9 +79,10 @@
   height: 100vh;
 }
 
-/* 这啥? */
+/* 这啥？加载时会导致屏幕超出 */
 .bpx-player-cmd-dm-wrap {
-  display: none;
+  position: absolute;
+  top: 0;
 }
 
 /* 加载动画强制显示 */
@@ -172,6 +176,7 @@ body>.custom-navbar {
 .plp-r {
   /* 番剧页加载时不会先使用sticky */
   position: sticky !important;
+  padding-top: 0 !important;
 }
 
 /* 番剧页下方容器 */
@@ -184,6 +189,15 @@ body>.custom-navbar {
   >:last-child[class^=navTools_floatNavExp] {
     z-index: 2 !important;
   }
+}
+
+/* 特殊页面 */
+.special .main-container {
+  margin-top: 0;
+}
+
+.special>.special-cover {
+  max-height: calc(var(--player-height) + var(--navbar-height));
 }
 
 .player-left-components {
@@ -264,7 +278,7 @@ body>.custom-navbar {
   height: initial !important;
 }
 
-div.wrapper,
+.wrapper,
 .search-page {
   width: auto !important;
   margin: 0;
@@ -412,8 +426,7 @@ div.wrapper,
 }`,
     search: `/* 搜索页 */
 .i_wrapper {
-  padding-left: var(--layout-padding) !important;
-  padding-right: var(--layout-padding) !important;
+  padding: 0 var(--layout-padding) !important;
 }`,
     read: `/* 阅读页 */
 #app {
@@ -438,7 +451,7 @@ div.wrapper,
 
 .container {
   max-width: initial !important;
-  width: auto !important;
+  width: auto;
 }
 
 .space-right-top {
@@ -470,10 +483,10 @@ html {
   min-width: 0;
 }
 
-.nav-search-input {
+/* .nav-search-input {
   width: 0 !important;
   padding-right: 0 !important;
-}
+} */
 
 /* 脚本选项 */
 #wider-bilibili {
@@ -507,7 +520,6 @@ html {
   background-color: var(--wb-bg);
   color: var(--wb-fg);
   font-size: 20px;
-  font-family: "HarmonyOS_Regular", "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif !important;
 
   opacity: 0.9;
 
@@ -575,7 +587,7 @@ html {
   #wb-close {
     width: fit-content;
     height: fit-content;
-    opacity: 1 !important;
+    opacity: 1;
 
     &:hover {
       background-color: rgb(var(--wb-red));
@@ -706,7 +718,7 @@ html {
   top: var(--navbar-height);
 }
 
-/* 限制高度上限 */
+/* 限制高度上限（非全屏时） */
 .bpx-player-container:not(:fullscreen) .bpx-player-video-wrap>video {
   max-height: calc(100vh - var(--navbar-height));
 }`,
@@ -745,10 +757,9 @@ html {
   min-width: 180px;
 
   &[data-screen="mini"] {
-    width: var(--mini-width) !important;
-    /* 自动高度 (不显示黑边和阴影) */
+    max-width: var(--mini-width) !important;
+    width: auto !important;
     height: auto !important;
-    box-shadow: none;
 
     /* 以防竖屏视频超出：留出导航栏高度+16px */
     .bpx-player-video-wrap>video {
@@ -763,6 +774,9 @@ html {
   width: 10px;
   height: 100%;
   cursor: ew-resize;
+}`,
+    fixHeight: `.bpx-player-video-wrap>video {
+  height: 100vh;
 }`,
     controls: `/* 播放器控件 */
 .bpx-player-control-bottom {
@@ -826,12 +840,6 @@ html {
   .bpx-player-video-inputbar-wrap {
     width: auto;
   }
-}`,
-    autoHeight: `/* 自适应高度 */
-#playerWrap.player-wrap,
-#bilibili-player-wrap,
-#bilibili-player {
-  height: fit-content !important;
 }`
   };
   function waitFor(loaded, desc = "页面加载", retry = 100, interval = 100) {
@@ -899,7 +907,7 @@ html {
   <fieldset data-title="通用">
     <label><input type="number" min="0">左右边距</label>
   </fieldset>
-  <fieldset data-title="播放器">
+  <fieldset data-title="视频">
     <label><input type="checkbox">导航栏下置</label>
     <label data-hint="试试拉一下小窗左侧？&#10;上次使用的宽度会被记录"><input type="checkbox">小窗样式</label>
     <label data-hint="在线人数/弹幕数"><input type="checkbox">显示观看信息</label>
@@ -948,7 +956,7 @@ html {
       default_: true,
       callback: (init) => {
         const toggle1 = styleToggle(styles.mini, init);
-        const toggle2 = styleToggle(".bpx-player-container { --mini-width: initial !important }", init, true);
+        const toggle2 = styleToggle(".bpx-player-container{--mini-width:initial}", init, true);
         return onStyleValueChange((enable) => (toggle1(enable), toggle2(enable)));
       }
     },
@@ -963,7 +971,7 @@ html {
             document.documentElement.style.setProperty("--player-height", `${height}px`);
           }
         });
-        const toggle = styleToggle(styles.autoHeight, init);
+        const toggle = styleToggle(styles.fixHeight, init, true);
         init && observer.observe(player);
         return onStyleValueChange((enable) => {
           toggle(enable);

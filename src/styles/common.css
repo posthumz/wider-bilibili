@@ -8,11 +8,6 @@ html {
   min-width: 0;
 }
 
-.nav-search-input {
-  width: 0 !important;
-  padding-right: 0 !important;
-}
-
 /* 脚本选项 */
 #wider-bilibili {
   --wb-bg: var(--Wh0, #FFF);
@@ -45,7 +40,6 @@ html {
   background-color: var(--wb-bg);
   color: var(--wb-fg);
   font-size: 20px;
-  font-family: "HarmonyOS_Regular", "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif !important;
 
   opacity: 0.9;
 
@@ -113,7 +107,7 @@ html {
   #wb-close {
     width: fit-content;
     height: fit-content;
-    opacity: 1 !important;
+    opacity: 1;
 
     &:hover {
       background-color: rgb(var(--wb-red));
