@@ -283,7 +283,7 @@ body>.custom-navbar {
   height: initial !important;
 }
 
-.wrapper,
+div.wrapper,
 .search-page {
   width: auto !important;
   margin: 0;
