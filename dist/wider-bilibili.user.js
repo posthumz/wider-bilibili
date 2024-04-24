@@ -79,6 +79,11 @@
   height: 100vh;
 }
 
+/* 换源时强制占用全屏 */
+.bpx-player-video-wrap>video:not([src]) {
+  height: 100vh;
+}
+
 /* 这啥？加载时会导致屏幕超出 */
 .bpx-player-cmd-dm-wrap {
   position: absolute;
@@ -482,11 +487,6 @@ html {
 .center-search-container {
   min-width: 0;
 }
-
-/* .nav-search-input {
-  width: 0 !important;
-  padding-right: 0 !important;
-} */
 
 /* 脚本选项 */
 #wider-bilibili {
@@ -907,7 +907,7 @@ html {
   <fieldset data-title="通用">
     <label><input type="number" min="0">左右边距</label>
   </fieldset>
-  <fieldset data-title="视频">
+  <fieldset data-title="播放器">
     <label><input type="checkbox">导航栏下置</label>
     <label data-hint="试试拉一下小窗左侧？&#10;上次使用的宽度会被记录"><input type="checkbox">小窗样式</label>
     <label data-hint="在线人数/弹幕数"><input type="checkbox">显示观看信息</label>

@@ -56,6 +56,11 @@
   height: 100vh;
 }
 
+/* 换源时强制占用全屏 */
+.bpx-player-video-wrap>video:not([src]) {
+  height: 100vh;
+}
+
 /* 这啥？加载时会导致屏幕超出 */
 .bpx-player-cmd-dm-wrap {
   position: absolute;
