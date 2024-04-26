@@ -1,3 +1,3 @@
-.bpx-player-video-wrap>video {
+.bpx-player-video-wrap[data-screen="web"]>video {
   height: 100vh;
 }

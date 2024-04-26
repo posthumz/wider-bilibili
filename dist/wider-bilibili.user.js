@@ -456,7 +456,7 @@ div.wrapper,
 
 .container {
   max-width: initial !important;
-  width: auto;
+  width: auto !important;
 }
 
 .space-right-top {
@@ -775,7 +775,7 @@ html {
   height: 100%;
   cursor: ew-resize;
 }`,
-    fixHeight: `.bpx-player-video-wrap>video {
+    fixHeight: `.bpx-player-video-wrap[data-screen="web"]>video {
   height: 100vh;
 }`,
     controls: `/* 播放器控件 */

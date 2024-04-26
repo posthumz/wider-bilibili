@@ -12,7 +12,6 @@
   "devDependencies": {
     "@stylistic/eslint-plugin": "^1.7.2",
     "@types/node": "^20.12.7",
-    "@typescript-eslint/eslint-plugin": "^7.7.1",
     "glob": "^10.3.12",
     "typescript": "^5.4.5",
     "vite": "^5.2.10",

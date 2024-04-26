@@ -49,7 +49,7 @@ switch (url.host) {
     container.style.setProperty('--mini-width', `${GM_getValue('小窗宽度', 320)}px`)
     GM_addValueChangeListener('小窗宽度', (_k, _o, newVal) => container.style.setProperty('--mini-width', `${newVal}px`))
 
-    // 初始化以及监听小窗位置
+    // 初始化以及监听小窗位置。直接改right和bottom值还会被改回去😡，所以初始用translate
     GM_addStyle(`.bpx-player-container[data-screen="mini"] {
   translate: ${84 - GM_getValue('小窗右', 52)}px ${48 - GM_getValue('小窗下', 8)}px;
 }`)

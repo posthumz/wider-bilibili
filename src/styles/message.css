@@ -4,7 +4,7 @@
 
 .container {
   max-width: initial !important;
-  width: auto;
+  width: auto !important;
 }
 
 .space-right-top {
