@@ -212,6 +212,10 @@ body>.custom-navbar {
   z-index: 114514 !important;
 }
 
+.fixed-sidenav-storage {
+  z-index: initial !important;
+}
+
 /* Bilibili Evolved侧栏 */
 .be-settings .sidebar {
   z-index: 114514 !important;

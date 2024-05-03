@@ -235,6 +235,10 @@ body>.custom-navbar {
   z-index: 114514 !important;
 }
 
+.fixed-sidenav-storage {
+  z-index: initial !important;
+}
+
 /* Bilibili Evolved侧栏 */
 .be-settings .sidebar {
   z-index: 114514 !important;
@@ -912,7 +916,7 @@ html {
     <label data-hint="试试拉一下小窗左侧？&#10;上次使用的宽度会被记录"><input type="checkbox">小窗样式</label>
     <label data-hint="在线人数/弹幕数"><input type="checkbox">显示观看信息</label>
     <label data-hint="播放器无上下黑边"><input type="checkbox">自动高度</label>
-    <label><input type="checkbox">调节控件间距</label>
+    <label><input type="checkbox">紧凑控件间距</label>
     <label data-hint="默认检测到鼠标活动显示控件&#10;需要一直显示请打开此选项"><input type="checkbox">暂停显示控件</label>
   </fieldset>
 </div>`;
@@ -979,7 +983,7 @@ html {
         });
       }
     },
-    调节控件间距: {
+    紧凑控件间距: {
       default_: true,
       callback: (init) => onStyleValueChange(styleToggle(styles.controls, init))
     },

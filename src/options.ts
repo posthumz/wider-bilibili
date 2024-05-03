@@ -81,7 +81,7 @@ const videoOptions: Options = {
       })
     },
   },
-  调节控件间距: {
+  紧凑控件间距: {
     default_: true,
     callback: init => onStyleValueChange(styleToggle(styles.controls, init)),
   },
