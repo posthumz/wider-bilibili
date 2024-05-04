@@ -35,6 +35,10 @@
     width: fit-content !important;
   }
 
+  .bpx-player-ctrl-time {
+    width: 130px !important;
+  }
+
   /* 时间控件 */
   .bpx-player-ctrl-time-seek {
     width: 100% !important;

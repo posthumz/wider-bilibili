@@ -782,7 +782,7 @@ html {
     fixHeight: `.bpx-player-video-wrap[data-screen="web"]>video {
   height: 100vh;
 }`,
-    controls: `/* 播放器控件 */
+    compactControls: `/* 播放器控件 */
 .bpx-player-control-bottom {
   padding: 0 20px !important;
 
@@ -817,6 +817,10 @@ html {
   .bpx-player-ctrl-btn {
     margin: 0 !important;
     width: fit-content !important;
+  }
+
+  .bpx-player-ctrl-time {
+    width: 130px !important;
   }
 
   /* 时间控件 */
@@ -985,7 +989,7 @@ html {
     },
     紧凑控件间距: {
       default_: true,
-      callback: (init) => onStyleValueChange(styleToggle(styles.controls, init))
+      callback: (init) => onStyleValueChange(styleToggle(styles.compactControls, init))
     },
     暂停显示控件: {
       default_: false,
