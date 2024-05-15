@@ -136,12 +136,30 @@
       height: var(--navbar-height);
       position: relative !important;
     }
+  }
 
-    /* 自定义顶栏加载前，强制显示原生顶栏 */
-    &:not(:has(+.custom-navbar))>.bili-header__bar {
-      display: flex !important;
+  /* BiliBili Evolved自定义顶栏加载前，强制显示原生顶栏 */
+  &:not(:has(>.custom-navbar)) .bili-header__bar {
+    display: flex !important;
+  }
+
+  /* BewlyBewly顶栏 */
+  &:has(>header) .bili-header__bar {
+    display: none !important;
+  }
+
+  >header {
+    position: initial !important;
+
+    * {
+      box-sizing: border-box;
+    }
+
+    >main {
+      height: var(--navbar-height) !important;
     }
   }
+
 
   /* 自定义顶栏加载后 */
   >.custom-navbar {
@@ -1123,10 +1141,13 @@ html {
       document.addEventListener("fullscreenchange", () => document.fullscreenElement || bottomCenter.replaceChildren(danmaku));
       bottomCenter.replaceChildren(danmaku);
       const header = document.getElementById("biliMainHeader");
-      observeFor("custom-navbar", document.body).then(async (nav) => {
-        await waitFor(() => document.getElementById("nav-searchform"));
-        header?.append(nav);
-      });
+      await( waitFor(() => document.getElementById("nav-searchform")).then(async () => {
+        observeFor("custom-navbar", document.body).then(async (nav) => {
+          header?.append(nav);
+        });
+        const bewlyHeader = (await waitFor(() => document.getElementById("bewly")))?.shadowRoot?.querySelector("header");
+        bewlyHeader && header?.append(bewlyHeader);
+      }));
       console.info("宽屏模式成功启用");
       break;
     }

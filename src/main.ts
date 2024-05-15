@@ -101,12 +101,18 @@ switch (url.host) {
 
     // 默认顶栏
     const header = document.getElementById('biliMainHeader')
-    // 将bilibili-evolved自定义顶栏插入默认顶栏后
-    observeFor('custom-navbar', document.body).then(async nav => {
-      // 等待默认顶栏加载完成
-      await waitFor(() => document.getElementById('nav-searchform'))
-      header?.append(nav)
+
+    await waitFor(() => document.getElementById('nav-searchform')).then(async () => {
+      // 将bilibili-evolved自定义顶栏插入默认顶栏后
+      observeFor('custom-navbar', document.body).then(async nav => {
+        header?.append(nav)
+      })
+
+      // 将BewlyBewly自定义顶栏插入默认顶栏后
+      const bewlyHeader = (await waitFor(() => document.getElementById('bewly')))?.shadowRoot?.querySelector('header')
+      bewlyHeader && header?.append(bewlyHeader)
     })
+
 
     console.info('宽屏模式成功启用')
     // #endregion
