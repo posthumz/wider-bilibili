@@ -982,7 +982,6 @@ html {
         const toggle = styleToggle(styles.fixHeight, init, true);
         init && observer.observe(player);
         return onStyleValueChange((enable) => {
-          debugger;
           toggle(enable);
           enable ? observer.observe(player) : observer.disconnect(), document.documentElement.style.removeProperty("--player-height");
         });
