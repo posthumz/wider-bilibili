@@ -121,7 +121,7 @@
   }
 
   /* BewlyBewly顶栏 */
-  &:has(>header) .bili-header__bar {
+  &:has(>header)>.bili-header>.bili-header__bar {
     display: none !important;
   }
 
