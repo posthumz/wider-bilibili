@@ -75,7 +75,7 @@
 }
 
 /* 加载时强制占用全屏 */
-.bpx-player-video-area:has(>.bpx-state-loading) video {
+.bpx-player-container:not([data-screen="mini"]) .bpx-player-video-area:has(>.bpx-state-loading) video {
   height: 100vh;
 }
 
@@ -473,9 +473,9 @@ div.wrapper,
   margin-top: 0px !important;
 }
 
+/* 下方已有刷新按钮 */
 .feed-roll-btn {
-  left: unset !important;
-  right: 0;
+  display: none;
 }
 
 .palette-button-wrap {
@@ -779,7 +779,7 @@ html {
   height: 100%;
   cursor: ew-resize;
 }`,
-    fixHeight: `.bpx-player-video-wrap[data-screen="web"]>video {
+    fixHeight: `.bpx-player-container:not([data-screen="mini"]) .bpx-player-video-wrap>video {
   height: 100vh;
 }`,
     compactControls: `/* 播放器控件 */
@@ -982,6 +982,7 @@ html {
         const toggle = styleToggle(styles.fixHeight, init, true);
         init && observer.observe(player);
         return onStyleValueChange((enable) => {
+          debugger;
           toggle(enable);
           enable ? observer.observe(player) : observer.disconnect(), document.documentElement.style.removeProperty("--player-height");
         });

@@ -5,9 +5,9 @@
   margin-top: 0px !important;
 }
 
+/* 下方已有刷新按钮 */
 .feed-roll-btn {
-  left: unset !important;
-  right: 0;
+  display: none;
 }
 
 .palette-button-wrap {

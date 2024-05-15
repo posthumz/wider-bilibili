@@ -1,6 +1,6 @@
 /** 等待条件满足并返回结果。检测成功后返回元素；超时停止检测。 */
 export function waitFor<T>(loaded: () => T, desc = '页面加载', retry = 100, interval = 100):
-Promise<NonNullable<T>> {
+  Promise<NonNullable<T>> {
   return new Promise((resolve, reject) => {
     const intervalID = setInterval((res = loaded()) => {
       if (res) {

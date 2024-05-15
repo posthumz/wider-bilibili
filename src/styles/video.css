@@ -52,7 +52,7 @@
 }
 
 /* 加载时强制占用全屏 */
-.bpx-player-video-area:has(>.bpx-state-loading) video {
+.bpx-player-container:not([data-screen="mini"]) .bpx-player-video-area:has(>.bpx-state-loading) video {
   height: 100vh;
 }
 
