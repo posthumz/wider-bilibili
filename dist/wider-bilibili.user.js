@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wider Bilibili
 // @namespace    https://greasyfork.org/users/1125570
-// @version      0.4.2
+// @version      0.4.3
 // @author       posthumz
 // @description  哔哩哔哩宽屏体验
 // @license      MIT
@@ -311,24 +311,12 @@ div.wrapper,
   margin: 0;
 }
 
-/* 主页, 动态 */
-#page-index,
-#page-dynamic {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-
-  &::before,
-  &::after {
-    content: none;
-  }
-
-  .col-1 {
-    flex: 1;
-
-    #i-masterpiece .small-item {
-      padding-top: 0 !important;
-    }
+/* 主页 */
+#page-index {
+  >div.col-1 {
+    /* 以防不支持round */
+    width: calc(100% - 400px);
+    width: round(down, calc(100% - 400px), 180px);
 
     .section {
       >.content {
@@ -336,88 +324,87 @@ div.wrapper,
       }
 
       /* 投稿、投币、点赞 */
-      &:is(.video, .coin)>.content,
+      &.video>.content,
+      &.coin>.content,
       .channel-video {
-        margin: 0 -10px;
+        margin-left: -10px;
         overflow: auto !important;
         scroll-snap-type: both mandatory;
 
-        /* 视频卡片 */
-        .small-item {
+        >.small-item {
           padding: 10px !important;
           scroll-snap-align: start;
         }
-
-        &::after {
-          content: none;
-        }
       }
 
-      &.video>.content {
-        flex-wrap: wrap;
-      }
-
+      /* 收藏 */
       &.fav>.content {
-        margin: -10px;
+        margin-top: -14px;
+        margin-left: -10px;
 
         >.fav-item {
           margin: 14px 10px;
         }
       }
 
+      /* 番剧 */
       &.bangumi>.content>.large-item {
         margin-right: 0;
       }
-
-      /* 合集 */
-      .channel-index {
-        width: auto !important;
-
-        .channel-list {
-          gap: 20px;
-
-          &::before,
-          &::after {
-            content: none;
-          }
-
-          .channel-item {
-            margin: 0 !important;
-          }
-        }
-      }
-
     }
 
     .article-content {
       width: calc(100% - 135px);
     }
+  }
+}
 
-    .fav-item {
-      margin-right: 20px !important;
+/* 动态 */
+#page-dynamic>div.col-1 {
+  width: calc(100% - 360px);
+}
+
+/* 投稿, 搜索 */
+#page-video {
+  width: 100% !important;
+
+  >.col-full {
+    display: flex;
+
+    >.main-content {
+      flex: 1;
+
+      .cube-list {
+        width: auto !important;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
     }
   }
 }
 
-/* 投稿, 搜索 */
-#page-video .col-full {
-  display: flex;
+/* 合集 */
+.channel-index {
+  width: auto !important;
 
-  >.main-content {
-    flex: 1;
+  .channel-list {
+    gap: 20px;
 
-    .cube-list {
-      width: auto !important;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+    &::before,
+    &::after {
+      content: none;
+    }
+
+    .channel-item {
+      margin: 0 !important;
     }
   }
 }
 
 /* 收藏夹, 关注 */
 #page-fav,
-#page-follow {
+#page-follows {
   .col-full {
     display: flex !important;
 
@@ -427,7 +414,7 @@ div.wrapper,
     }
   }
 
-  .fav-video-list.content {
+  .fav-content>.fav-video-list {
     margin: 10px;
 
     >.small-item {
@@ -446,10 +433,6 @@ div.wrapper,
       padding-left: 0;
     }
   }
-}
-
-.feed-dynamic {
-  flex: 1;
 }`,
     search: `/* 搜索页 */
 .i_wrapper {
