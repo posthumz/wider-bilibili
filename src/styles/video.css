@@ -100,10 +100,7 @@
   height: auto !important;
   margin-top: var(--player-height);
   margin-bottom: 0;
-  position: sticky;
-  top: 0;
-  /* 其他元素 z-index 基本是<100 */
-  z-index: 100;
+  position: static;
 
   >.bili-header.fixed-header {
     min-height: initial !important;

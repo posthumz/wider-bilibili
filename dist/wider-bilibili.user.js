@@ -123,10 +123,7 @@
   height: auto !important;
   margin-top: var(--player-height);
   margin-bottom: 0;
-  position: sticky;
-  top: 0;
-  /* 其他元素 z-index 基本是<100 */
-  z-index: 100;
+  position: static;
 
   >.bili-header.fixed-header {
     min-height: initial !important;
@@ -727,6 +724,12 @@ html {
 .bpx-player-container:not(:fullscreen) .bpx-player-video-wrap>video {
   max-height: calc(100vh - var(--navbar-height));
 }`,
+    stickyHeader: `#biliMainHeader {
+  position: sticky;
+  top: 0;
+  /* 其他元素 z-index 基本是<100 */
+  z-index: 100;
+}`,
     pauseShow: `/* 暂停显示控件 */
 .bpx-state-paused {
 
@@ -917,12 +920,13 @@ html {
     <label><input type="number" min="0">左右边距</label>
   </fieldset>
   <fieldset data-title="播放器">
-    <label><input type="checkbox">导航栏下置</label>
-    <label data-hint="试试拉一下小窗左侧？&#10;上次使用的宽度会被记录"><input type="checkbox">小窗样式</label>
-    <label data-hint="在线人数/弹幕数"><input type="checkbox">显示观看信息</label>
     <label data-hint="播放器无上下黑边"><input type="checkbox">自动高度</label>
+    <label data-hint="试试拉一下小窗左侧？&#10;上次使用的宽度会被记录"><input type="checkbox">小窗样式</label>
+    <label><input type="checkbox">导航栏下置</label>
+    <label><input type="checkbox">粘性导航栏</label>
     <label><input type="checkbox">紧凑控件间距</label>
     <label data-hint="默认检测到鼠标活动显示控件&#10;需要一直显示请打开此选项"><input type="checkbox">暂停显示控件</label>
+    <label data-hint="在线人数/弹幕数"><input type="checkbox">显示观看信息</label>
   </fieldset>
 </div>`;
   GM_addStyle(styles.options);
@@ -953,22 +957,6 @@ html {
     }
   };
   const videoOptions = {
-    导航栏下置: {
-      default_: true,
-      callback: (init) => onStyleValueChange(styleToggle(styles.upperNavigation, init, true))
-    },
-    显示观看信息: {
-      default_: true,
-      callback: (init) => onStyleValueChange(styleToggle(".bpx-player-video-info{display:flex!important}", init))
-    },
-    小窗样式: {
-      default_: true,
-      callback: (init) => {
-        const toggle1 = styleToggle(styles.mini, init);
-        const toggle2 = styleToggle(".bpx-player-container{--mini-width:initial}", init, true);
-        return onStyleValueChange((enable) => (toggle1(enable), toggle2(enable)));
-      }
-    },
     自动高度: {
       // 也就是说，不会有上下黑边
       default_: false,
@@ -988,6 +976,22 @@ html {
         });
       }
     },
+    小窗样式: {
+      default_: true,
+      callback: (init) => {
+        const toggle1 = styleToggle(styles.mini, init);
+        const toggle2 = styleToggle(".bpx-player-container{--mini-width:initial}", init, true);
+        return onStyleValueChange((enable) => (toggle1(enable), toggle2(enable)));
+      }
+    },
+    导航栏下置: {
+      default_: true,
+      callback: (init) => onStyleValueChange(styleToggle(styles.upperNavigation, init, true))
+    },
+    粘性导航栏: {
+      default_: true,
+      callback: (init) => onStyleValueChange(styleToggle(styles.stickyHeader, init))
+    },
     紧凑控件间距: {
       default_: true,
       callback: (init) => onStyleValueChange(styleToggle(styles.compactControls, init))
@@ -995,6 +999,10 @@ html {
     暂停显示控件: {
       default_: false,
       callback: (init) => onStyleValueChange(styleToggle(styles.pauseShow, init))
+    },
+    显示观看信息: {
+      default_: true,
+      callback: (init) => onStyleValueChange(styleToggle(".bpx-player-video-info{display:flex!important}", init))
     }
   };
   function listenOptions(options) {

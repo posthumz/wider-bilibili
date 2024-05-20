@@ -46,22 +46,6 @@ const commonOptions: Options = {
 }
 
 const videoOptions: Options = {
-  导航栏下置: {
-    default_: true,
-    callback: init => onStyleValueChange(styleToggle(styles.upperNavigation, init, true)),
-  },
-  显示观看信息: {
-    default_: true,
-    callback: init => onStyleValueChange(styleToggle('.bpx-player-video-info{display:flex!important}', init)),
-  },
-  小窗样式: {
-    default_: true,
-    callback: init => {
-      const toggle1 = styleToggle(styles.mini, init)
-      const toggle2 = styleToggle('.bpx-player-container{--mini-width:initial}', init, true)
-      return onStyleValueChange(enable => (toggle1(enable), toggle2(enable)))
-    },
-  },
   自动高度: { // 也就是说，不会有上下黑边
     default_: false,
     callback: init => {
@@ -81,6 +65,22 @@ const videoOptions: Options = {
       })
     },
   },
+  小窗样式: {
+    default_: true,
+    callback: init => {
+      const toggle1 = styleToggle(styles.mini, init)
+      const toggle2 = styleToggle('.bpx-player-container{--mini-width:initial}', init, true)
+      return onStyleValueChange(enable => (toggle1(enable), toggle2(enable)))
+    },
+  },
+  导航栏下置: {
+    default_: true,
+    callback: init => onStyleValueChange(styleToggle(styles.upperNavigation, init, true)),
+  },
+  粘性导航栏: {
+    default_: true,
+    callback: init => onStyleValueChange(styleToggle(styles.stickyHeader, init)),
+  },
   紧凑控件间距: {
     default_: true,
     callback: init => onStyleValueChange(styleToggle(styles.compactControls, init)),
@@ -88,6 +88,10 @@ const videoOptions: Options = {
   暂停显示控件: {
     default_: false,
     callback: init => onStyleValueChange(styleToggle(styles.pauseShow, init)),
+  },
+  显示观看信息: {
+    default_: true,
+    callback: init => onStyleValueChange(styleToggle('.bpx-player-video-info{display:flex!important}', init)),
   },
 }
 

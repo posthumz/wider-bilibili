@@ -1,0 +1,6 @@
+#biliMainHeader {
+  position: sticky;
+  top: 0;
+  /* 其他元素 z-index 基本是<100 */
+  z-index: 100;
+}
