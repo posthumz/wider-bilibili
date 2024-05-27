@@ -37,6 +37,10 @@ div.wrapper,
           padding: 10px !important;
           scroll-snap-align: start;
         }
+
+        &::after {
+          content: none;
+        }
       }
 
       /* 收藏 */

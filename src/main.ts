@@ -120,9 +120,17 @@ switch (url.host) {
   }
   case 't.bilibili.com':
     GM_addStyle(styles.t)
-    waitFor(() => document.getElementsByClassName('right')[0], '动态右栏').then(right =>
-      right.prepend(...document.getElementsByClassName('left')[0]?.childNodes ?? []),
-    )
+    waitFor(() => document.getElementsByClassName('right')[0], '动态右栏').then(right => {
+      const left = document.getElementsByClassName('left')[0]!
+      var last: Element
+      for (const child of left.children)
+        right.prepend(last = child)
+      new MutationObserver((mutations) => {
+        for (const mutation of mutations)
+          for (const node of mutation.addedNodes)
+            last ? last.insertAdjacentElement('afterend', node as Element) : right.insertAdjacentElement('afterbegin', last = node as Element)
+      }).observe(left, { childList: true })
+    })
     console.info('使用动态样式')
     break
   case 'space.bilibili.com':

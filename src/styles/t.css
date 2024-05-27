@@ -23,6 +23,10 @@
       display: none;
     }
 
+    .right>.bili-dyn-live-users {
+      margin-bottom: 10px;
+    }
+
     main {
       flex: 1
     }
