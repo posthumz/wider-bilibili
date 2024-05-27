@@ -1154,9 +1154,9 @@ html {
       GM_addStyle(styles.t);
       waitFor(() => document.getElementsByClassName("right")[0], "动态右栏").then((right) => {
         const left = document.getElementsByClassName("left")[0];
-        var last;
-        for (const child of left.children)
-          right.prepend(last = child);
+        const children = [...left.children];
+        right.prepend(...children);
+        var last = children.pop();
         new MutationObserver((mutations) => {
           for (const mutation of mutations)
             for (const node of mutation.addedNodes)
