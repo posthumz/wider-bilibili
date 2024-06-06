@@ -25,6 +25,11 @@ switch (url.host) {
       console.info('使用阅读页宽屏样式')
       break
     }
+    // 新版动态页
+    if (url.pathname.startsWith('/opus')) {
+      GM_addStyle(styles.opus)
+      break
+    }
 
     // #region 视频页
     // 先插入视频页样式，再等待页面加载完成

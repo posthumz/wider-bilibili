@@ -5,11 +5,6 @@
   margin-top: 0px !important;
 }
 
-/* 下方已有刷新按钮 */
-.feed-roll-btn {
-  display: none;
-}
-
 .palette-button-wrap {
   left: initial !important;
   right: 30px;

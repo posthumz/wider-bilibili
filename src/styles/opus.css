@@ -1,0 +1,9 @@
+div.opus-detail {
+  width: initial;
+  margin: 0 var(--layout-padding);
+}
+
+.right-sidebar-wrap {
+  margin-left: 0;
+  right: 0;
+}

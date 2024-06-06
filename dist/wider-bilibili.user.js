@@ -460,6 +460,15 @@ div.wrapper,
     }
   }
 }`,
+    opus: `div.opus-detail {
+  width: initial;
+  margin: 0 var(--layout-padding);
+}
+
+.right-sidebar-wrap {
+  margin-left: 0;
+  right: 0;
+}`,
     message: `#message-navbar {
   display: none;
 }
@@ -477,11 +486,6 @@ div.wrapper,
 .floor-single-card,
 .bili-video-card {
   margin-top: 0px !important;
-}
-
-/* 下方已有刷新按钮 */
-.feed-roll-btn {
-  display: none;
 }
 
 .palette-button-wrap {
@@ -1075,6 +1079,10 @@ html {
       if (url.pathname.startsWith("/read")) {
         GM_addStyle(styles.read);
         console.info("使用阅读页宽屏样式");
+        break;
+      }
+      if (url.pathname.startsWith("/opus")) {
+        GM_addStyle(styles.opus);
         break;
       }
       const style = GM_addStyle(styles.video);
