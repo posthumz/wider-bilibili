@@ -176,9 +176,13 @@ body>.custom-navbar {
   padding-top: 0 !important;
 }
 
+.playlist-container--left {
+  z-index: 1 !important;
+}
+
 /* 番剧页下方容器 */
 .main-container {
-  width: 100%;
+  width: auto !important;
   box-sizing: border-box;
   display: flex;
 
