@@ -8,6 +8,12 @@ html {
   min-width: 0;
 }
 
+/* 兼容性检测 */
+.wb-button-group::before {
+  content: '内核版本不完全适配脚本，请考虑升级浏览器';
+  color: red;
+}
+
 /* 脚本选项 */
 #wider-bilibili {
   --wb-bg: var(--Wh0, #FFF);
@@ -73,6 +79,10 @@ html {
     >* {
       height: 100%;
     }
+  }
+
+  div.wb-button-group::before {
+    display: none;
   }
 
   a,
@@ -218,16 +228,5 @@ html {
         appearance: none;
       }
     }
-  }
-}
-
-@supports not selector(&) {
-  .wb-button-group>a {
-    display: none;
-  }
-
-  .wb-button-group::before {
-    content: '内核版本不完全适配脚本，请考虑升级浏览器';
-    color: red;
   }
 }
