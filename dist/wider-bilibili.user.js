@@ -725,7 +725,7 @@ html {
   }
 
   .wb-button-group::before {
-    content: '内核版本完全不适配脚本，请考虑升级浏览器';
+    content: '内核版本不完全适配脚本，请考虑升级浏览器';
     color: red;
   }
 }`,
