@@ -717,6 +717,17 @@ html {
       }
     }
   }
+}
+
+@supports not selector(&) {
+  .wb-button-group>a {
+    display: none;
+  }
+
+  .wb-button-group::before {
+    content: '内核版本完全不适配脚本，请考虑升级浏览器';
+    color: red;
+  }
 }`,
     upperNavigation: `/* 导航栏上置 (默认下置) */
 :root {
