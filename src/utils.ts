@@ -1,7 +1,6 @@
 /** 等待条件满足并返回结果。检测成功后返回元素；超时停止检测。 */
-export function waitFor<T>(loaded: () => T, desc = '页面加载', retry = 100, interval = 100):
-  Promise<NonNullable<T>> {
-  return new Promise((resolve, reject) => {
+export const waitFor = <T>(loaded: () => T, desc = '页面加载', retry = 100, interval = 100) =>
+  new Promise<NonNullable<T>>((resolve, reject) => {
     const intervalID = setInterval((res = loaded()) => {
       if (res) {
         clearInterval(intervalID)
@@ -15,11 +14,10 @@ export function waitFor<T>(loaded: () => T, desc = '页面加载', retry = 100, 
       if (retry % 10 === 0) { console.debug(`${desc}等待加载`) }
     }, interval)
   })
-}
 
 /** 直接获取元素或等待元素被添加。检测成功后停止观察并返回元素。 */
-export function observeFor(className: string, parent: Element): Promise<Element> {
-  return new Promise(resolve => {
+export const observeFor = (className: string, parent: Element) =>
+  new Promise<Element>(resolve => {
     const elem = parent.getElementsByClassName(className)[0]
     if (elem) { return resolve(elem) }
     new MutationObserver((mutations, observer) => {
@@ -33,13 +31,11 @@ export function observeFor(className: string, parent: Element): Promise<Element>
       }
     }).observe(parent, { childList: true })
   })
-}
 
 /** 等待DOMContentLoaded */
-export function waitReady() {
-  return new Promise<void>(resolve => {
+export const waitReady = () =>
+  new Promise<void>(resolve => {
     document.readyState === 'loading'
       ? window.addEventListener('DOMContentLoaded', () => resolve(), { once: true })
       : resolve()
   })
-}

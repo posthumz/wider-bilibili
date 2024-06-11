@@ -16,8 +16,8 @@
 }
 
 #bilibili-player {
-  height: 100% !important;
-  width: 100% !important;
+  height: auto !important;
+  width: auto !important;
   box-shadow: none !important;
 
   .bpx-player-container {

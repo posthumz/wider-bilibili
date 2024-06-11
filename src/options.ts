@@ -49,18 +49,21 @@ const videoOptions: Options = {
   自动高度: { // 也就是说，不会有上下黑边
     default_: false,
     callback: init => {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const player = document.getElementById('bilibili-player')!
+      const container = document.getElementsByClassName('bpx-player-container')[0]! as HTMLElement
       const observer = new ResizeObserver(entries => {
-        const height = entries[0]?.contentRect.height
-        if (height) { document.documentElement.style.setProperty('--player-height', `${height}px`) }
+        const { height } = entries[0]!.contentRect
+        if (container.dataset.screen === 'mini') return
+        if (height < window.innerHeight)
+          document.documentElement.style.setProperty('--player-height', `${height}px`)
+        else
+          document.documentElement.style.removeProperty('--player-height')
       })
       const toggle = styleToggle(styles.fixHeight, init, true)
-      init && observer.observe(player)
+      init && observer.observe(container)
       return onStyleValueChange(enable => {
         toggle(enable)
         enable
-          ? observer.observe(player)
+          ? observer.observe(container)
           : observer.disconnect(), document.documentElement.style.removeProperty('--player-height')
       })
     },
@@ -98,9 +101,8 @@ const videoOptions: Options = {
 // 应用页面选项并监听变化
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function listenOptions(options: Options) {
-  for (const [name, { default_, callback }] of Object.entries(options)) {
+  for (const [name, { default_, callback }] of Object.entries(options))
     callback && GM_addValueChangeListener(name, callback(GM_getValue(name, default_)))
-  }
 }
 
 const optionsFlat: Options = { ...commonOptions, ...videoOptions }

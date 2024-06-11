@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wider Bilibili
 // @namespace    https://greasyfork.org/users/1125570
-// @version      0.4.3
+// @version      0.4.4
 // @author       posthumz
 // @description  哔哩哔哩宽屏体验
 // @license      MIT
@@ -39,8 +39,8 @@
 }
 
 #bilibili-player {
-  height: 100% !important;
-  width: 100% !important;
+  height: auto !important;
+  width: auto !important;
   box-shadow: none !important;
 
   .bpx-player-container {
@@ -880,47 +880,41 @@ html {
   width: auto;
 }`
   };
-  function waitFor(loaded, desc = "页面加载", retry = 100, interval = 100) {
-    return new Promise((resolve, reject) => {
-      const intervalID = setInterval((res = loaded()) => {
-        if (res) {
-          clearInterval(intervalID);
-          console.info(`${desc}已加载`);
-          return resolve(res);
-        }
-        if (--retry === 0) {
-          clearInterval(intervalID);
-          return reject(new Error("页面加载超时"));
-        }
-        if (retry % 10 === 0) {
-          console.debug(`${desc}等待加载`);
-        }
-      }, interval);
-    });
-  }
-  function observeFor(className, parent) {
-    return new Promise((resolve) => {
-      const elem = parent.getElementsByClassName(className)[0];
-      if (elem) {
-        return resolve(elem);
+  const waitFor = (loaded, desc = "页面加载", retry = 100, interval = 100) => new Promise((resolve, reject) => {
+    const intervalID = setInterval((res = loaded()) => {
+      if (res) {
+        clearInterval(intervalID);
+        console.info(`${desc}已加载`);
+        return resolve(res);
       }
-      new MutationObserver((mutations, observer) => {
-        for (const mutation of mutations) {
-          for (const node of mutation.addedNodes) {
-            if (node instanceof Element && node.classList.contains(className)) {
-              observer.disconnect();
-              return resolve(node);
-            }
+      if (--retry === 0) {
+        clearInterval(intervalID);
+        return reject(new Error("页面加载超时"));
+      }
+      if (retry % 10 === 0) {
+        console.debug(`${desc}等待加载`);
+      }
+    }, interval);
+  });
+  const observeFor = (className, parent) => new Promise((resolve) => {
+    const elem = parent.getElementsByClassName(className)[0];
+    if (elem) {
+      return resolve(elem);
+    }
+    new MutationObserver((mutations, observer) => {
+      for (const mutation of mutations) {
+        for (const node of mutation.addedNodes) {
+          if (node instanceof Element && node.classList.contains(className)) {
+            observer.disconnect();
+            return resolve(node);
           }
         }
-      }).observe(parent, { childList: true });
-    });
-  }
-  function waitReady() {
-    return new Promise((resolve) => {
-      document.readyState === "loading" ? window.addEventListener("DOMContentLoaded", () => resolve(), { once: true }) : resolve();
-    });
-  }
+      }
+    }).observe(parent, { childList: true });
+  });
+  const waitReady = () => new Promise((resolve) => {
+    document.readyState === "loading" ? window.addEventListener("DOMContentLoaded", () => resolve(), { once: true }) : resolve();
+  });
   const html = `<div id="wider-bilibili" style="display: none;">
   <header>
     <div class="wb-button-group">
@@ -987,18 +981,21 @@ html {
       // 也就是说，不会有上下黑边
       default_: false,
       callback: (init) => {
-        const player = document.getElementById("bilibili-player");
+        const container = document.getElementsByClassName("bpx-player-container")[0];
         const observer = new ResizeObserver((entries) => {
-          const height = entries[0]?.contentRect.height;
-          if (height) {
+          const { height } = entries[0].contentRect;
+          if (container.dataset.screen === "mini")
+            return;
+          if (height < window.innerHeight)
             document.documentElement.style.setProperty("--player-height", `${height}px`);
-          }
+          else
+            document.documentElement.style.removeProperty("--player-height");
         });
         const toggle = styleToggle(styles.fixHeight, init, true);
-        init && observer.observe(player);
+        init && observer.observe(container);
         return onStyleValueChange((enable) => {
           toggle(enable);
-          enable ? observer.observe(player) : observer.disconnect(), document.documentElement.style.removeProperty("--player-height");
+          enable ? observer.observe(container) : observer.disconnect(), document.documentElement.style.removeProperty("--player-height");
         });
       }
     },
@@ -1032,9 +1029,8 @@ html {
     }
   };
   function listenOptions(options) {
-    for (const [name, { default_, callback }] of Object.entries(options)) {
+    for (const [name, { default_, callback }] of Object.entries(options))
       callback && GM_addValueChangeListener(name, callback(GM_getValue(name, default_)));
-    }
   }
   const optionsFlat = { ...commonOptions, ...videoOptions };
   waitReady().then(() => {
@@ -1166,7 +1162,7 @@ html {
         observeFor("custom-navbar", document.body).then(async (nav) => {
           header?.append(nav);
         });
-        const bewlyHeader = (await waitFor(() => document.getElementById("bewly")))?.shadowRoot?.querySelector("header");
+        const bewlyHeader = (await waitFor(() => document.getElementById("bewly"), "BewlyBewly顶栏"))?.shadowRoot?.querySelector("header");
         bewlyHeader && header?.append(bewlyHeader);
       }));
       console.info("宽屏模式成功启用");
