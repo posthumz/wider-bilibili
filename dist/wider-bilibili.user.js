@@ -199,7 +199,8 @@ body>.custom-navbar {
   padding-top: 0 !important;
 }
 
-.playlist-container--left {
+.playlist-container--left,
+.bilibili-player-wrap {
   z-index: 1 !important;
 }
 
