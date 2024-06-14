@@ -21,10 +21,10 @@ export default defineConfig({
   </body>`)
           : html
       },
-      handleHotUpdate: ({ file, server }) => {
-        if (file === 'src\\pages\\options.html')
-          server.hot.send({ type: 'full-reload' })
-      },
+      // handleHotUpdate: ({ file, server }) => {
+      //   if (file === 'src\\pages\\options.html')
+      //     server.hot.send({ type: 'full-reload' })
+      // },
     },
   ],
 })

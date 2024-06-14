@@ -52,14 +52,14 @@ export default defineConfig(({ mode }) => {
       monkey({
         entry: 'src/main.ts',
         userscript: {
-          'name': 'Wider Bilibili',
-          'namespace': 'https://greasyfork.org/users/1125570',
-          'author': 'posthumz',
-          'description': '哔哩哔哩宽屏体验',
-          'license': 'MIT',
-          'icon': 'https://www.bilibili.com/favicon.ico',
-          'match': ['http*://*.bilibili.com/*'],
-          'exclude': [
+          name: 'Wider Bilibili',
+          namespace: 'https://greasyfork.org/users/1125570',
+          author: 'posthumz',
+          description: '哔哩哔哩宽屏体验',
+          license: 'MIT',
+          icon: 'https://www.bilibili.com/favicon.ico',
+          match: ['http*://*.bilibili.com/*'],
+          exclude: [
             'http*://www.bilibili.com/correspond/*',
             'http*://message.bilibili.com/pages/nav/*_sync',
           ],

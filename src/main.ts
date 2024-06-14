@@ -13,19 +13,19 @@ GM_addStyle(styles.common)
 const url = new URL(window.location.href)
 switch (url.host) {
   case 'www.bilibili.com': {
-    // 首页
+    // #region 首页
     if (url.pathname === '/') {
       GM_addStyle(styles.home)
       console.info('使用首页宽屏样式')
       break
     }
-    // 阅读页
+    // #region 阅读页
     if (url.pathname.startsWith('/read')) {
       GM_addStyle(styles.read)
       console.info('使用阅读页宽屏样式')
       break
     }
-    // 新版动态页
+    // #region 新版动态页
     if (url.pathname.startsWith('/opus')) {
       GM_addStyle(styles.opus)
       break
@@ -38,10 +38,10 @@ switch (url.host) {
     await waitReady()
     const player = document.getElementById('bilibili-player')
     if (!player) { style.remove(); break }
-    listenOptions(videoOptions)
 
     // 播放器内容器 (番剧页面需要额外等待)
     const container = await waitFor(() => player.getElementsByClassName('bpx-player-container')[0], '播放器内容器') as HTMLDivElement
+    listenOptions(videoOptions)
     // 立即使用宽屏样式 (除非当前是小窗模式)
     if (container.getAttribute('data-screen') !== 'mini') { container.setAttribute('data-screen', 'web') }
     // 重载container的setAttribute：data-screen被设置为mini(小窗)以外的值时将其设置为web(宽屏)
@@ -118,19 +118,19 @@ switch (url.host) {
       bewlyHeader && header?.append(bewlyHeader)
     })
 
-
     console.info('宽屏模式成功启用')
-    // #endregion
     break
+    // #endregion
   }
+  // #region 动态页
   case 't.bilibili.com':
     GM_addStyle(styles.t)
     waitFor(() => document.getElementsByClassName('right')[0], '动态右栏').then(right => {
       const left = document.getElementsByClassName('left')[0]!
       const children = [...left.children]
       right.prepend(...children)
-      var last = children.pop()
-      new MutationObserver((mutations) => {
+      let last = children.pop()
+      new MutationObserver(mutations => {
         for (const mutation of mutations)
           for (const node of mutation.addedNodes)
             last ? last.insertAdjacentElement('afterend', node as Element) : right.insertAdjacentElement('afterbegin', last = node as Element)
@@ -138,18 +138,22 @@ switch (url.host) {
     })
     console.info('使用动态样式')
     break
+  // #region 空间页
   case 'space.bilibili.com':
     GM_addStyle(styles.space)
     console.info('使用空间样式')
     break
+  // #region 消息页
   case 'message.bilibili.com':
     GM_addStyle(styles.message)
     console.info('使用通知样式')
     break
+  // #region 搜索页
   case 'search.bilibili.com':
     GM_addStyle(styles.search)
     console.info('使用搜索页样式')
     break
+  // #region 未适配页面
   default:
     console.info(`未适配页面，仅启用通用样式: ${url.href}`)
     break

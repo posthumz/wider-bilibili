@@ -49,7 +49,7 @@ const videoOptions: Options = {
   自动高度: { // 也就是说，不会有上下黑边
     default_: false,
     callback: init => {
-      const container = document.getElementsByClassName('bpx-player-container')[0]! as HTMLElement
+      const container = document.getElementsByClassName('bpx-player-container')[0]! as HTMLDivElement
       const observer = new ResizeObserver(entries => {
         const { height } = entries[0]!.contentRect
         if (container.dataset.screen === 'mini') return
@@ -99,7 +99,6 @@ const videoOptions: Options = {
 }
 
 // 应用页面选项并监听变化
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function listenOptions(options: Options) {
   for (const [name, { default_, callback }] of Object.entries(options))
     callback && GM_addValueChangeListener(name, callback(GM_getValue(name, default_)))
@@ -110,7 +109,6 @@ const optionsFlat: Options = { ...commonOptions, ...videoOptions }
 // 页面加载完成后插入设置选项
 waitReady().then(() => {
   document.body.insertAdjacentHTML('beforeend', html)
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const app = document.getElementById('wider-bilibili')!
 
   // 调出设置选项
@@ -121,14 +119,17 @@ waitReady().then(() => {
   const modifiers = ['ctrlKey', 'altKey', 'shiftKey', 'metaKey'] as const
   const comb = [['altKey', 'shiftKey'], 'W'] as [typeof modifiers[number][], string]
 
-  document.addEventListener('keyup', ev => {
-    const { key } = ev
-    if (key === comb[1] && modifiers.every(mod => comb[0].includes(mod) === ev[mod])) {
-      ev.stopImmediatePropagation()
-      ev.stopPropagation()
-      app.style.display = app.style.display === 'none' ? 'flex' : 'none'
-    }
-  })
+  (function addListener() {
+    document.addEventListener('keydown', ev => {
+      const { key } = ev
+      if (key === comb[1] && modifiers.every(mod => comb[0].includes(mod) === ev[mod])) {
+        ev.stopImmediatePropagation()
+        ev.stopPropagation()
+        app.style.display = app.style.display === 'none' ? 'flex' : 'none'
+      }
+      setTimeout(addListener, 250)
+    }, { once: true })
+  })()
 
   for (const input of app.getElementsByTagName('input')) {
     const key = input.parentElement?.textContent

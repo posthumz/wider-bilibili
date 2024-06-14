@@ -1044,14 +1044,17 @@ html {
     });
     const modifiers = ["ctrlKey", "altKey", "shiftKey", "metaKey"];
     const comb = [["altKey", "shiftKey"], "W"];
-    document.addEventListener("keyup", (ev) => {
-      const { key } = ev;
-      if (key === comb[1] && modifiers.every((mod) => comb[0].includes(mod) === ev[mod])) {
-        ev.stopImmediatePropagation();
-        ev.stopPropagation();
-        app.style.display = app.style.display === "none" ? "flex" : "none";
-      }
-    });
+    (function addListener() {
+      document.addEventListener("keydown", (ev) => {
+        const { key } = ev;
+        if (key === comb[1] && modifiers.every((mod) => comb[0].includes(mod) === ev[mod])) {
+          ev.stopImmediatePropagation();
+          ev.stopPropagation();
+          app.style.display = app.style.display === "none" ? "flex" : "none";
+        }
+        setTimeout(addListener, 250);
+      }, { once: true });
+    })();
     for (const input of app.getElementsByTagName("input")) {
       const key = input.parentElement?.textContent;
       if (!key) {
@@ -1102,8 +1105,8 @@ html {
         style.remove();
         break;
       }
-      listenOptions(videoOptions);
       const container = await( waitFor(() => player.getElementsByClassName("bpx-player-container")[0], "播放器内容器"));
+      listenOptions(videoOptions);
       if (container.getAttribute("data-screen") !== "mini") {
         container.setAttribute("data-screen", "web");
       }
@@ -1174,7 +1177,7 @@ html {
         const left = document.getElementsByClassName("left")[0];
         const children = [...left.children];
         right.prepend(...children);
-        var last = children.pop();
+        let last = children.pop();
         new MutationObserver((mutations) => {
           for (const mutation of mutations)
             for (const node of mutation.addedNodes)
