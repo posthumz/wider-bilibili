@@ -9,7 +9,7 @@ export const waitFor = <T>(loaded: () => T, desc = '页面加载', retry = 100, 
       }
       if (--retry === 0) {
         clearInterval(intervalID)
-        return reject(new Error('页面加载超时'))
+        return reject(new Error(`${desc}加载超时`))
       }
       if (retry % 10 === 0) { console.debug(`${desc}等待加载`) }
     }, interval)

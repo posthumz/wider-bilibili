@@ -4,6 +4,7 @@
   --player-height: 100vh;
 }
 
+/* 播放器定位 */
 #playerWrap.player-wrap,
 #bilibili-player-wrap {
   position: absolute;
@@ -16,6 +17,7 @@
 }
 
 #bilibili-player {
+  /* 播放器适应宽高 */
   height: auto !important;
   width: auto !important;
   box-shadow: none !important;
@@ -47,7 +49,8 @@
   max-height: 100vh;
 }
 
-#bilibili-player-wrap .bpx-docker:has(>.bpx-player-container[data-screen="mini"]) {
+/* 小窗时仍然保持播放器容器高度 */
+.bpx-docker:has(>.bpx-player-container[data-screen="mini"]) {
   height: var(--player-height);
 }
 
@@ -176,6 +179,7 @@ body>.custom-navbar {
   padding-top: 0 !important;
 }
 
+/* 以防播放器挡住一些浮窗 */
 .playlist-container--left,
 .bilibili-player-wrap {
   z-index: 1 !important;

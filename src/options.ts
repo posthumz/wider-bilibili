@@ -47,7 +47,7 @@ const commonOptions: Options = {
 
 const videoOptions: Options = {
   自动高度: { // 也就是说，不会有上下黑边
-    default_: false,
+    default_: true,
     callback: init => {
       const container = document.getElementsByClassName('bpx-player-container')[0]! as HTMLDivElement
       const observer = new ResizeObserver(entries => {

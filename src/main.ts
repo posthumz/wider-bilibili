@@ -113,6 +113,9 @@ switch (url.host) {
         header?.append(nav)
       })
 
+      // 未启用BewlyBewly
+      if (!document.getElementsByClassName('bewly-design').length)
+        return
       // 将BewlyBewly自定义顶栏插入默认顶栏后
       const bewlyHeader = (await waitFor(() => document.getElementById('bewly'), 'BewlyBewly顶栏'))?.shadowRoot?.querySelector('header')
       bewlyHeader && header?.append(bewlyHeader)

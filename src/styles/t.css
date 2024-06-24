@@ -16,7 +16,7 @@
   }
 
   /* 动态页 */
-  >.bili-dyn-home--member {
+  >[class^=bili-dyn-home] {
     margin: 0 var(--layout-padding);
 
     .left {

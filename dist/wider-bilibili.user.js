@@ -27,6 +27,7 @@
   --player-height: 100vh;
 }
 
+/* 播放器定位 */
 #playerWrap.player-wrap,
 #bilibili-player-wrap {
   position: absolute;
@@ -39,6 +40,7 @@
 }
 
 #bilibili-player {
+  /* 播放器适应宽高 */
   height: auto !important;
   width: auto !important;
   box-shadow: none !important;
@@ -70,7 +72,8 @@
   max-height: 100vh;
 }
 
-#bilibili-player-wrap .bpx-docker:has(>.bpx-player-container[data-screen="mini"]) {
+/* 小窗时仍然保持播放器容器高度 */
+.bpx-docker:has(>.bpx-player-container[data-screen="mini"]) {
   height: var(--player-height);
 }
 
@@ -199,6 +202,7 @@ body>.custom-navbar {
   padding-top: 0 !important;
 }
 
+/* 以防播放器挡住一些浮窗 */
 .playlist-container--left,
 .bilibili-player-wrap {
   z-index: 1 !important;
@@ -281,7 +285,7 @@ body>.custom-navbar {
   }
 
   /* 动态页 */
-  >.bili-dyn-home--member {
+  >[class^=bili-dyn-home] {
     margin: 0 var(--layout-padding);
 
     .left {
@@ -565,9 +569,8 @@ html {
     &::before {
       content: "Wider Bilibili 选项";
       align-self: center;
-      flex: 1;
-      padding-left: 20px;
-      text-overflow: clip;
+      margin-left: 10px;
+      margin-right: auto;
     }
   }
 
@@ -890,7 +893,7 @@ html {
       }
       if (--retry === 0) {
         clearInterval(intervalID);
-        return reject(new Error("页面加载超时"));
+        return reject(new Error(`${desc}加载超时`));
       }
       if (retry % 10 === 0) {
         console.debug(`${desc}等待加载`);
@@ -980,7 +983,7 @@ html {
   const videoOptions = {
     自动高度: {
       // 也就是说，不会有上下黑边
-      default_: false,
+      default_: true,
       callback: (init) => {
         const container = document.getElementsByClassName("bpx-player-container")[0];
         const observer = new ResizeObserver((entries) => {
@@ -1166,6 +1169,8 @@ html {
         observeFor("custom-navbar", document.body).then(async (nav) => {
           header?.append(nav);
         });
+        if (!document.getElementsByClassName("bewly-design").length)
+          return;
         const bewlyHeader = (await waitFor(() => document.getElementById("bewly"), "BewlyBewly顶栏"))?.shadowRoot?.querySelector("header");
         bewlyHeader && header?.append(bewlyHeader);
       }));

@@ -66,9 +66,8 @@ html {
     &::before {
       content: "Wider Bilibili 选项";
       align-self: center;
-      flex: 1;
-      padding-left: 20px;
-      text-overflow: clip;
+      margin-left: 10px;
+      margin-right: auto;
     }
   }
 
