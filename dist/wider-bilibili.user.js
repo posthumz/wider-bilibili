@@ -837,8 +837,8 @@ html {
 
 .bpx-player-control-wrap:not(:hover) {
   .bpx-player-shadow-progress-area {
-    opacity: 1;
-    visibility: visible;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 }
 
