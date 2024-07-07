@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         Wider Bilibili
 // @namespace    https://greasyfork.org/users/1125570
-// @version      0.4.4
+// @version      0.4.5
 // @author       posthumz
 // @description  哔哩哔哩宽屏体验
 // @license      MIT
 // @icon         https://www.bilibili.com/favicon.ico
+// @supportURL   https://github.com/posthumz/wider-bilibili/issues
 // @match        http*://*.bilibili.com/*
 // @exclude      http*://www.bilibili.com/correspond/*
 // @exclude      http*://message.bilibili.com/pages/nav/*_sync
@@ -760,7 +761,7 @@ html {
   /* 其他元素 z-index 基本是<100 */
   z-index: 100;
 }`,
-    pauseShow: `/* 暂停显示控件 */
+    pauseShowControls: `/* 暂停显示控件 */
 .bpx-state-paused {
 
   .bpx-player-top-wrap,
@@ -812,6 +813,43 @@ html {
   width: 10px;
   height: 100%;
   cursor: ew-resize;
+}`,
+    hideControls: `.bpx-player-top-wrap,
+.bpx-player-control-mask,
+.bpx-player-control-top,
+.bpx-player-control-bottom,
+.bpx-player-pbp {
+  opacity: 0 !important;
+}
+
+.bpx-player-top-wrap {
+  pointer-events: initial;
+}
+
+.bpx-player-top-mask {
+  pointer-events: none;
+}
+
+.bpx-player-top-wrap:hover {
+  opacity: 1 !important;
+}
+
+
+.bpx-player-control-wrap:not(:hover) {
+  .bpx-player-shadow-progress-area {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.bpx-player-control-wrap:hover {
+
+  .bpx-player-control-mask,
+  .bpx-player-control-top,
+  .bpx-player-control-bottom,
+  .bpx-player-pbp {
+    opacity: 1 !important;
+  }
 }`,
     fixHeight: `.bpx-player-container:not([data-screen="mini"]) .bpx-player-video-wrap>video {
   height: 100vh;
@@ -945,12 +983,13 @@ html {
   </fieldset>
   <fieldset data-title="播放器">
     <label data-hint="播放器无上下黑边"><input type="checkbox">自动高度</label>
-    <label data-hint="试试拉一下小窗左侧？&#10;上次使用的宽度会被记录"><input type="checkbox">小窗样式</label>
+    <label data-hint="试试拉一下小窗左侧？&#10;记录小窗宽度与位置"><input type="checkbox">小窗样式</label>
     <label><input type="checkbox">导航栏下置</label>
     <label><input type="checkbox">粘性导航栏</label>
     <label><input type="checkbox">紧凑控件间距</label>
     <label data-hint="默认检测到鼠标活动显示控件&#10;需要一直显示请打开此选项"><input type="checkbox">暂停显示控件</label>
     <label data-hint="在线人数/弹幕数"><input type="checkbox">显示观看信息</label>
+    <label data-hint="默认隐藏控件区&#10;悬浮到相应位置以显示"><input type="checkbox">隐藏控件</label>
   </fieldset>
 </div>`;
   GM_addStyle(styles.options);
@@ -1025,11 +1064,15 @@ html {
     },
     暂停显示控件: {
       default_: false,
-      callback: (init) => onStyleValueChange(styleToggle(styles.pauseShow, init))
+      callback: (init) => onStyleValueChange(styleToggle(styles.pauseShowControls, init))
     },
     显示观看信息: {
       default_: true,
       callback: (init) => onStyleValueChange(styleToggle(".bpx-player-video-info{display:flex!important}", init))
+    },
+    隐藏控件: {
+      default_: true,
+      callback: (init) => onStyleValueChange(styleToggle(styles.hideControls, init))
     }
   };
   function listenOptions(options) {

@@ -90,11 +90,15 @@ const videoOptions: Options = {
   },
   暂停显示控件: {
     default_: false,
-    callback: init => onStyleValueChange(styleToggle(styles.pauseShow, init)),
+    callback: init => onStyleValueChange(styleToggle(styles.pauseShowControls, init)),
   },
   显示观看信息: {
     default_: true,
     callback: init => onStyleValueChange(styleToggle('.bpx-player-video-info{display:flex!important}', init)),
+  },
+  隐藏控件: {
+    default_: true,
+    callback: init => onStyleValueChange(styleToggle(styles.hideControls, init)),
   },
 }
 

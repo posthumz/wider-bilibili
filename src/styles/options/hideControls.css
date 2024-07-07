@@ -1,0 +1,37 @@
+.bpx-player-top-wrap,
+.bpx-player-control-mask,
+.bpx-player-control-top,
+.bpx-player-control-bottom,
+.bpx-player-pbp {
+  opacity: 0 !important;
+}
+
+.bpx-player-top-wrap {
+  pointer-events: initial;
+}
+
+.bpx-player-top-mask {
+  pointer-events: none;
+}
+
+.bpx-player-top-wrap:hover {
+  opacity: 1 !important;
+}
+
+
+.bpx-player-control-wrap:not(:hover) {
+  .bpx-player-shadow-progress-area {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.bpx-player-control-wrap:hover {
+
+  .bpx-player-control-mask,
+  .bpx-player-control-top,
+  .bpx-player-control-bottom,
+  .bpx-player-pbp {
+    opacity: 1 !important;
+  }
+}

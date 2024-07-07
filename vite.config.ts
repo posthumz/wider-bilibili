@@ -64,6 +64,7 @@ export default defineConfig(({ mode }) => {
             'http*://message.bilibili.com/pages/nav/*_sync',
           ],
           'run-at': 'document-start',
+          supportURL: 'https://github.com/posthumz/wider-bilibili/issues',
         },
       }),
       multiline,
