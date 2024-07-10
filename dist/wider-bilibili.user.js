@@ -8,14 +8,17 @@
 // @icon         https://www.bilibili.com/favicon.ico
 // @supportURL   https://github.com/posthumz/wider-bilibili/issues
 // @match        http*://*.bilibili.com/*
-// @exclude      http*://www.bilibili.com/correspond/*
-// @exclude      http*://message.bilibili.com/pages/nav/*_sync
 // @grant        GM_addStyle
 // @grant        GM_addValueChangeListener
 // @grant        GM_getValue
 // @grant        GM_registerMenuCommand
 // @grant        GM_setValue
 // @run-at       document-start
+// @compatible   firefox 117+
+// @compatible   chrome 120+
+// @compatible   edge 120+
+// @compatible   safari 17.2+ (理论上，实际未经测试)
+// @noframes
 // ==/UserScript==
 
 (async function () {
@@ -814,26 +817,16 @@ html {
   height: 100%;
   cursor: ew-resize;
 }`,
-    hideControls: `.bpx-player-top-wrap,
-.bpx-player-control-mask,
+    hideControls: `.bpx-player-control-mask,
 .bpx-player-control-top,
 .bpx-player-control-bottom,
 .bpx-player-pbp {
   opacity: 0 !important;
 }
 
-.bpx-player-top-wrap {
-  pointer-events: initial;
-}
-
-.bpx-player-top-mask {
-  pointer-events: none;
-}
-
 .bpx-player-top-wrap:hover {
   opacity: 1 !important;
 }
-
 
 .bpx-player-control-wrap:not(:hover) {
   .bpx-player-shadow-progress-area {
