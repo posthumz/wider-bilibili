@@ -1,6 +1,7 @@
 /* 空间页 */
 #app {
   margin: 0 var(--layout-padding);
+  min-width: 1120px;
 }
 
 #biliMainHeader {
@@ -17,7 +18,7 @@ div.wrapper,
 #page-index {
   >div.col-1 {
     /* 以防不支持round */
-    width: calc(100% - 400px);
+    max-width: calc(100% - 400px);
     width: round(down, calc(100% - 400px), 180px);
 
     .section {

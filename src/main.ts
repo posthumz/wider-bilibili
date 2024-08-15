@@ -128,16 +128,9 @@ switch (url.host) {
   // #region 动态页
   case 't.bilibili.com':
     GM_addStyle(styles.t)
-    waitFor(() => document.getElementsByClassName('right')[0], '动态右栏').then(right => {
+    waitFor(() => document.getElementsByClassName('bili-dyn-topic-box')[0], '话题').then(topic => {
       const left = document.getElementsByClassName('left')[0]!
-      const children = [...left.children]
-      right.prepend(...children)
-      let last = children.pop()
-      new MutationObserver(mutations => {
-        for (const mutation of mutations)
-          for (const node of mutation.addedNodes)
-            last ? last.insertAdjacentElement('afterend', node as Element) : right.insertAdjacentElement('afterbegin', last = node as Element)
-      }).observe(left, { childList: true })
+      left.appendChild(topic)
     })
     console.info('使用动态样式')
     break

@@ -20,11 +20,17 @@
     margin: 0 var(--layout-padding);
 
     .left {
-      display: none;
+      .bili-dyn-live-users {
+        margin-bottom: 10px;
+      }
+
+      .bili-dyn-topic-box {
+        top: 200px !important;
+      }
     }
 
-    .right>.bili-dyn-live-users {
-      margin-bottom: 10px;
+    .right {
+      display: none;
     }
 
     main {

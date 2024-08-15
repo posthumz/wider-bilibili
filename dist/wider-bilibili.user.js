@@ -1,24 +1,24 @@
 // ==UserScript==
-// @name         Wider Bilibili
-// @namespace    https://greasyfork.org/users/1125570
-// @version      0.4.5
-// @author       posthumz
-// @description  哔哩哔哩宽屏体验
-// @license      MIT
-// @icon         https://www.bilibili.com/favicon.ico
-// @supportURL   https://github.com/posthumz/wider-bilibili/issues
-// @match        http*://*.bilibili.com/*
-// @grant        GM_addStyle
-// @grant        GM_addValueChangeListener
-// @grant        GM_getValue
-// @grant        GM_registerMenuCommand
-// @grant        GM_setValue
-// @run-at       document-start
-// @compatible   firefox 117+
-// @compatible   chrome 120+
-// @compatible   edge 120+
-// @compatible   safari 17.2+ (理论上，实际未经测试)
+// @name               Wider Bilibili
+// @namespace          https://greasyfork.org/users/1125570
+// @version            0.4.5
+// @author             posthumz
+// @description        哔哩哔哩宽屏体验
+// @license            MIT
+// @icon               https://www.bilibili.com/favicon.ico
+// @supportURL         https://github.com/posthumz/wider-bilibili/issues
+// @match              http*://*.bilibili.com/*
+// @grant              GM_addStyle
+// @grant              GM_addValueChangeListener
+// @grant              GM_getValue
+// @grant              GM_registerMenuCommand
+// @grant              GM_setValue
+// @run-at             document-start
 // @noframes
+// @compatible         firefox 117+
+// @compatible         chrome 120+
+// @compatible         edge 120+
+// @compatible         safari 17.2+ (理论上，实际未经测试)
 // ==/UserScript==
 
 (async function () {
@@ -293,11 +293,17 @@ body>.custom-navbar {
     margin: 0 var(--layout-padding);
 
     .left {
-      display: none;
+      .bili-dyn-live-users {
+        margin-bottom: 10px;
+      }
+
+      .bili-dyn-topic-box {
+        top: 200px !important;
+      }
     }
 
-    .right>.bili-dyn-live-users {
-      margin-bottom: 10px;
+    .right {
+      display: none;
     }
 
     main {
@@ -313,6 +319,7 @@ body>.custom-navbar {
     space: `/* 空间页 */
 #app {
   margin: 0 var(--layout-padding);
+  min-width: 1120px;
 }
 
 #biliMainHeader {
@@ -328,9 +335,10 @@ div.wrapper,
 /* 主页 */
 #page-index {
   >div.col-1 {
-    /* 以防不支持round */
-    width: calc(100% - 400px);
+    min-width: 720px;
     width: round(down, calc(100% - 400px), 180px);
+    /* 以防不支持round */
+    max-width: calc(100% - 400px);
 
     .section {
       >.content {
@@ -1215,16 +1223,9 @@ html {
     }
     case "t.bilibili.com":
       GM_addStyle(styles.t);
-      waitFor(() => document.getElementsByClassName("right")[0], "动态右栏").then((right) => {
+      waitFor(() => document.getElementsByClassName("bili-dyn-topic-box")[0], "话题").then((topic) => {
         const left = document.getElementsByClassName("left")[0];
-        const children = [...left.children];
-        right.prepend(...children);
-        let last = children.pop();
-        new MutationObserver((mutations) => {
-          for (const mutation of mutations)
-            for (const node of mutation.addedNodes)
-              last ? last.insertAdjacentElement("afterend", node) : right.insertAdjacentElement("afterbegin", last = node);
-        }).observe(left, { childList: true });
+        left.appendChild(topic);
       });
       console.info("使用动态样式");
       break;
