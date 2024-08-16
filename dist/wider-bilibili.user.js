@@ -1,24 +1,24 @@
 // ==UserScript==
-// @name               Wider Bilibili
-// @namespace          https://greasyfork.org/users/1125570
-// @version            0.4.5
-// @author             posthumz
-// @description        哔哩哔哩宽屏体验
-// @license            MIT
-// @icon               https://www.bilibili.com/favicon.ico
-// @supportURL         https://github.com/posthumz/wider-bilibili/issues
-// @match              http*://*.bilibili.com/*
-// @grant              GM_addStyle
-// @grant              GM_addValueChangeListener
-// @grant              GM_getValue
-// @grant              GM_registerMenuCommand
-// @grant              GM_setValue
-// @run-at             document-start
+// @name             Wider Bilibili
+// @namespace        https://greasyfork.org/users/1125570
+// @version          0.4.5
+// @author           posthumz
+// @description      哔哩哔哩宽屏体验
+// @license          MIT
+// @icon             https://www.bilibili.com/favicon.ico
+// @supportURL       https://github.com/posthumz/wider-bilibili/issues
+// @match            http*://*.bilibili.com/*
+// @grant            GM_addStyle
+// @grant            GM_addValueChangeListener
+// @grant            GM_getValue
+// @grant            GM_registerMenuCommand
+// @grant            GM_setValue
+// @run-at           document-start
 // @noframes
-// @compatible         firefox 117+
-// @compatible         chrome 120+
-// @compatible         edge 120+
-// @compatible         safari 17.2+ (理论上，实际未经测试)
+// @compatible       firefox 117+
+// @compatible       chrome 120+
+// @compatible       edge 120+
+// @compatible       safari 17.2+ (理论上，实际未经测试)
 // ==/UserScript==
 
 (async function () {
@@ -293,12 +293,12 @@ body>.custom-navbar {
     margin: 0 var(--layout-padding);
 
     .left {
-      .bili-dyn-live-users {
-        margin-bottom: 10px;
+      >* {
+        position: initial !important;
       }
 
-      .bili-dyn-topic-box {
-        top: 200px !important;
+      .bili-dyn-live-users {
+        margin-bottom: 10px;
       }
     }
 
@@ -335,10 +335,9 @@ div.wrapper,
 /* 主页 */
 #page-index {
   >div.col-1 {
-    min-width: 720px;
-    width: round(down, calc(100% - 400px), 180px);
     /* 以防不支持round */
     max-width: calc(100% - 400px);
+    width: round(down, calc(100% - 400px), 180px);
 
     .section {
       >.content {
