@@ -30,6 +30,8 @@
   .bpx-player-video-info {
     color: hsla(0, 0%, 100%, .9) !important;
     margin-right: 10px;
+    /* 某些页面莫名其妙加了width */
+    width: initial !important;
   }
 
   .bpx-player-video-btn-dm,

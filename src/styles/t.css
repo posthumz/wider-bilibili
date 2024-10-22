@@ -20,6 +20,8 @@
     margin: 0 var(--layout-padding);
 
     .left {
+      position: initial !important;
+
       >* {
         position: initial !important;
       }
