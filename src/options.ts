@@ -102,13 +102,20 @@ const videoOptions: Options = {
   },
 }
 
+const timelineOptions: Options = {
+  粘性侧栏: {
+    default_: false,
+    callback: init => onStyleValueChange(styleToggle(styles.stickyAside, init)),
+  },
+}
+
 // 应用页面选项并监听变化
 export default function listenOptions(options: Options) {
   for (const [name, { default_, callback }] of Object.entries(options))
     callback && GM_addValueChangeListener(name, callback(GM_getValue(name, default_)))
 }
 
-const optionsFlat: Options = { ...commonOptions, ...videoOptions }
+const optionsFlat: Options = { ...commonOptions, ...videoOptions, ...timelineOptions }
 
 // 页面加载完成后插入设置选项
 waitReady().then(() => {
@@ -158,4 +165,4 @@ waitReady().then(() => {
   listenOptions(commonOptions)
 })
 
-export { videoOptions }
+export { videoOptions, timelineOptions }

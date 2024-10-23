@@ -5,7 +5,7 @@ import {
   GM_addValueChangeListener,
 } from '$'
 import styles from './styles'
-import listenOptions, { videoOptions } from './options'
+import listenOptions, { videoOptions, timelineOptions } from './options'
 import { waitFor, observeFor, waitReady } from './utils'
 
 GM_addStyle(styles.common)
@@ -128,9 +128,10 @@ switch (url.host) {
   // #region 动态页
   case 't.bilibili.com':
     GM_addStyle(styles.t)
-    waitFor(() => document.getElementsByClassName('bili-dyn-topic-box')[0], '话题').then(topic => {
+    listenOptions(timelineOptions)
+    waitFor(() => document.getElementsByClassName('right')[0], '右侧栏').then(right => {
       const left = document.getElementsByClassName('left')[0]!
-      left.appendChild(topic)
+      left.appendChild(right)
     })
     console.info('使用动态样式')
     break

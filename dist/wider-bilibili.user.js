@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wider Bilibili
 // @namespace    https://greasyfork.org/users/1125570
-// @version      0.4.5
+// @version      0.4.6
 // @author       posthumz
 // @description  哔哩哔哩宽屏体验
 // @license      MIT
@@ -295,19 +295,22 @@ body>.custom-navbar {
     margin: 0 var(--layout-padding);
 
     .left {
-      position: initial !important;
-
-      >* {
-        position: initial !important;
-      }
-
       .bili-dyn-live-users {
         margin-bottom: 10px;
+        position: initial !important;
       }
     }
 
     .right {
-      display: none;
+      width: initial;
+
+      .bili-dyn-banner {
+        display: none;
+      }
+
+      .bili-dyn-topic-box {
+        transform: none !important;
+      }
     }
 
     main {
@@ -775,6 +778,11 @@ html {
   /* 其他元素 z-index 基本是<100 */
   z-index: 100;
 }`,
+    stickyAside: `#app .left {
+  height: fit-content;
+  position: sticky;
+  top: 72px;
+}`,
     pauseShowControls: `/* 暂停显示控件 */
 .bpx-state-paused {
 
@@ -995,6 +1003,9 @@ html {
     <label data-hint="在线人数/弹幕数"><input type="checkbox">显示观看信息</label>
     <label data-hint="默认隐藏控件区&#10;悬浮到相应位置以显示"><input type="checkbox">隐藏控件</label>
   </fieldset>
+  <fieldset data-title="动态页">
+    <label data-hint="可能导致侧栏显示不全"><input type="checkbox">粘性侧栏</label>
+  </fieldset>
 </div>`;
   GM_addStyle(styles.options);
   function styleToggle(s, init = true, flip = false) {
@@ -1079,11 +1090,17 @@ html {
       callback: (init) => onStyleValueChange(styleToggle(styles.hideControls, init))
     }
   };
+  const timelineOptions = {
+    粘性侧栏: {
+      default_: false,
+      callback: (init) => onStyleValueChange(styleToggle(styles.stickyAside, init))
+    }
+  };
   function listenOptions(options) {
     for (const [name, { default_, callback }] of Object.entries(options))
       callback && GM_addValueChangeListener(name, callback(GM_getValue(name, default_)));
   }
-  const optionsFlat = { ...commonOptions, ...videoOptions };
+  const optionsFlat = { ...commonOptions, ...videoOptions, ...timelineOptions };
   waitReady().then(() => {
     document.body.insertAdjacentHTML("beforeend", html);
     const app = document.getElementById("wider-bilibili");
@@ -1226,9 +1243,10 @@ html {
     }
     case "t.bilibili.com":
       GM_addStyle(styles.t);
-      waitFor(() => document.getElementsByClassName("bili-dyn-topic-box")[0], "话题").then((topic) => {
+      listenOptions(timelineOptions);
+      waitFor(() => document.getElementsByClassName("right")[0], "右侧栏").then((right) => {
         const left = document.getElementsByClassName("left")[0];
-        left.appendChild(topic);
+        left.appendChild(right);
       });
       console.info("使用动态样式");
       break;

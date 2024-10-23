@@ -1,0 +1,5 @@
+#app .left {
+  height: fit-content;
+  position: sticky;
+  top: 72px;
+}

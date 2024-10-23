@@ -20,19 +20,22 @@
     margin: 0 var(--layout-padding);
 
     .left {
-      position: initial !important;
-
-      >* {
-        position: initial !important;
-      }
-
       .bili-dyn-live-users {
         margin-bottom: 10px;
+        position: initial !important;
       }
     }
 
     .right {
-      display: none;
+      width: initial;
+
+      .bili-dyn-banner {
+        display: none;
+      }
+
+      .bili-dyn-topic-box {
+        transform: none !important;
+      }
     }
 
     main {
