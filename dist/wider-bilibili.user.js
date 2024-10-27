@@ -132,7 +132,8 @@
   height: auto !important;
   margin-top: var(--player-height);
   margin-bottom: 0;
-  position: static;
+  position: initial;
+  visibility: initial !important;
 
   >.bili-header.fixed-header {
     min-height: initial !important;
@@ -298,6 +299,7 @@ body>.custom-navbar {
       .bili-dyn-live-users {
         margin-bottom: 10px;
         position: initial !important;
+        transform: none !important;
       }
     }
 
@@ -993,7 +995,7 @@ html {
   <fieldset data-title="通用">
     <label><input type="number" min="0">左右边距</label>
   </fieldset>
-  <fieldset data-title="播放器">
+  <fieldset data-title="播放页">
     <label data-hint="播放器无上下黑边"><input type="checkbox">自动高度</label>
     <label data-hint="试试拉一下小窗左侧？&#10;记录小窗宽度与位置"><input type="checkbox">小窗样式</label>
     <label><input type="checkbox">导航栏下置</label>

@@ -105,7 +105,8 @@
   height: auto !important;
   margin-top: var(--player-height);
   margin-bottom: 0;
-  position: static;
+  position: initial;
+  visibility: initial !important;
 
   >.bili-header.fixed-header {
     min-height: initial !important;

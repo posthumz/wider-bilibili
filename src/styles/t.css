@@ -23,6 +23,7 @@
       .bili-dyn-live-users {
         margin-bottom: 10px;
         position: initial !important;
+        transform: none !important;
       }
     }
 
