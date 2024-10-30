@@ -123,24 +123,6 @@
     display: flex !important;
   }
 
-  /* BewlyBewly顶栏 */
-  &:has(>header)>.bili-header>.bili-header__bar {
-    display: none !important;
-  }
-
-  >header {
-    position: initial !important;
-
-    * {
-      box-sizing: border-box;
-    }
-
-    >main {
-      height: var(--navbar-height) !important;
-    }
-  }
-
-
   /* 自定义顶栏加载后 */
   >.custom-navbar {
     position: relative;

@@ -1,5 +1,5 @@
 /* 暂停显示控件 */
-.bpx-state-paused {
+.bpx-player-container.bpx-state-paused {
 
   .bpx-player-top-wrap,
   .bpx-player-control-top,
@@ -9,7 +9,7 @@
     visibility: visible !important;
   }
 
-  .bpx-player-shadow-progress-area {
+  div.bpx-player-shadow-progress-area {
     visibility: hidden !important;
   }
 

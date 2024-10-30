@@ -109,16 +109,7 @@ switch (url.host) {
 
     await waitFor(() => document.getElementById('nav-searchform'), '搜索框').then(async () => {
       // 将bilibili-evolved自定义顶栏插入默认顶栏后
-      observeFor('custom-navbar', document.body).then(async nav => {
-        header?.append(nav)
-      })
-
-      // 未启用BewlyBewly
-      if (!document.getElementsByClassName('bewly-design').length)
-        return
-      // 将BewlyBewly自定义顶栏插入默认顶栏后
-      const bewlyHeader = (await waitFor(() => document.getElementById('bewly'), 'BewlyBewly顶栏'))?.shadowRoot?.querySelector('header')
-      bewlyHeader && header?.append(bewlyHeader)
+      observeFor('custom-navbar', document.body).then(async nav => header?.append(nav))
     })
 
     console.info('宽屏模式成功启用')

@@ -150,24 +150,6 @@
     display: flex !important;
   }
 
-  /* BewlyBewly顶栏 */
-  &:has(>header)>.bili-header>.bili-header__bar {
-    display: none !important;
-  }
-
-  >header {
-    position: initial !important;
-
-    * {
-      box-sizing: border-box;
-    }
-
-    >main {
-      height: var(--navbar-height) !important;
-    }
-  }
-
-
   /* 自定义顶栏加载后 */
   >.custom-navbar {
     position: relative;
@@ -786,7 +768,7 @@ html {
   top: 72px;
 }`,
     pauseShowControls: `/* 暂停显示控件 */
-.bpx-state-paused {
+.bpx-player-container.bpx-state-paused {
 
   .bpx-player-top-wrap,
   .bpx-player-control-top,
@@ -796,7 +778,7 @@ html {
     visibility: visible !important;
   }
 
-  .bpx-player-shadow-progress-area {
+  div.bpx-player-shadow-progress-area {
     visibility: hidden !important;
   }
 
@@ -1232,13 +1214,7 @@ html {
       bottomCenter.replaceChildren(danmaku);
       const header = document.getElementById("biliMainHeader");
       await( waitFor(() => document.getElementById("nav-searchform"), "搜索框").then(async () => {
-        observeFor("custom-navbar", document.body).then(async (nav) => {
-          header?.append(nav);
-        });
-        if (!document.getElementsByClassName("bewly-design").length)
-          return;
-        const bewlyHeader = (await waitFor(() => document.getElementById("bewly"), "BewlyBewly顶栏"))?.shadowRoot?.querySelector("header");
-        bewlyHeader && header?.append(bewlyHeader);
+        observeFor("custom-navbar", document.body).then(async (nav) => header?.append(nav));
       }));
       console.info("宽屏模式成功启用");
       break;
