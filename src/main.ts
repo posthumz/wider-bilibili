@@ -107,7 +107,7 @@ switch (url.host) {
     // 默认顶栏
     const header = document.getElementById('biliMainHeader')
 
-    await waitFor(() => document.getElementById('nav-searchform')).then(async () => {
+    await waitFor(() => document.getElementById('nav-searchform'), '搜索框').then(async () => {
       // 将bilibili-evolved自定义顶栏插入默认顶栏后
       observeFor('custom-navbar', document.body).then(async nav => {
         header?.append(nav)

@@ -53,7 +53,7 @@ const videoOptions: Options = {
       const observer = new ResizeObserver(entries => {
         const { height } = entries[0]!.contentRect
         if (container.dataset.screen === 'mini') return
-        if (height < window.innerHeight)
+        if (height < window.innerHeight && height)
           document.documentElement.style.setProperty('--player-height', `${height}px`)
         else
           document.documentElement.style.removeProperty('--player-height')

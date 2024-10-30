@@ -1046,7 +1046,7 @@ html {
           const { height } = entries[0].contentRect;
           if (container.dataset.screen === "mini")
             return;
-          if (height < window.innerHeight)
+          if (height < window.innerHeight && height)
             document.documentElement.style.setProperty("--player-height", `${height}px`);
           else
             document.documentElement.style.removeProperty("--player-height");
@@ -1231,7 +1231,7 @@ html {
       document.addEventListener("fullscreenchange", () => document.fullscreenElement || bottomCenter.replaceChildren(danmaku));
       bottomCenter.replaceChildren(danmaku);
       const header = document.getElementById("biliMainHeader");
-      await( waitFor(() => document.getElementById("nav-searchform")).then(async () => {
+      await( waitFor(() => document.getElementById("nav-searchform"), "搜索框").then(async () => {
         observeFor("custom-navbar", document.body).then(async (nav) => {
           header?.append(nav);
         });
