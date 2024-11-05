@@ -7,20 +7,17 @@ import {
 } from '$'
 import styles from './styles'
 import { waitReady } from './utils'
-import html from './pages/options.html?multiline'
+import html from './pages/options.html?raw'
 
-GM_addStyle(styles.options)
-
-type ValueChangeListener = Parameters<typeof GM_addValueChangeListener>[1]
+type ValueChangeListener<T> = Parameters<typeof GM_addValueChangeListener<T>>[1]
 type Toggle = (enable: boolean) => void
 
 interface Option<T> {
   default_: T
-  callback?: (init: T) => ValueChangeListener
+  callback: (init: T) => ValueChangeListener<T>
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Options = Record<string, Option<any>>
+type OptionRecord = Record<string, Option<boolean> | Option<number>>
 
 function styleToggle(s: string, init = true, flip = false): Toggle {
   if (flip) { init = !init }
@@ -31,21 +28,21 @@ function styleToggle(s: string, init = true, flip = false): Toggle {
     : (enable: boolean) => { style.disabled = !enable }
 }
 
-function onStyleValueChange(toggle: Toggle): ValueChangeListener {
-  return (_k, _o, newVal) => toggle(newVal as boolean)
+function onStyleValueChange<T>(toggle: Toggle) {
+  return (_k: string, _o?: T, newVal?: T) => toggle(newVal as boolean)
 }
 
-const commonOptions: Options = {
+const commonOptions: OptionRecord = {
   左右边距: {
     default_: 30,
     callback: init => {
       document.documentElement.style.setProperty('--layout-padding', `${init}px`)
-      return (_k, _o, newVal) => document.documentElement.style.setProperty('--layout-padding', `${newVal}px`)
+      return (_k, _o, newVal) => document.documentElement.style.setProperty('--layout-padding', `${newVal || 30}px`)
     },
   },
 }
 
-const videoOptions: Options = {
+const videoOptions: OptionRecord = {
   自动高度: { // 也就是说，不会有上下黑边
     default_: true,
     callback: init => {
@@ -102,7 +99,7 @@ const videoOptions: Options = {
   },
 }
 
-const timelineOptions: Options = {
+const timelineOptions: OptionRecord = {
   粘性侧栏: {
     default_: false,
     callback: init => onStyleValueChange(styleToggle(styles.stickyAside, init)),
@@ -110,12 +107,13 @@ const timelineOptions: Options = {
 }
 
 // 应用页面选项并监听变化
-export default function listenOptions(options: Options) {
+export default function listenOptions(options: OptionRecord): void {
   for (const [name, { default_, callback }] of Object.entries(options))
-    callback && GM_addValueChangeListener(name, callback(GM_getValue(name, default_)))
+    // @ts-expect-error idk how to fix this, but it works
+    GM_addValueChangeListener(name, callback(GM_getValue(name, default_)))
 }
 
-const optionsFlat: Options = { ...commonOptions, ...videoOptions, ...timelineOptions }
+const optionsFlat: OptionRecord = { ...commonOptions, ...videoOptions, ...timelineOptions }
 
 // 页面加载完成后插入设置选项
 waitReady().then(() => {
@@ -149,11 +147,11 @@ waitReady().then(() => {
     if (!option) { continue }
     switch (input.type) {
       case 'checkbox':
-        input.checked = GM_getValue(key, option.default_)
+        input.checked = GM_getValue(key, option.default_) as boolean
         input.onchange = () => GM_setValue(key, input.checked)
         break
       case 'number':
-        input.value = GM_getValue(key, option.default_)
+        input.value = GM_getValue(key, option.default_) as unknown as string
         input.oninput = () => {
           const val = Number(input.value)
           Number.isInteger(val) && GM_setValue(key, val)
@@ -163,6 +161,6 @@ waitReady().then(() => {
   }
 
   listenOptions(commonOptions)
-})
+}).catch(console.error)
 
 export { videoOptions, timelineOptions }

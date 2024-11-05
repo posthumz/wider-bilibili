@@ -1,5 +1,16 @@
-import { defineConfig } from 'vite'
+import { defineConfig, Plugin } from 'vite'
 import fs from 'node:fs'
+
+const htmlTransform: Plugin = {
+  name: 'html-transform',
+  transformIndexHtml: (html, ctx) => {
+    if (ctx.path === '/index.html') {
+      return html.replace(/<body>.*<\/body>/s, `<body>
+${fs.readFileSync('src/pages/options.html', 'utf-8').replace(/^/mg, '  ')}
+</body>`)
+    }
+  },
+}
 
 export default defineConfig({
   server: { port: 2333 },
@@ -11,20 +22,5 @@ export default defineConfig({
       output: { entryFileNames: '[name].js', assetFileNames: '[name].[ext]' },
     },
   },
-  plugins: [
-    {
-      name: 'html-transform',
-      transformIndexHtml: (html, ctx) => {
-        return ctx.path === '/index.html'
-          ? html.replace(/<body>.*<\/body>/s, `<body>
-  ${fs.readFileSync('src/pages/options.html', 'utf-8').replace(/^/mg, '  ')}
-  </body>`)
-          : html
-      },
-      // handleHotUpdate: ({ file, server }) => {
-      //   if (file === 'src\\pages\\options.html')
-      //     server.hot.send({ type: 'full-reload' })
-      // },
-    },
-  ],
+  plugins: [htmlTransform],
 })

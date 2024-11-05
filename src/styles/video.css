@@ -100,6 +100,12 @@
   display: none;
 }
 
+/* 以防窗口过窄 */
+#app {
+  width: fit-content;
+  min-width: 100vw;
+}
+
 /* 导航栏 */
 #biliMainHeader {
   height: auto !important;
@@ -175,6 +181,11 @@ body>.custom-navbar {
   width: auto !important;
   box-sizing: border-box;
   display: flex;
+
+  /* 番剧页弹窗 */
+  >:nth-last-child(2)[class^=dialogcoin_coin_dialog_mask] {
+    z-index: 100001;
+  }
 
   /* 右下方浮动按钮位置 */
   >:last-child[class^=navTools_floatNavExp] {

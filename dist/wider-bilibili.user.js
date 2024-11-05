@@ -127,6 +127,12 @@
   display: none;
 }
 
+/* 以防窗口过窄 */
+#app {
+  width: fit-content;
+  min-width: 100vw;
+}
+
 /* 导航栏 */
 #biliMainHeader {
   height: auto !important;
@@ -202,6 +208,11 @@ body>.custom-navbar {
   width: auto !important;
   box-sizing: border-box;
   display: flex;
+
+  /* 番剧页弹窗 */
+  >:nth-last-child(2)[class^=dialogcoin_coin_dialog_mask] {
+    z-index: 100001;
+  }
 
   /* 右下方浮动按钮位置 */
   >:last-child[class^=navTools_floatNavExp] {
@@ -991,7 +1002,6 @@ html {
     <label data-hint="可能导致侧栏显示不全"><input type="checkbox">粘性侧栏</label>
   </fieldset>
 </div>`;
-  GM_addStyle(styles.options);
   function styleToggle(s, init = true, flip = false) {
     if (flip) {
       init = !init;
@@ -1014,7 +1024,7 @@ html {
       default_: 30,
       callback: (init) => {
         document.documentElement.style.setProperty("--layout-padding", `${init}px`);
-        return (_k, _o, newVal) => document.documentElement.style.setProperty("--layout-padding", `${newVal}px`);
+        return (_k, _o, newVal) => document.documentElement.style.setProperty("--layout-padding", `${newVal || 30}px`);
       }
     }
   };
@@ -1026,8 +1036,7 @@ html {
         const container = document.getElementsByClassName("bpx-player-container")[0];
         const observer = new ResizeObserver((entries) => {
           const { height } = entries[0].contentRect;
-          if (container.dataset.screen === "mini")
-            return;
+          if (container.dataset.screen === "mini") return;
           if (height < window.innerHeight && height)
             document.documentElement.style.setProperty("--player-height", `${height}px`);
           else
@@ -1082,7 +1091,7 @@ html {
   };
   function listenOptions(options) {
     for (const [name, { default_, callback }] of Object.entries(options))
-      callback && GM_addValueChangeListener(name, callback(GM_getValue(name, default_)));
+      GM_addValueChangeListener(name, callback(GM_getValue(name, default_)));
   }
   const optionsFlat = { ...commonOptions, ...videoOptions, ...timelineOptions };
   waitReady().then(() => {
@@ -1131,7 +1140,7 @@ html {
       }
     }
     listenOptions(commonOptions);
-  });
+  }).catch(console.error);
   GM_addStyle(styles.common);
   const url = new URL(window.location.href);
   switch (url.host) {
@@ -1162,7 +1171,7 @@ html {
       if (container.getAttribute("data-screen") !== "mini") {
         container.setAttribute("data-screen", "web");
       }
-      container.setAttribute = new Proxy(container.setAttribute, {
+      container.setAttribute = new Proxy(container.setAttribute.bind(container), {
         apply: (target, thisArg, [name, val]) => target.apply(thisArg, [name, name === "data-screen" && val !== "mini" ? "web" : val])
       });
       container.style.setProperty("--mini-width", `${GM_getValue("小窗宽度", 320)}px`);
@@ -1171,10 +1180,8 @@ html {
   translate: ${84 - GM_getValue("小窗右", 52)}px ${48 - GM_getValue("小窗下", 8)}px;
 }`);
       new MutationObserver(() => {
-        if (container.dataset.screen != "mini")
-          return;
-        if (container.style.right === "84px" && container.style.bottom === "48px")
-          return;
+        if (container.dataset.screen != "mini") return;
+        if (container.style.right === "84px" && container.style.bottom === "48px") return;
         const { right, bottom } = container.getBoundingClientRect();
         GM_setValue("小窗右", Math.round(window.innerWidth - right));
         GM_setValue("小窗下", Math.round(window.innerHeight - bottom));
@@ -1188,8 +1195,7 @@ html {
           const miniWidth = Math.max(container.offsetWidth + container.getBoundingClientRect().x - ev2.x + 5, 0);
           GM_setValue("小窗宽度", Math.round(miniWidth));
         };
-        if (ev.button !== 0)
-          return;
+        if (ev.button !== 0) return;
         document.addEventListener("mousemove", resize);
         document.addEventListener("mouseup", () => document.removeEventListener("mousemove", resize), { once: true });
       };
@@ -1198,7 +1204,7 @@ html {
         console.error("页面加载错误：视频区域不存在");
         break;
       }
-      observeFor("bpx-player-mini-warp", videoArea).then((wrap) => wrap.appendChild(miniResizer));
+      observeFor("bpx-player-mini-warp", videoArea).then((wrap) => wrap.appendChild(miniResizer)).catch(console.error);
       const sendingBar = player.getElementsByClassName("bpx-player-sending-bar")[0];
       if (!sendingBar) {
         console.error("页面加载错误：发送框不存在");
@@ -1213,8 +1219,8 @@ html {
       document.addEventListener("fullscreenchange", () => document.fullscreenElement || bottomCenter.replaceChildren(danmaku));
       bottomCenter.replaceChildren(danmaku);
       const header = document.getElementById("biliMainHeader");
-      await( waitFor(() => document.getElementById("nav-searchform"), "搜索框").then(async () => {
-        observeFor("custom-navbar", document.body).then(async (nav) => header?.append(nav));
+      await( waitFor(() => document.getElementById("nav-searchform"), "搜索框").then(() => {
+        observeFor("custom-navbar", document.body).then((nav) => header?.append(nav)).catch(console.error);
       }));
       console.info("宽屏模式成功启用");
       break;
@@ -1225,7 +1231,7 @@ html {
       waitFor(() => document.getElementsByClassName("right")[0], "右侧栏").then((right) => {
         const left = document.getElementsByClassName("left")[0];
         left.appendChild(right);
-      });
+      }).catch(console.error);
       console.info("使用动态样式");
       break;
     case "space.bilibili.com":

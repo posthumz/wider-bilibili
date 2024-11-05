@@ -45,14 +45,14 @@ switch (url.host) {
     // 立即使用宽屏样式 (除非当前是小窗模式)
     if (container.getAttribute('data-screen') !== 'mini') { container.setAttribute('data-screen', 'web') }
     // 重载container的setAttribute：data-screen被设置为mini(小窗)以外的值时将其设置为web(宽屏)
-    container.setAttribute = new Proxy(container.setAttribute, {
+    container.setAttribute = new Proxy(container.setAttribute.bind(container), {
       apply: (target, thisArg, [name, val]) =>
         target.apply(thisArg, [name, name === 'data-screen' && val !== 'mini' ? 'web' : val]),
     })
 
     // 初始化以及监听小窗宽度选项
     container.style.setProperty('--mini-width', `${GM_getValue('小窗宽度', 320)}px`)
-    GM_addValueChangeListener('小窗宽度', (_k, _o, newVal) => container.style.setProperty('--mini-width', `${newVal}px`))
+    GM_addValueChangeListener<number>('小窗宽度', (_k, _o, newVal) => container.style.setProperty('--mini-width', `${newVal}px`))
 
     // 初始化以及监听小窗位置。直接改right和bottom值还会被改回去😡，所以初始用translate
     GM_addStyle(`.bpx-player-container[data-screen="mini"] {
@@ -86,7 +86,7 @@ switch (url.host) {
 
     const videoArea = container.getElementsByClassName('bpx-player-video-area')[0]
     if (!videoArea) { console.error('页面加载错误：视频区域不存在'); break }
-    observeFor('bpx-player-mini-warp', videoArea).then(wrap => wrap.appendChild(miniResizer))
+    observeFor('bpx-player-mini-warp', videoArea).then(wrap => wrap.appendChild(miniResizer)).catch(console.error)
 
     const sendingBar = player.getElementsByClassName('bpx-player-sending-bar')[0] as HTMLElement
     if (!sendingBar) { console.error('页面加载错误：发送框不存在'); break }
@@ -107,9 +107,9 @@ switch (url.host) {
     // 默认顶栏
     const header = document.getElementById('biliMainHeader')
 
-    await waitFor(() => document.getElementById('nav-searchform'), '搜索框').then(async () => {
+    await waitFor(() => document.getElementById('nav-searchform'), '搜索框').then(() => {
       // 将bilibili-evolved自定义顶栏插入默认顶栏后
-      observeFor('custom-navbar', document.body).then(async nav => header?.append(nav))
+      observeFor('custom-navbar', document.body).then(nav => header?.append(nav)).catch(console.error)
     })
 
     console.info('宽屏模式成功启用')
@@ -123,7 +123,7 @@ switch (url.host) {
     waitFor(() => document.getElementsByClassName('right')[0], '右侧栏').then(right => {
       const left = document.getElementsByClassName('left')[0]!
       left.appendChild(right)
-    })
+    }).catch(console.error)
     console.info('使用动态样式')
     break
   // #region 空间页

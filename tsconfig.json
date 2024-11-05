@@ -17,5 +17,5 @@
     "noUncheckedIndexedAccess": true,
     "sourceMap": true,
   },
-  "include": [ "src" ]
+  // "include": [ "src", "eslint.config.mjs" ]
 }
