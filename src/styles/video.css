@@ -115,12 +115,14 @@
   visibility: initial !important;
 
   >.bili-header.fixed-header {
-    min-height: initial !important;
-    min-width: initial !important;
+    min-height: initial;
+    min-width: none;
+    max-width: none;
 
     >.bili-header__bar {
-      height: var(--navbar-height);
       position: relative !important;
+      height: var(--navbar-height);
+      max-width: none;
     }
   }
 
@@ -155,13 +157,15 @@ body>.custom-navbar {
 .main-container,
 .playlist-container {
   padding: 0 var(--layout-padding) !important;
-  min-width: initial !important;
+  max-width: none !important;
+  min-width: none !important;
 }
 
 .left-container,
 .plp-l,
 .playlist-container--left {
   flex: 1;
+  width: initial;
 }
 
 .plp-r {

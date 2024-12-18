@@ -8,6 +8,7 @@
 // @icon         https://www.bilibili.com/favicon.ico
 // @supportURL   https://github.com/posthumz/wider-bilibili/issues
 // @match        http*://*.bilibili.com/*
+// @grant        GM_addElement
 // @grant        GM_addStyle
 // @grant        GM_addValueChangeListener
 // @grant        GM_getValue
@@ -142,12 +143,14 @@
   visibility: initial !important;
 
   >.bili-header.fixed-header {
-    min-height: initial !important;
-    min-width: initial !important;
+    min-height: initial;
+    min-width: none;
+    max-width: none;
 
     >.bili-header__bar {
-      height: var(--navbar-height);
       position: relative !important;
+      height: var(--navbar-height);
+      max-width: none;
     }
   }
 
@@ -182,13 +185,15 @@ body>.custom-navbar {
 .main-container,
 .playlist-container {
   padding: 0 var(--layout-padding) !important;
-  min-width: initial !important;
+  max-width: none !important;
+  min-width: none !important;
 }
 
 .left-container,
 .plp-l,
 .playlist-container--left {
   flex: 1;
+  width: initial;
 }
 
 .plp-r {
@@ -1034,13 +1039,12 @@ html {
       default_: true,
       callback: (init) => {
         const container = document.getElementsByClassName("bpx-player-container")[0];
+        document.documentElement.style.setProperty("--player-height", `${container.clientHeight}px`);
         const observer = new ResizeObserver((entries) => {
-          const { height } = entries[0].contentRect;
           if (container.dataset.screen === "mini") return;
-          if (height < window.innerHeight && height)
+          const { height } = entries[0].contentRect;
+          if (height && height <= window.innerHeight)
             document.documentElement.style.setProperty("--player-height", `${height}px`);
-          else
-            document.documentElement.style.removeProperty("--player-height");
         });
         const toggle = styleToggle(styles.fixHeight, init, true);
         init && observer.observe(container);
@@ -1186,8 +1190,7 @@ html {
         GM_setValue("小窗右", Math.round(window.innerWidth - right));
         GM_setValue("小窗下", Math.round(window.innerHeight - bottom));
       }).observe(container, { attributes: true, attributeFilter: ["style"] });
-      const miniResizer = document.createElement("div");
-      miniResizer.className = "bpx-player-mini-resizer";
+      const miniResizer = GM_addElement("div", { className: "bpx-player-mini-resizer" });
       miniResizer.onmousedown = (ev) => {
         ev.stopImmediatePropagation();
         ev.preventDefault();

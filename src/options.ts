@@ -47,13 +47,12 @@ const videoOptions: OptionRecord = {
     default_: true,
     callback: init => {
       const container = document.getElementsByClassName('bpx-player-container')[0]! as HTMLDivElement
+      document.documentElement.style.setProperty('--player-height', `${container.clientHeight}px`)
       const observer = new ResizeObserver(entries => {
-        const { height } = entries[0]!.contentRect
         if (container.dataset.screen === 'mini') return
-        if (height < window.innerHeight && height)
+        const { height } = entries[0]!.contentRect
+        if (height && height <= window.innerHeight)
           document.documentElement.style.setProperty('--player-height', `${height}px`)
-        else
-          document.documentElement.style.removeProperty('--player-height')
       })
       const toggle = styleToggle(styles.fixHeight, init, true)
       init && observer.observe(container)

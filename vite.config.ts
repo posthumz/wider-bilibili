@@ -8,9 +8,6 @@ import path from 'node:path'
 const cleanBuild: Plugin = {
   name: 'clean-build',
   apply: 'build',
-  outputOptions(options) {
-    console.log(options)
-  },
   load(id) {
     const relative = path.relative(__dirname, id)
     // load css statically instead of globbing at runtime
@@ -23,16 +20,12 @@ const cleanBuild: Plugin = {
   /** removes the _GM_* aliases */
   transform(code, id) {
     const relative = path.relative(__dirname, id)
-    console.log(id)
     if (relative.endsWith('options.html?raw')) {
       const content = fs.readFileSync(id.replace('?raw', ''), 'utf-8')
       return `export default \`${content}\``
     }
     if (path.matchesGlob(relative, 'src/*.ts'))
       return code.replace(/import \{.*?\} from "\$";?\n/s, '')
-    // if (path.matchesGlob(relative, 'src/styles/**/*.css?inline')) {
-    //   return
-    // }
   },
 }
 

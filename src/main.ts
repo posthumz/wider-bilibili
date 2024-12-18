@@ -1,5 +1,6 @@
 import {
   GM_addStyle,
+  GM_addElement,
   GM_setValue,
   GM_getValue,
   GM_addValueChangeListener,
@@ -40,7 +41,7 @@ switch (url.host) {
     if (!player) { style.remove(); break }
 
     // 播放器内容器 (番剧页面需要额外等待)
-    const container = await waitFor(() => player.getElementsByClassName('bpx-player-container')[0], '播放器内容器') as HTMLDivElement
+    const container = await waitFor(() => player.getElementsByClassName('bpx-player-container')[0], '播放器内容器') as HTMLElement
     listenOptions(videoOptions)
     // 立即使用宽屏样式 (除非当前是小窗模式)
     if (container.getAttribute('data-screen') !== 'mini') { container.setAttribute('data-screen', 'web') }
@@ -70,8 +71,7 @@ switch (url.host) {
     }).observe(container, { attributes: true, attributeFilter: ['style'] })
 
     // 添加拖动调整大小的部件
-    const miniResizer = document.createElement('div')
-    miniResizer.className = 'bpx-player-mini-resizer'
+    const miniResizer = GM_addElement('div', { className: 'bpx-player-mini-resizer' })
     miniResizer.onmousedown = ev => {
       ev.stopImmediatePropagation()
       ev.preventDefault()
@@ -88,7 +88,7 @@ switch (url.host) {
     if (!videoArea) { console.error('页面加载错误：视频区域不存在'); break }
     observeFor('bpx-player-mini-warp', videoArea).then(wrap => wrap.appendChild(miniResizer)).catch(console.error)
 
-    const sendingBar = player.getElementsByClassName('bpx-player-sending-bar')[0] as HTMLElement
+    const sendingBar = player.getElementsByClassName('bpx-player-sending-bar')[0]
     if (!sendingBar) { console.error('页面加载错误：发送框不存在'); break }
     // 等待人数加载完成，再进行弹幕框的操作
     const danmaku = (await observeFor('bpx-player-video-info', sendingBar)).parentElement
