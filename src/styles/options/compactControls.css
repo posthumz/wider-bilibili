@@ -10,7 +10,7 @@
 /* 控件区域 */
 .bpx-player-control-bottom-left,
 .bpx-player-control-bottom-right {
-  min-width: initial !important;
+  min-width: auto !important;
   gap: 8px;
 }
 
@@ -59,7 +59,7 @@
 }
 
 .bpx-player-video-inputbar {
-  max-width: initial !important;
+  max-width: none !important;
 }
 
 .bpx-player-video-inputbar-wrap {

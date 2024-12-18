@@ -1,4 +1,8 @@
 /* 首页 */
+div#i_cecream {
+  max-width: none;
+}
+
 .feed-card,
 .floor-single-card,
 .bili-video-card {

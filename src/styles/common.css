@@ -3,6 +3,12 @@ html {
   --layout-padding: 30px;
 }
 
+.bili-header {
+  min-height: auto !important;
+  min-width: auto !important;
+  max-width: none !important;
+}
+
 /* 搜索栏 */
 .center-search-container {
   min-width: 0;

@@ -59,7 +59,7 @@
     color: hsla(0, 0%, 100%, .9) !important;
     margin-right: 10px;
     /* 某些页面莫名其妙加了width */
-    width: initial !important;
+    width: auto !important;
   }
 
   .bpx-player-video-btn-dm,
@@ -142,16 +142,10 @@
   position: initial;
   visibility: initial !important;
 
-  >.bili-header.fixed-header {
-    min-height: initial;
-    min-width: none;
+  >.bili-header>.bili-header__bar {
+    position: relative !important;
+    height: var(--navbar-height);
     max-width: none;
-
-    >.bili-header__bar {
-      position: relative !important;
-      height: var(--navbar-height);
-      max-width: none;
-    }
   }
 
   /* BiliBili Evolved自定义顶栏加载前，强制显示原生顶栏 */
@@ -186,14 +180,14 @@ body>.custom-navbar {
 .playlist-container {
   padding: 0 var(--layout-padding) !important;
   max-width: none !important;
-  min-width: none !important;
+  min-width: auto !important;
 }
 
 .left-container,
 .plp-l,
 .playlist-container--left {
   flex: 1;
-  width: initial;
+  width: auto;
 }
 
 .plp-r {
@@ -501,7 +495,7 @@ div.wrapper,
 }
 
 .container {
-  max-width: initial !important;
+  max-width: none !important;
   width: auto !important;
 }
 
@@ -509,6 +503,10 @@ div.wrapper,
   padding-top: 0 !important;
 }`,
     home: `/* 首页 */
+div#i_cecream {
+  max-width: none;
+}
+
 .feed-card,
 .floor-single-card,
 .bili-video-card {
@@ -522,6 +520,12 @@ div.wrapper,
     common: `/* This overrides :root style */
 html {
   --layout-padding: 30px;
+}
+
+.bili-header {
+  min-height: auto !important;
+  min-width: auto !important;
+  max-width: none !important;
 }
 
 /* 搜索栏 */
@@ -878,7 +882,7 @@ html {
 /* 控件区域 */
 .bpx-player-control-bottom-left,
 .bpx-player-control-bottom-right {
-  min-width: initial !important;
+  min-width: auto !important;
   gap: 8px;
 }
 
@@ -927,7 +931,7 @@ html {
 }
 
 .bpx-player-video-inputbar {
-  max-width: initial !important;
+  max-width: none !important;
 }
 
 .bpx-player-video-inputbar-wrap {

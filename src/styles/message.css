@@ -3,7 +3,7 @@
 }
 
 .container {
-  max-width: initial !important;
+  max-width: none !important;
   width: auto !important;
 }
 
