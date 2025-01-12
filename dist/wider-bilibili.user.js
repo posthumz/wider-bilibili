@@ -523,7 +523,6 @@ html {
 }
 
 div.bili-header {
-  min-height: auto !important;
   min-width: auto !important;
   max-width: none !important;
 }
