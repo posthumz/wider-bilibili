@@ -51,7 +51,7 @@ const videoOptions: OptionRecord = {
       const observer = new ResizeObserver(entries => {
         if (container.dataset.screen === 'mini') return
         const { height } = entries[0]!.contentRect
-        if (height && height <= window.innerHeight)
+        if (height && Math.round(height) <= window.innerHeight)
           document.documentElement.style.setProperty('--player-height', `${height}px`)
       })
       const toggle = styleToggle(styles.fixHeight, init, true)
