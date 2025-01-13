@@ -1,25 +1,24 @@
 // ==UserScript==
-// @name         Wider Bilibili
-// @namespace    https://greasyfork.org/users/1125570
-// @version      0.4.6
-// @author       posthumz
-// @description  哔哩哔哩宽屏体验
-// @license      MIT
-// @icon         https://www.bilibili.com/favicon.ico
-// @supportURL   https://github.com/posthumz/wider-bilibili/issues
-// @match        http*://*.bilibili.com/*
-// @grant        GM_addElement
-// @grant        GM_addStyle
-// @grant        GM_addValueChangeListener
-// @grant        GM_getValue
-// @grant        GM_registerMenuCommand
-// @grant        GM_setValue
-// @run-at       document-start
-// @compatible   firefox 117+
-// @compatible   chrome 120+
-// @compatible   edge 120+
-// @compatible   safari 17.2+ (理论上，实际未经测试)
+// @name               Wider Bilibili
+// @namespace          https://greasyfork.org/users/1125570
+// @version            0.4.6
+// @author             posthumz
+// @description        哔哩哔哩宽屏体验
+// @license            MIT
+// @icon               https://www.bilibili.com/favicon.ico
+// @supportURL         https://github.com/posthumz/wider-bilibili/issues
+// @match              http*://*.bilibili.com/*
+// @grant              GM_addStyle
+// @grant              GM_addValueChangeListener
+// @grant              GM_getValue
+// @grant              GM_registerMenuCommand
+// @grant              GM_setValue
+// @run-at             document-start
 // @noframes
+// @compatible         firefox 117+
+// @compatible         chrome 120+
+// @compatible         edge 120+
+// @compatible         safari 17.2+ (理论上，实际未经测试)
 // ==/UserScript==
 
 (async function () {
@@ -1193,7 +1192,8 @@ div.bili-header {
         GM_setValue("小窗右", Math.round(window.innerWidth - right));
         GM_setValue("小窗下", Math.round(window.innerHeight - bottom));
       }).observe(container, { attributes: true, attributeFilter: ["style"] });
-      const miniResizer = GM_addElement("div", { className: "bpx-player-mini-resizer" });
+      const miniResizer = document.createElement("div");
+      miniResizer.className = "bpx-player-mini-resizer";
       miniResizer.onmousedown = (ev) => {
         ev.stopImmediatePropagation();
         ev.preventDefault();

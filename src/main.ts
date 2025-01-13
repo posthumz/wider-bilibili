@@ -71,7 +71,8 @@ switch (url.host) {
     }).observe(container, { attributes: true, attributeFilter: ['style'] })
 
     // 添加拖动调整大小的部件
-    const miniResizer = GM_addElement('div', { className: 'bpx-player-mini-resizer' })
+    const miniResizer = document.createElement('div')
+    miniResizer.className = 'bpx-player-mini-resizer'
     miniResizer.onmousedown = ev => {
       ev.stopImmediatePropagation()
       ev.preventDefault()
