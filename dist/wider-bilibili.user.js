@@ -1,24 +1,24 @@
 // ==UserScript==
-// @name               Wider Bilibili
-// @namespace          https://greasyfork.org/users/1125570
-// @version            0.4.6
-// @author             posthumz
-// @description        哔哩哔哩宽屏体验
-// @license            MIT
-// @icon               https://www.bilibili.com/favicon.ico
-// @supportURL         https://github.com/posthumz/wider-bilibili/issues
-// @match              http*://*.bilibili.com/*
-// @grant              GM_addStyle
-// @grant              GM_addValueChangeListener
-// @grant              GM_getValue
-// @grant              GM_registerMenuCommand
-// @grant              GM_setValue
-// @run-at             document-start
+// @name         Wider Bilibili
+// @namespace    https://greasyfork.org/users/1125570
+// @version      0.4.6
+// @author       posthumz
+// @description  哔哩哔哩宽屏体验
+// @license      MIT
+// @icon         https://www.bilibili.com/favicon.ico
+// @supportURL   https://github.com/posthumz/wider-bilibili/issues
+// @match        http*://*.bilibili.com/*
+// @grant        GM_addStyle
+// @grant        GM_addValueChangeListener
+// @grant        GM_getValue
+// @grant        GM_registerMenuCommand
+// @grant        GM_setValue
+// @run-at       document-start
+// @compatible   firefox 117+
+// @compatible   chrome 120+
+// @compatible   edge 120+
+// @compatible   safari 17.2+ (理论上，实际未经测试)
 // @noframes
-// @compatible         firefox 117+
-// @compatible         chrome 120+
-// @compatible         edge 120+
-// @compatible         safari 17.2+ (理论上，实际未经测试)
 // ==/UserScript==
 
 (async function () {
@@ -141,10 +141,14 @@
   position: initial;
   visibility: initial !important;
 
-  >.bili-header>.bili-header__bar {
-    position: relative !important;
-    height: var(--navbar-height);
-    max-width: none;
+  >.bili-header {
+    min-height: auto !important;
+
+    >.bili-header__bar {
+      position: relative !important;
+      height: var(--navbar-height);
+      max-width: none;
+    }
   }
 
   /* BiliBili Evolved自定义顶栏加载前，强制显示原生顶栏 */

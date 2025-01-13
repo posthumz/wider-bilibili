@@ -1,6 +1,5 @@
 import {
   GM_addStyle,
-  GM_addElement,
   GM_setValue,
   GM_getValue,
   GM_addValueChangeListener,

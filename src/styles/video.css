@@ -114,10 +114,14 @@
   position: initial;
   visibility: initial !important;
 
-  >.bili-header>.bili-header__bar {
-    position: relative !important;
-    height: var(--navbar-height);
-    max-width: none;
+  >.bili-header {
+    min-height: auto !important;
+
+    >.bili-header__bar {
+      position: relative !important;
+      height: var(--navbar-height);
+      max-width: none;
+    }
   }
 
   /* BiliBili Evolved自定义顶栏加载前，强制显示原生顶栏 */
