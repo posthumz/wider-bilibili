@@ -129,8 +129,8 @@
 
 /* 以防窗口过窄 */
 #app {
-  width: fit-content;
-  min-width: 100vw;
+  width: 100vw;
+  max-width: 100%;
 }
 
 /* 导航栏 */
@@ -1035,7 +1035,7 @@ div.bili-header {
       default_: 30,
       callback: (init) => {
         document.documentElement.style.setProperty("--layout-padding", `${init}px`);
-        return (_k, _o, newVal) => document.documentElement.style.setProperty("--layout-padding", `${newVal || 30}px`);
+        return (_k, _o, newVal) => document.documentElement.style.setProperty("--layout-padding", `${newVal ?? 30}px`);
       }
     }
   };

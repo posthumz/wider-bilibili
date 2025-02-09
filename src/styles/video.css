@@ -102,8 +102,8 @@
 
 /* 以防窗口过窄 */
 #app {
-  width: fit-content;
-  min-width: 100vw;
+  width: 100vw;
+  max-width: 100%;
 }
 
 /* 导航栏 */

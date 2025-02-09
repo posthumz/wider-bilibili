@@ -37,7 +37,7 @@ const commonOptions: OptionRecord = {
     default_: 30,
     callback: init => {
       document.documentElement.style.setProperty('--layout-padding', `${init}px`)
-      return (_k, _o, newVal) => document.documentElement.style.setProperty('--layout-padding', `${newVal || 30}px`)
+      return (_k, _o, newVal) => document.documentElement.style.setProperty('--layout-padding', `${newVal ?? 30}px`)
     },
   },
 }
