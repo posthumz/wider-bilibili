@@ -129,8 +129,8 @@
 
 /* 以防窗口过窄 */
 #app {
-  width: 100vw;
-  max-width: 100%;
+  width: 100vw !important;
+  max-width: 100% !important;
 }
 
 /* 导航栏 */
