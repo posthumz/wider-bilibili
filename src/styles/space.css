@@ -1,3 +1,10 @@
+/* 新版空间页 */
+#app .space-main,
+.nav-bar__main,
+.header .header-upinfo {
+  --side-padding: var(--layout-padding) !important;
+}
+
 /* 空间页 */
 #app {
   margin: 0 var(--layout-padding);

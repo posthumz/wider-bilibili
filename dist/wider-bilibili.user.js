@@ -320,7 +320,14 @@ body>.custom-navbar {
     }
   }
 }`,
-    space: `/* 空间页 */
+    space: `/* 新版空间页 */
+#app .space-main,
+.nav-bar__main,
+.header .header-upinfo {
+  --side-padding: var(--layout-padding) !important;
+}
+
+/* 空间页 */
 #app {
   margin: 0 var(--layout-padding);
   min-width: 1120px;
@@ -1235,6 +1242,7 @@ div.bili-header {
       console.info("宽屏模式成功启用");
       break;
     }
+    // #region 动态页
     case "t.bilibili.com":
       GM_addStyle(styles.t);
       listenOptions(timelineOptions);
@@ -1244,18 +1252,22 @@ div.bili-header {
       }).catch(console.error);
       console.info("使用动态样式");
       break;
+    // #region 空间页
     case "space.bilibili.com":
       GM_addStyle(styles.space);
       console.info("使用空间样式");
       break;
+    // #region 消息页
     case "message.bilibili.com":
       GM_addStyle(styles.message);
       console.info("使用通知样式");
       break;
+    // #region 搜索页
     case "search.bilibili.com":
       GM_addStyle(styles.search);
       console.info("使用搜索页样式");
       break;
+    // #region 未适配页面
     default:
       console.info(`未适配页面，仅启用通用样式: ${url.href}`);
       break;
