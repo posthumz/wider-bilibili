@@ -1,6 +1,6 @@
 /* 导航栏上置 (默认下置) */
 :root {
-  --player-height: calc(100vh - var(--navbar-height));
+  --player-height: calc(100vh - var(--navbar-height) - var(--title-height));
 }
 
 #biliMainHeader {

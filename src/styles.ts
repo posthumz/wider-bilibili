@@ -16,8 +16,9 @@ import pauseShowControls from './styles/options/pauseShowControls.css?inline'
 import stickyAside from './styles/options/stickyAside.css?inline'
 import stickyHeader from './styles/options/stickyHeader.css?inline'
 import upperNavigation from './styles/options/upperNavigation.css?inline'
+import reserveTitleBar from './styles/options/reserveTitleBar.css?inline'
 
 export default {
   common, home, message, opus, read, search, space, t, video, compactControls,
-  fixHeight, hideControls, mini, pauseShowControls, stickyAside, stickyHeader, upperNavigation,
+  fixHeight, hideControls, mini, pauseShowControls, stickyAside, stickyHeader, upperNavigation, reserveTitleBar,
 }
