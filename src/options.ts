@@ -78,10 +78,7 @@ const videoOptions: OptionRecord = {
   },
   显示标题栏: {
     default_: false,
-    callback: init => {
-      document.documentElement.style.removeProperty('--player-height')
-      return onStyleValueChange(styleToggle(styles.reserveTitleBar, init))
-    }
+    callback: init => onStyleValueChange(styleToggle(styles.reserveTitleBar, init)),
   },
   粘性导航栏: {
     default_: true,

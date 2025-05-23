@@ -1,6 +1,6 @@
 /* 导航栏上置 (默认下置) */
 :root {
-  --player-height: calc(100vh - var(--navbar-height) - var(--title-height));
+  --upper-nav: 1;
 }
 
 #biliMainHeader {
@@ -14,9 +14,4 @@
 #playerWrap.player-wrap,
 #bilibili-player-wrap {
   top: var(--navbar-height);
-}
-
-/* 限制高度上限（非全屏时） */
-.bpx-player-container:not(:fullscreen) .bpx-player-video-wrap>video {
-  max-height: calc(100vh - var(--navbar-height));
 }

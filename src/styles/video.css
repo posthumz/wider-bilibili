@@ -1,8 +1,10 @@
 /* 播放器 */
 :root {
   --navbar-height: 64px;
-  --player-height: 100vh;
+  --upper-nav: 0;
   --title-height: 0px;
+  --reserve-height: calc(var(--upper-nav) * var(--navbar-height) + var(--title-height));
+  --player-height: calc(100vh - var(--reserve-height));
 }
 
 /* 播放器定位 */
@@ -47,9 +49,9 @@
   }
 }
 
-/* 限制高度上限100vh */
-.bpx-player-video-wrap>video {
-  max-height: 100vh;
+/* 限制高度上限100vh - 预留高度 */
+.bpx-player-container:not(:fullscreen) .bpx-player-video-wrap>video {
+  max-height: calc(100vh - var(--reserve-height));
 }
 
 /* 小窗时仍然保持播放器容器高度 */
@@ -57,12 +59,12 @@
   height: var(--player-height);
 }
 
-/* 加载时强制占用全屏 */
+/* 加载时强制占用全高 */
 .bpx-player-container:not([data-screen="mini"]) .bpx-player-video-area:has(>.bpx-state-loading) video {
   height: 100vh;
 }
 
-/* 换源时强制占用全屏 */
+/* 换源时强制占用全高 */
 .bpx-player-video-wrap>video:not([src]) {
   height: 100vh;
 }
@@ -70,7 +72,6 @@
 /* 这啥？加载时会导致屏幕超出 */
 .bpx-player-cmd-dm-wrap {
   position: absolute;
-  top: 0;
 }
 
 /* 加载动画强制显示 */
@@ -91,10 +92,7 @@
 }
 
 /* 原弹幕发送区域不显示 */
-.bpx-player-sending-area {
-  display: none;
-}
-
+.bpx-player-sending-area,
 /* 原宽屏/网页全屏按钮不显示 */
 .bpx-player-ctrl-wide,
 .bpx-player-ctrl-web {
@@ -197,12 +195,9 @@ body>.custom-navbar {
 }
 
 /* 特殊页面 */
-.special .main-container {
-  margin-top: 0;
-}
 
 .special>.special-cover {
-  max-height: calc(var(--player-height) + var(--navbar-height) + var(--title-height));
+  max-height: calc(100vh - var(--title-height));
 }
 
 .player-left-components {

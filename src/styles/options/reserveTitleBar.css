@@ -1,9 +1,3 @@
 :root {
-  --title-height: 164px;
-  --player-height: calc(100vh - var(--navbar-height) - var(--title-height));
-}
-
-/* 限制高度上限（非全屏时） */
-.bpx-player-container:not(:fullscreen) .bpx-player-video-wrap>video {
-  max-height: calc(100vh - var(--navbar-height) - var(--title-height));
+  --title-height: calc(100px + (1 - var(--upper-nav)) * var(--navbar-height));
 }

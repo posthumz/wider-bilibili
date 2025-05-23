@@ -28,7 +28,10 @@
     video: `/* 播放器 */
 :root {
   --navbar-height: 64px;
-  --player-height: 100vh;
+  --upper-nav: 0;
+  --title-height: 0px;
+  --reserve-height: calc(var(--upper-nav) * var(--navbar-height) + var(--title-height));
+  --player-height: calc(100vh - var(--reserve-height));
 }
 
 /* 播放器定位 */
@@ -73,9 +76,9 @@
   }
 }
 
-/* 限制高度上限100vh */
-.bpx-player-video-wrap>video {
-  max-height: 100vh;
+/* 限制高度上限100vh - 预留高度 */
+.bpx-player-container:not(:fullscreen) .bpx-player-video-wrap>video {
+  max-height: calc(100vh - var(--reserve-height));
 }
 
 /* 小窗时仍然保持播放器容器高度 */
@@ -83,12 +86,12 @@
   height: var(--player-height);
 }
 
-/* 加载时强制占用全屏 */
+/* 加载时强制占用全高 */
 .bpx-player-container:not([data-screen="mini"]) .bpx-player-video-area:has(>.bpx-state-loading) video {
   height: 100vh;
 }
 
-/* 换源时强制占用全屏 */
+/* 换源时强制占用全高 */
 .bpx-player-video-wrap>video:not([src]) {
   height: 100vh;
 }
@@ -96,7 +99,6 @@
 /* 这啥？加载时会导致屏幕超出 */
 .bpx-player-cmd-dm-wrap {
   position: absolute;
-  top: 0;
 }
 
 /* 加载动画强制显示 */
@@ -117,10 +119,7 @@
 }
 
 /* 原弹幕发送区域不显示 */
-.bpx-player-sending-area {
-  display: none;
-}
-
+.bpx-player-sending-area,
 /* 原宽屏/网页全屏按钮不显示 */
 .bpx-player-ctrl-wide,
 .bpx-player-ctrl-web {
@@ -223,12 +222,9 @@ body>.custom-navbar {
 }
 
 /* 特殊页面 */
-.special .main-container {
-  margin-top: 0;
-}
 
 .special>.special-cover {
-  max-height: calc(var(--player-height) + var(--navbar-height));
+  max-height: calc(100vh - var(--title-height));
 }
 
 .player-left-components {
@@ -765,7 +761,7 @@ div.bili-header {
 }`,
     upperNavigation: `/* 导航栏上置 (默认下置) */
 :root {
-  --player-height: calc(100vh - var(--navbar-height));
+  --upper-nav: 1;
 }
 
 #biliMainHeader {
@@ -779,11 +775,6 @@ div.bili-header {
 #playerWrap.player-wrap,
 #bilibili-player-wrap {
   top: var(--navbar-height);
-}
-
-/* 限制高度上限（非全屏时） */
-.bpx-player-container:not(:fullscreen) .bpx-player-video-wrap>video {
-  max-height: calc(100vh - var(--navbar-height));
 }`,
     stickyHeader: `#biliMainHeader {
   position: sticky;
@@ -795,6 +786,9 @@ div.bili-header {
   height: fit-content;
   position: sticky;
   top: 72px;
+}`,
+    reserveTitleBar: `:root {
+  --title-height: calc(100px + (1 - var(--upper-nav)) * var(--navbar-height));
 }`,
     pauseShowControls: `/* 暂停显示控件 */
 .bpx-player-container.bpx-state-paused {
@@ -1010,6 +1004,7 @@ div.bili-header {
     <label data-hint="播放器无上下黑边"><input type="checkbox">自动高度</label>
     <label data-hint="试试拉一下小窗左侧？&#10;记录小窗宽度与位置"><input type="checkbox">小窗样式</label>
     <label><input type="checkbox">导航栏下置</label>
+    <label><input type="checkbox">显示标题栏</label>
     <label><input type="checkbox">粘性导航栏</label>
     <label><input type="checkbox">紧凑控件间距</label>
     <label data-hint="默认检测到鼠标活动显示控件&#10;需要一直显示请打开此选项"><input type="checkbox">暂停显示控件</label>
@@ -1078,6 +1073,10 @@ div.bili-header {
     导航栏下置: {
       default_: true,
       callback: (init) => onStyleValueChange(styleToggle(styles.upperNavigation, init, true))
+    },
+    显示标题栏: {
+      default_: false,
+      callback: (init) => onStyleValueChange(styleToggle(styles.reserveTitleBar, init))
     },
     粘性导航栏: {
       default_: true,
