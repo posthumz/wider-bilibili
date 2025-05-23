@@ -43,6 +43,14 @@ const commonOptions: OptionRecord = {
 }
 
 const videoOptions: OptionRecord = {
+  导航栏下置: {
+    default_: true,
+    callback: init => onStyleValueChange(styleToggle(styles.upperNavigation, init, true)),
+  },
+  显示标题栏: {
+    default_: false,
+    callback: init => onStyleValueChange(styleToggle(styles.reserveTitleBar, init)),
+  },
   自动高度: { // 也就是说，不会有上下黑边
     default_: true,
     callback: init => {
@@ -55,12 +63,9 @@ const videoOptions: OptionRecord = {
           document.documentElement.style.setProperty('--player-height', `${height}px`)
       })
       const toggle = styleToggle(styles.fixHeight, init, true)
-      init && observer.observe(container)
+      observer.observe(container)
       return onStyleValueChange(enable => {
         toggle(enable)
-        enable
-          ? observer.observe(container)
-          : observer.disconnect(), document.documentElement.style.removeProperty('--player-height')
       })
     },
   },
@@ -71,14 +76,6 @@ const videoOptions: OptionRecord = {
       const toggle2 = styleToggle('.bpx-player-container{--mini-width:initial}', init, true)
       return onStyleValueChange(enable => (toggle1(enable), toggle2(enable)))
     },
-  },
-  导航栏下置: {
-    default_: true,
-    callback: init => onStyleValueChange(styleToggle(styles.upperNavigation, init, true)),
-  },
-  显示标题栏: {
-    default_: false,
-    callback: init => onStyleValueChange(styleToggle(styles.reserveTitleBar, init)),
   },
   粘性导航栏: {
     default_: true,

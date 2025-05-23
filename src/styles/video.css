@@ -59,13 +59,11 @@
   height: var(--player-height);
 }
 
-/* 加载时强制占用全高 */
-.bpx-player-container:not([data-screen="mini"]) .bpx-player-video-area:has(>.bpx-state-loading) video {
-  height: 100vh;
-}
-
-/* 换源时强制占用全高 */
+/* 加载时 */
+.bpx-player-container:not([data-screen="mini"]) .bpx-player-video-area:has(>.bpx-state-loading) video,
+/* 换源时 */
 .bpx-player-video-wrap>video:not([src]) {
+  /* 宽高比不详，强制占用全高 */
   height: 100vh;
 }
 

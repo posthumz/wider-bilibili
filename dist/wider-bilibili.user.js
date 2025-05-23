@@ -86,13 +86,11 @@
   height: var(--player-height);
 }
 
-/* 加载时强制占用全高 */
-.bpx-player-container:not([data-screen="mini"]) .bpx-player-video-area:has(>.bpx-state-loading) video {
-  height: 100vh;
-}
-
-/* 换源时强制占用全高 */
+/* 加载时 */
+.bpx-player-container:not([data-screen="mini"]) .bpx-player-video-area:has(>.bpx-state-loading) video,
+/* 换源时 */
 .bpx-player-video-wrap>video:not([src]) {
+  /* 宽高比不详，强制占用全高 */
   height: 100vh;
 }
 
@@ -1042,6 +1040,14 @@ div.bili-header {
     }
   };
   const videoOptions = {
+    导航栏下置: {
+      default_: true,
+      callback: (init) => onStyleValueChange(styleToggle(styles.upperNavigation, init, true))
+    },
+    显示标题栏: {
+      default_: false,
+      callback: (init) => onStyleValueChange(styleToggle(styles.reserveTitleBar, init))
+    },
     自动高度: {
       // 也就是说，不会有上下黑边
       default_: true,
@@ -1055,10 +1061,9 @@ div.bili-header {
             document.documentElement.style.setProperty("--player-height", `${height}px`);
         });
         const toggle = styleToggle(styles.fixHeight, init, true);
-        init && observer.observe(container);
+        observer.observe(container);
         return onStyleValueChange((enable) => {
           toggle(enable);
-          enable ? observer.observe(container) : observer.disconnect(), document.documentElement.style.removeProperty("--player-height");
         });
       }
     },
@@ -1069,14 +1074,6 @@ div.bili-header {
         const toggle2 = styleToggle(".bpx-player-container{--mini-width:initial}", init, true);
         return onStyleValueChange((enable) => (toggle1(enable), toggle2(enable)));
       }
-    },
-    导航栏下置: {
-      default_: true,
-      callback: (init) => onStyleValueChange(styleToggle(styles.upperNavigation, init, true))
-    },
-    显示标题栏: {
-      default_: false,
-      callback: (init) => onStyleValueChange(styleToggle(styles.reserveTitleBar, init))
     },
     粘性导航栏: {
       default_: true,
