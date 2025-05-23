@@ -2,6 +2,7 @@
 :root {
   --navbar-height: 64px;
   --player-height: 100vh;
+  --title-height: 0px;
 }
 
 /* 播放器定位 */
@@ -201,7 +202,7 @@ body>.custom-navbar {
 }
 
 .special>.special-cover {
-  max-height: calc(var(--player-height) + var(--navbar-height));
+  max-height: calc(var(--player-height) + var(--navbar-height) + var(--title-height));
 }
 
 .player-left-components {
