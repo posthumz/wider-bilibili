@@ -55,27 +55,6 @@ switch (url.host) {
     container.style.setProperty('--mini-width', `${GM_getValue('小窗宽度', 320)}px`)
     GM_addValueChangeListener<number>('小窗宽度', (_k, _o, newVal) => container.style.setProperty('--mini-width', `${newVal}px`))
 
-    // 初始化以及监听小窗位置。直接改right和bottom值还会被改回去😡，所以初始用translate
-    const miniStyle = GM_addStyle(`.bpx-player-container[data-screen="mini"] {\
-  translate: ${84 - GM_getValue('小窗右', 52)}px ${48 - GM_getValue('小窗下', 8)}px;}`)
-    new MutationObserver(() => {
-      // 非小窗时不处理
-      if (container.dataset.screen != 'mini') return
-      // 初始位置不记录
-      if (container.style.right === '84px' && container.style.bottom === '48px') return
-      // 小窗位置变化时记录
-      const { right, bottom } = container.getBoundingClientRect()
-      GM_setValue('小窗右', Math.round(window.innerWidth - right))
-      GM_setValue('小窗下', Math.round(window.innerHeight - bottom))
-    }).observe(container, { attributes: true, attributeFilter: ['style'] })
-
-    // 小窗选项重置
-    document.querySelector<HTMLButtonElement>(`button[data-option=重置小窗位置]`)?.addEventListener('click', () => {
-      GM_deleteValues(['小窗右', '小窗下', '小窗宽度'])
-      miniStyle.disabled = true
-      container.style.removeProperty('--mini-width')
-    })
-
     // 添加拖动调整大小的部件
     const miniResizer = document.createElement('div')
     miniResizer.className = 'bpx-player-mini-resizer'
@@ -84,18 +63,51 @@ switch (url.host) {
       ev.stopImmediatePropagation()
       ev.preventDefault()
       const resize = (ev: MouseEvent) => {
-        const miniWidth = Math.max(container.offsetWidth + container.getBoundingClientRect().x - ev.x + 5, 0) // 不设为<0的无效值
-        GM_setValue('小窗宽度', Math.round(miniWidth))
+        // +1防止指针鬼畜
+        const miniWidth = Math.round(Math.max(container.offsetWidth + container.getBoundingClientRect().x - ev.x + 1, 0))
+        GM_setValue('小窗宽度', miniWidth)
       }
       document.addEventListener('mousemove', resize)
       document.addEventListener('mouseup', () => document.removeEventListener('mousemove', resize), { once: true })
     }
 
-    const videoArea = container.getElementsByClassName('bpx-player-video-area')[0]
-    if (!videoArea) { console.error('页面加载错误：视频区域不存在'); break }
-    observeFor('bpx-player-mini-warp', videoArea).then(wrap => wrap.appendChild(miniResizer)).catch(console.error)
+    const miniStyleFormat = (rt: string, bt: string) => `.bpx-player-container[data-screen="mini"] {
+  right: ${rt}px !important;
+  bottom: ${bt}px !important;
+}`
+    const miniStyle = GM_addStyle(miniStyleFormat(GM_getValue('小窗右', '52'), GM_getValue('小窗下', '8')))
 
-    const sendingBar = player.getElementsByClassName('bpx-player-sending-bar')[0]
+    // 小窗选项重置
+    document.querySelector<HTMLButtonElement>(`button[data-option=重置小窗位置]`)?.addEventListener('click', () => {
+      GM_deleteValues(['小窗右', '小窗下', '小窗宽度'])
+      miniStyle.textContent = miniStyleFormat('52', '8')
+      container.style.removeProperty('--mini-width')
+    })
+
+    const videoArea = container.getElementsByClassName('bpx-player-video-area')[0] as HTMLElement
+    if (!videoArea) { console.error('页面加载错误：视频区域不存在'); break }
+    observeFor('bpx-player-mini-warp', videoArea).then(warp => {
+      warp.appendChild(miniResizer)
+      warp.addEventListener('mousedown', ev => {
+        if (ev.button !== 0) return
+        const { right, bottom } = warp.getBoundingClientRect()
+        const offsetX = right - ev.x
+        const offsetY = bottom - ev.y
+        const onmousemove = (ev: MouseEvent) => {
+          const newRt = Math.round(Math.max(window.innerWidth - ev.x - offsetX, 0)) // 不设为<0的无效值
+          const newBt = Math.round(Math.max(window.innerHeight - ev.y - offsetY, 0)) // 不设为<0的无效值
+          GM_setValue('小窗右', newRt)
+          GM_setValue('小窗下', newBt)
+          miniStyle.textContent = miniStyleFormat(String(newRt), String(newBt))
+        }
+        document.addEventListener('mousemove', onmousemove)
+        document.addEventListener('mouseup', () => {
+          document.removeEventListener('mousemove', onmousemove)
+        }, { once: true })
+      })
+    }).catch(console.error)
+
+    const sendingBar = player.getElementsByClassName('bpx-player-sending-bar')[0] as HTMLElement
     if (!sendingBar) { console.error('页面加载错误：发送框不存在'); break }
     // 等待人数加载完成，再进行弹幕框的操作
     const danmaku = (await observeFor('bpx-player-video-info', sendingBar)).parentElement

@@ -155,33 +155,32 @@ div.bili-header {
 
   }
 
+  [data-option]::after {
+    content: attr(data-option);
+    text-wrap: nowrap;
+  }
+
+  [data-hint]:hover::before {
+    position: absolute;
+    bottom: 110%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: fit-content;
+    padding: 3px 5px;
+    border-radius: 5px;
+    content: attr(data-hint);
+    font-size: 12px;
+    background-color: rgb(var(--wb-blue));
+    color: var(--wb-white);
+    white-space: pre-line;
+  }
+
   label {
     display: inline-flex;
     gap: 10px;
     place-items: center;
     position: relative;
-
-    &::after {
-      content: attr(data-option);
-      line-height: 1;
-      text-wrap: nowrap;
-    }
-
-    &[data-hint]:hover::before {
-      position: absolute;
-      bottom: 110%;
-      left: 0;
-      right: 0;
-      margin: 0 auto;
-      width: fit-content;
-      padding: 3px 5px;
-      border-radius: 5px;
-      content: attr(data-hint);
-      font-size: 12px;
-      background-color: rgb(var(--wb-blue));
-      color: var(--wb-white);
-      white-space: pre-line;
-    }
   }
 
   input,
@@ -191,6 +190,7 @@ div.bili-header {
     padding: 4px;
     height: 20px;
     font-size: 16px;
+    line-height: 1;
     transition: .2s;
 
     &:hover {
@@ -200,7 +200,9 @@ div.bili-header {
     &:active {
       opacity: 0.5;
     }
+  }
 
+  input {
     &[type=checkbox] {
       box-sizing: content-box;
       border-radius: 20px;
@@ -249,17 +251,9 @@ div.bili-header {
     border: none;
     background: none;
     border-radius: 5px;
-    width: fit-content;
     outline: 1px solid #C9CCD0;
 
-    &::after {
-      content: attr(data-option);
-      line-height: 1;
-      text-wrap: nowrap;
-    }
-
     &:hover {
-      background-color: #E3E5E7;
       outline: 2px solid rgb(var(--wb-blue));
     }
   }

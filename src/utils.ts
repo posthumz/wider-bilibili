@@ -16,14 +16,14 @@ export const waitFor = <T>(loaded: () => T, desc = '页面加载', retry = 100, 
   })
 
 /** 直接获取元素或等待元素被添加。检测成功后停止观察并返回元素。 */
-export const observeFor = (className: string, parent: Element) =>
-  new Promise<Element>(resolve => {
-    const elem = parent.getElementsByClassName(className)[0]
+export const observeFor = (className: string, parent: HTMLElement) =>
+  new Promise<HTMLElement>(resolve => {
+    const elem = parent.getElementsByClassName(className)[0] as HTMLElement
     if (elem) { return resolve(elem) }
     new MutationObserver((mutations, observer) => {
       for (const mutation of mutations) {
         for (const node of mutation.addedNodes) {
-          if (node instanceof Element && node.classList.contains(className)) {
+          if (node instanceof HTMLElement && node.classList.contains(className)) {
             observer.disconnect()
             return resolve(node)
           }
