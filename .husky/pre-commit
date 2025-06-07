@@ -1,0 +1,2 @@
+pnpm build
+git add dist/wider-bilibili.user.js

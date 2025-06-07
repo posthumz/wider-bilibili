@@ -58,7 +58,6 @@ export default defineConfig(() => {
             ['compatible', 'firefox 117+'],
             ['compatible', 'chrome 120+'],
             ['compatible', 'edge 120+'],
-            ['compatible', 'safari 17.2+ (理论上，实际未经测试)'],
             // ['downloadURL', 'https://update.greasyfork.org/scripts/474507/Wider%20Bilibili.user.js'],
             // ['updateURL', 'https://update.greasyfork.org/scripts/474507/Wider%20Bilibili.meta.js'],
           ],

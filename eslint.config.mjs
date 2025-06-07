@@ -1,4 +1,3 @@
-import pluginJs from "@eslint/js"
 import stylistic from '@stylistic/eslint-plugin'
 import globals from "globals"
 import { configs } from "typescript-eslint"
@@ -28,7 +27,6 @@ export default [
   // stylistic
   stylistic.configs["disable-legacy"],
   stylistic.configs.customize({
-    flat: true,
     indent: 2,
     quotes: 'single',
     semi: false,

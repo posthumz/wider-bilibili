@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wider Bilibili
 // @namespace    https://greasyfork.org/users/1125570
-// @version      0.4.6
+// @version      0.4.7
 // @author       posthumz
 // @description  哔哩哔哩宽屏体验
 // @license      MIT
@@ -10,6 +10,8 @@
 // @match        http*://*.bilibili.com/*
 // @grant        GM_addStyle
 // @grant        GM_addValueChangeListener
+// @grant        GM_deleteValue
+// @grant        GM_deleteValues
 // @grant        GM_getValue
 // @grant        GM_registerMenuCommand
 // @grant        GM_setValue
@@ -17,7 +19,6 @@
 // @compatible   firefox 117+
 // @compatible   chrome 120+
 // @compatible   edge 120+
-// @compatible   safari 17.2+ (理论上，实际未经测试)
 // @noframes
 // ==/UserScript==
 
@@ -536,7 +537,7 @@ div.bili-header {
   min-width: 0;
 }
 
-/* 兼容性检测 */
+/* CSS Nesting兼容性检测 */
 .wb-button-group::before {
   content: '内核版本不完全适配脚本，请考虑升级浏览器';
   color: red;
@@ -569,13 +570,16 @@ div.bili-header {
   flex-direction: column;
   gap: 10px;
 
-  outline: 2px solid rgba(var(--wb-blue), 0.8);
-  outline-offset: 0;
+  border: 2px solid rgba(var(--wb-blue), 0.8);
   background-color: var(--wb-bg);
   color: var(--wb-fg);
   font-size: 20px;
 
   opacity: 0.9;
+
+  &:popover-open {
+    display: flex;
+  }
 
   &:hover {
     opacity: 1
@@ -613,10 +617,8 @@ div.bili-header {
   }
 
   a,
-  button {
-    border: none;
+  #wb-close {
     padding: 4px;
-    background: none;
     color: var(--wb-fg);
     display: flex;
     font-size: 16px;
@@ -645,6 +647,9 @@ div.bili-header {
     width: fit-content;
     height: fit-content;
     opacity: 1;
+    border-radius: 0;
+    outline: none;
+    box-shadow: none;
 
     &:hover {
       background-color: rgb(var(--wb-red));
@@ -666,11 +671,12 @@ div.bili-header {
     background-color: rgba(127, 127, 127, 0.1);
 
     &::before {
-      content: attr(data-title);
+      content: attr(name);
       border-radius: 4px 4px 0 0;
       border-bottom: 2px solid rgba(127, 127, 127, 0.1);
       grid-column: 1 / -1;
     }
+
   }
 
   label {
@@ -678,7 +684,12 @@ div.bili-header {
     gap: 10px;
     place-items: center;
     position: relative;
-    text-wrap: nowrap;
+
+    &::after {
+      content: attr(data-option);
+      line-height: 1;
+      text-wrap: nowrap;
+    }
 
     &[data-hint]:hover::before {
       position: absolute;
@@ -697,7 +708,8 @@ div.bili-header {
     }
   }
 
-  input {
+  input,
+  button {
     box-sizing: content-box;
     margin: 0;
     padding: 4px;
@@ -707,6 +719,10 @@ div.bili-header {
 
     &:hover {
       box-shadow: 0 0 8px rgb(var(--wb-blue));
+    }
+
+    &:active {
+      opacity: 0.5;
     }
 
     &[type=checkbox] {
@@ -736,10 +752,6 @@ div.bili-header {
       &:checked::before {
         transform: translateX(20px);
       }
-
-      &:active {
-        opacity: 0.5;
-      }
     }
 
     &[type=number] {
@@ -754,6 +766,25 @@ div.bili-header {
       &::-webkit-inner-spin-button {
         appearance: none;
       }
+    }
+  }
+
+  button {
+    border: none;
+    background: none;
+    border-radius: 5px;
+    width: fit-content;
+    outline: 1px solid #C9CCD0;
+
+    &::after {
+      content: attr(data-option);
+      line-height: 1;
+      text-wrap: nowrap;
+    }
+
+    &:hover {
+      background-color: #E3E5E7;
+      outline: 2px solid rgb(var(--wb-blue));
     }
   }
 }`,
@@ -974,7 +1005,7 @@ div.bili-header {
   const waitReady = () => new Promise((resolve) => {
     document.readyState === "loading" ? window.addEventListener("DOMContentLoaded", () => resolve(), { once: true }) : resolve();
   });
-  const html = `<div id="wider-bilibili" style="display: none;">
+  const html = `<div id="wider-bilibili" popover>
   <header>
     <div class="wb-button-group">
       <a target="_blank" href="//greasyfork.org/scripts/474507">
@@ -989,69 +1020,70 @@ div.bili-header {
         <!-- From https://www.radix-ui.com/icons -->
         <svg viewBox="0 0 15 15"  width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path d="M7.49933 0.25C3.49635 0.25 0.25 3.49593 0.25 7.50024C0.25 10.703 2.32715 13.4206 5.2081 14.3797C5.57084 14.446 5.70302 14.2222 5.70302 14.0299C5.70302 13.8576 5.69679 13.4019 5.69323 12.797C3.67661 13.235 3.25112 11.825 3.25112 11.825C2.92132 10.9874 2.44599 10.7644 2.44599 10.7644C1.78773 10.3149 2.49584 10.3238 2.49584 10.3238C3.22353 10.375 3.60629 11.0711 3.60629 11.0711C4.25298 12.1788 5.30335 11.8588 5.71638 11.6732C5.78225 11.205 5.96962 10.8854 6.17658 10.7043C4.56675 10.5209 2.87415 9.89918 2.87415 7.12104C2.87415 6.32925 3.15677 5.68257 3.62053 5.17563C3.54576 4.99226 3.29697 4.25521 3.69174 3.25691C3.69174 3.25691 4.30015 3.06196 5.68522 3.99973C6.26337 3.83906 6.8838 3.75895 7.50022 3.75583C8.1162 3.75895 8.73619 3.83906 9.31523 3.99973C10.6994 3.06196 11.3069 3.25691 11.3069 3.25691C11.7026 4.25521 11.4538 4.99226 11.3795 5.17563C11.8441 5.68257 12.1245 6.32925 12.1245 7.12104C12.1245 9.9063 10.4292 10.5192 8.81452 10.6985C9.07444 10.9224 9.30633 11.3648 9.30633 12.0413C9.30633 13.0102 9.29742 13.7922 9.29742 14.0299C9.29742 14.2239 9.42828 14.4496 9.79591 14.3788C12.6746 13.4179 14.75 10.7025 14.75 7.50024C14.75 3.49593 11.5036 0.25 7.49933 0.25Z"></path></svg>
       </a>
-      <button id="wb-close">
+      <button id="wb-close" popovertarget="wider-bilibili">
         <!-- From https://www.radix-ui.com/icons -->
         <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><path d="M12.8536 2.85355C13.0488 2.65829 13.0488 2.34171 12.8536 2.14645C12.6583 1.95118 12.3417 1.95118 12.1464 2.14645L7.5 6.79289L2.85355 2.14645C2.65829 1.95118 2.34171 1.95118 2.14645 2.14645C1.95118 2.34171 1.95118 2.65829 2.14645 2.85355L6.79289 7.5L2.14645 12.1464C1.95118 12.3417 1.95118 12.6583 2.14645 12.8536C2.34171 13.0488 2.65829 13.0488 2.85355 12.8536L7.5 8.20711L12.1464 12.8536C12.3417 13.0488 12.6583 13.0488 12.8536 12.8536C13.0488 12.6583 13.0488 12.3417 12.8536 12.1464L8.20711 7.5L12.8536 2.85355Z"></path></svg>
       </button>
     </div>
   </header>
-  <fieldset data-title="通用">
-    <label><input type="number" min="0">左右边距</label>
+  <fieldset name="通用">
+    <label data-option="左右边距"><input type="number" min="0"></label>
   </fieldset>
-  <fieldset data-title="播放页">
-    <label data-hint="播放器无上下黑边"><input type="checkbox">自动高度</label>
-    <label data-hint="试试拉一下小窗左侧？&#10;记录小窗宽度与位置"><input type="checkbox">小窗样式</label>
-    <label><input type="checkbox">导航栏下置</label>
-    <label><input type="checkbox">显示标题栏</label>
-    <label><input type="checkbox">粘性导航栏</label>
-    <label><input type="checkbox">紧凑控件间距</label>
-    <label data-hint="默认检测到鼠标活动显示控件&#10;需要一直显示请打开此选项"><input type="checkbox">暂停显示控件</label>
-    <label data-hint="在线人数/弹幕数"><input type="checkbox">显示观看信息</label>
-    <label data-hint="默认隐藏控件区&#10;悬浮到相应位置以显示"><input type="checkbox">隐藏控件</label>
+  <fieldset name="播放页">
+    <label data-option="自动高度" data-hint="播放器无上下黑边"><input type="checkbox"></label>
+    <label data-option="小窗样式" data-hint="试试拉一下小窗左侧？&#10;记录小窗宽度与位置"><input type="checkbox"></label>
+    <label data-option="导航栏下置"><input type="checkbox"></label>
+    <label data-option="显示标题栏"><input type="checkbox"></label>
+    <label data-option="粘性导航栏"><input type="checkbox"></label>
+    <label data-option="紧凑控件间距"><input type="checkbox"></label>
+    <label data-option="暂停显示控件" data-hint="默认检测到鼠标活动显示控件&#10;需要一直显示请打开此选项"><input type="checkbox"></label>
+    <label data-option="显示观看信息" data-hint="在线人数/弹幕数"><input type="checkbox"></label>
+    <label data-option="隐藏控件" data-hint="默认隐藏控件区&#10;悬浮到相应位置以显示"><input type="checkbox"></label>
   </fieldset>
-  <fieldset data-title="动态页">
-    <label data-hint="可能导致侧栏显示不全"><input type="checkbox">粘性侧栏</label>
+  <fieldset name="动态页">
+    <label data-option="粘性侧栏" data-hint="可能导致侧栏显示不全"><input type="checkbox"></label>
+  </fieldset>
+  <fieldset name="其他">
+    <label><button data-option="重置小窗位置"></button></label>
   </fieldset>
 </div>`;
-  function styleToggle(s, init = true, flip = false) {
-    if (flip) {
-      init = !init;
-    }
+  function styleToggle(s, flip = false) {
     const style = GM_addStyle(s);
-    if (!init) {
-      style.disabled = true;
-    }
     return flip ? (enable) => {
       style.disabled = enable;
     } : (enable) => {
       style.disabled = !enable;
     };
   }
-  function onStyleValueChange(toggle) {
-    return (_k, _o, newVal) => toggle(newVal);
+  function initUpdate(update, init, fallback) {
+    update(init ?? fallback);
+    return (_k, _o, newVal) => update(newVal ?? fallback);
   }
   const commonOptions = {
     左右边距: {
-      default_: 30,
-      callback: (init) => {
-        document.documentElement.style.setProperty("--layout-padding", `${init}px`);
-        return (_k, _o, newVal) => document.documentElement.style.setProperty("--layout-padding", `${newVal ?? 30}px`);
+      fallback: 30,
+      callback(init) {
+        return initUpdate((val) => document.documentElement.style.setProperty("--layout-padding", `${val}px`), init, this.fallback);
       }
     }
   };
   const videoOptions = {
     导航栏下置: {
-      default_: true,
-      callback: (init) => onStyleValueChange(styleToggle(styles.upperNavigation, init, true))
+      fallback: true,
+      callback(init) {
+        return initUpdate(styleToggle(styles.upperNavigation, true), init, this.fallback);
+      }
     },
     显示标题栏: {
-      default_: false,
-      callback: (init) => onStyleValueChange(styleToggle(styles.reserveTitleBar, init))
+      fallback: false,
+      callback(init) {
+        return initUpdate(styleToggle(styles.reserveTitleBar), init, this.fallback);
+      }
     },
     自动高度: {
       // 也就是说，不会有上下黑边
-      default_: true,
-      callback: (init) => {
+      fallback: true,
+      callback(init) {
         const container = document.getElementsByClassName("bpx-player-container")[0];
         document.documentElement.style.setProperty("--player-height", `${container.clientHeight}px`);
         const observer = new ResizeObserver((entries) => {
@@ -1060,51 +1092,61 @@ div.bili-header {
           if (height && Math.round(height) <= window.innerHeight)
             document.documentElement.style.setProperty("--player-height", `${height}px`);
         });
-        const toggle = styleToggle(styles.fixHeight, init, true);
         observer.observe(container);
-        return onStyleValueChange((enable) => {
-          toggle(enable);
-        });
+        return initUpdate(styleToggle(styles.fixHeight, true), init, this.fallback);
       }
     },
     小窗样式: {
-      default_: true,
-      callback: (init) => {
-        const toggle1 = styleToggle(styles.mini, init);
-        const toggle2 = styleToggle(".bpx-player-container{--mini-width:initial}", init, true);
-        return onStyleValueChange((enable) => (toggle1(enable), toggle2(enable)));
+      fallback: true,
+      callback(init) {
+        const toggle1 = styleToggle(styles.mini);
+        const toggle2 = styleToggle(".bpx-player-container{--mini-width:initial}", true);
+        return initUpdate((enable) => (toggle1(enable), toggle2(enable)), init, this.fallback);
       }
     },
     粘性导航栏: {
-      default_: true,
-      callback: (init) => onStyleValueChange(styleToggle(styles.stickyHeader, init))
+      fallback: true,
+      callback(init) {
+        return initUpdate(styleToggle(styles.stickyHeader), init, this.fallback);
+      }
     },
     紧凑控件间距: {
-      default_: true,
-      callback: (init) => onStyleValueChange(styleToggle(styles.compactControls, init))
+      fallback: true,
+      callback(init) {
+        return initUpdate(styleToggle(styles.compactControls), init, this.fallback);
+      }
     },
     暂停显示控件: {
-      default_: false,
-      callback: (init) => onStyleValueChange(styleToggle(styles.pauseShowControls, init))
+      fallback: false,
+      callback(init) {
+        return initUpdate(styleToggle(styles.pauseShowControls), init, this.fallback);
+      }
     },
     显示观看信息: {
-      default_: true,
-      callback: (init) => onStyleValueChange(styleToggle(".bpx-player-video-info{display:flex!important}", init))
+      fallback: true,
+      callback(init) {
+        return initUpdate(styleToggle(".bpx-player-video-info{display:flex!important)}"), init, this.fallback);
+      }
     },
     隐藏控件: {
-      default_: true,
-      callback: (init) => onStyleValueChange(styleToggle(styles.hideControls, init))
+      fallback: true,
+      callback(init) {
+        return initUpdate(styleToggle(styles.hideControls), init, this.fallback);
+      }
     }
   };
   const timelineOptions = {
     粘性侧栏: {
-      default_: false,
-      callback: (init) => onStyleValueChange(styleToggle(styles.stickyAside, init))
+      fallback: false,
+      callback(init) {
+        return initUpdate(styleToggle(styles.stickyAside), init, this.fallback);
+      }
     }
   };
   function listenOptions(options) {
-    for (const [name, { default_, callback }] of Object.entries(options))
-      GM_addValueChangeListener(name, callback(GM_getValue(name, default_)));
+    for (const [name, option] of Object.entries(options)) {
+      GM_addValueChangeListener(name, option.callback(GM_getValue(name)));
+    }
   }
   const optionsFlat = { ...commonOptions, ...videoOptions, ...timelineOptions };
   waitReady().then(() => {
@@ -1112,9 +1154,6 @@ div.bili-header {
     const app = document.getElementById("wider-bilibili");
     GM_registerMenuCommand("选项", () => {
       app.style.display = "flex";
-    });
-    document.getElementById("wb-close")?.addEventListener("click", () => {
-      app.style.display = "none";
     });
     const modifiers = ["ctrlKey", "altKey", "shiftKey", "metaKey"];
     const comb = [["altKey", "shiftKey"], "W"];
@@ -1124,30 +1163,34 @@ div.bili-header {
         if (key === comb[1] && modifiers.every((mod) => comb[0].includes(mod) === ev[mod])) {
           ev.stopImmediatePropagation();
           ev.stopPropagation();
-          app.style.display = app.style.display === "none" ? "flex" : "none";
+          app.showPopover();
         }
         setTimeout(addListener, 250);
       }, { once: true });
     })();
-    for (const input of app.getElementsByTagName("input")) {
-      const key = input.parentElement?.textContent;
-      if (!key) {
-        continue;
-      }
-      const option = optionsFlat[key];
-      if (!option) {
-        continue;
-      }
-      switch (input.type) {
+    for (const [name, option] of Object.entries(optionsFlat)) {
+      const init = GM_getValue(name);
+      const input = document.querySelector(`label[data-option=${name}]>input`);
+      switch (input?.type) {
         case "checkbox":
-          input.checked = GM_getValue(key, option.default_);
-          input.onchange = () => GM_setValue(key, input.checked);
+          input.checked = init ?? option.fallback;
+          input.onchange = () => GM_setValue(name, input.checked);
+          input.oncontextmenu = (e) => {
+            e.preventDefault();
+            input.checked = option.fallback;
+            GM_deleteValue(name);
+          };
           break;
         case "number":
-          input.value = GM_getValue(key, option.default_);
+          input.value = init ?? option.fallback;
           input.oninput = () => {
+            if (!input.value) {
+              input.value = option.fallback;
+              return GM_deleteValue(name);
+            }
             const val = Number(input.value);
-            Number.isInteger(val) && GM_setValue(key, val);
+            if (Number.isInteger(val))
+              GM_setValue(name, val);
           };
           break;
       }
@@ -1189,9 +1232,7 @@ div.bili-header {
       });
       container.style.setProperty("--mini-width", `${GM_getValue("小窗宽度", 320)}px`);
       GM_addValueChangeListener("小窗宽度", (_k, _o, newVal) => container.style.setProperty("--mini-width", `${newVal}px`));
-      GM_addStyle(`.bpx-player-container[data-screen="mini"] {
-  translate: ${84 - GM_getValue("小窗右", 52)}px ${48 - GM_getValue("小窗下", 8)}px;
-}`);
+      const miniStyle = GM_addStyle(`.bpx-player-container[data-screen="mini"] {  translate: ${84 - GM_getValue("小窗右", 52)}px ${48 - GM_getValue("小窗下", 8)}px;}`);
       new MutationObserver(() => {
         if (container.dataset.screen != "mini") return;
         if (container.style.right === "84px" && container.style.bottom === "48px") return;
@@ -1199,16 +1240,21 @@ div.bili-header {
         GM_setValue("小窗右", Math.round(window.innerWidth - right));
         GM_setValue("小窗下", Math.round(window.innerHeight - bottom));
       }).observe(container, { attributes: true, attributeFilter: ["style"] });
+      document.querySelector(`button[data-option=重置小窗位置]`)?.addEventListener("click", () => {
+        GM_deleteValues(["小窗右", "小窗下", "小窗宽度"]);
+        miniStyle.disabled = true;
+        container.style.removeProperty("--mini-width");
+      });
       const miniResizer = document.createElement("div");
       miniResizer.className = "bpx-player-mini-resizer";
       miniResizer.onmousedown = (ev) => {
+        if (ev.button !== 0) return;
         ev.stopImmediatePropagation();
         ev.preventDefault();
         const resize = (ev2) => {
           const miniWidth = Math.max(container.offsetWidth + container.getBoundingClientRect().x - ev2.x + 5, 0);
           GM_setValue("小窗宽度", Math.round(miniWidth));
         };
-        if (ev.button !== 0) return;
         document.addEventListener("mousemove", resize);
         document.addEventListener("mouseup", () => document.removeEventListener("mousemove", resize), { once: true });
       };

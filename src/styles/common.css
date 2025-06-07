@@ -13,7 +13,7 @@ div.bili-header {
   min-width: 0;
 }
 
-/* 兼容性检测 */
+/* CSS Nesting兼容性检测 */
 .wb-button-group::before {
   content: '内核版本不完全适配脚本，请考虑升级浏览器';
   color: red;
@@ -46,13 +46,16 @@ div.bili-header {
   flex-direction: column;
   gap: 10px;
 
-  outline: 2px solid rgba(var(--wb-blue), 0.8);
-  outline-offset: 0;
+  border: 2px solid rgba(var(--wb-blue), 0.8);
   background-color: var(--wb-bg);
   color: var(--wb-fg);
   font-size: 20px;
 
   opacity: 0.9;
+
+  &:popover-open {
+    display: flex;
+  }
 
   &:hover {
     opacity: 1
@@ -90,10 +93,8 @@ div.bili-header {
   }
 
   a,
-  button {
-    border: none;
+  #wb-close {
     padding: 4px;
-    background: none;
     color: var(--wb-fg);
     display: flex;
     font-size: 16px;
@@ -122,6 +123,9 @@ div.bili-header {
     width: fit-content;
     height: fit-content;
     opacity: 1;
+    border-radius: 0;
+    outline: none;
+    box-shadow: none;
 
     &:hover {
       background-color: rgb(var(--wb-red));
@@ -143,11 +147,12 @@ div.bili-header {
     background-color: rgba(127, 127, 127, 0.1);
 
     &::before {
-      content: attr(data-title);
+      content: attr(name);
       border-radius: 4px 4px 0 0;
       border-bottom: 2px solid rgba(127, 127, 127, 0.1);
       grid-column: 1 / -1;
     }
+
   }
 
   label {
@@ -155,7 +160,12 @@ div.bili-header {
     gap: 10px;
     place-items: center;
     position: relative;
-    text-wrap: nowrap;
+
+    &::after {
+      content: attr(data-option);
+      line-height: 1;
+      text-wrap: nowrap;
+    }
 
     &[data-hint]:hover::before {
       position: absolute;
@@ -174,7 +184,8 @@ div.bili-header {
     }
   }
 
-  input {
+  input,
+  button {
     box-sizing: content-box;
     margin: 0;
     padding: 4px;
@@ -184,6 +195,10 @@ div.bili-header {
 
     &:hover {
       box-shadow: 0 0 8px rgb(var(--wb-blue));
+    }
+
+    &:active {
+      opacity: 0.5;
     }
 
     &[type=checkbox] {
@@ -213,10 +228,6 @@ div.bili-header {
       &:checked::before {
         transform: translateX(20px);
       }
-
-      &:active {
-        opacity: 0.5;
-      }
     }
 
     &[type=number] {
@@ -231,6 +242,25 @@ div.bili-header {
       &::-webkit-inner-spin-button {
         appearance: none;
       }
+    }
+  }
+
+  button {
+    border: none;
+    background: none;
+    border-radius: 5px;
+    width: fit-content;
+    outline: 1px solid #C9CCD0;
+
+    &::after {
+      content: attr(data-option);
+      line-height: 1;
+      text-wrap: nowrap;
+    }
+
+    &:hover {
+      background-color: #E3E5E7;
+      outline: 2px solid rgb(var(--wb-blue));
     }
   }
 }

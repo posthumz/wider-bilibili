@@ -2,6 +2,7 @@ import {
   GM_addStyle,
   GM_setValue,
   GM_getValue,
+  GM_deleteValues,
   GM_addValueChangeListener,
 } from '$'
 import styles from './styles'
@@ -34,7 +35,7 @@ switch (url.host) {
     // #region 视频页
     // 先插入视频页样式，再等待页面加载完成
     const style = GM_addStyle(styles.video)
-    // 等待页面加载完成，因为使用了run-at document-body
+    // 等待页面加载完成，因为使用了run-at document-start
     await waitReady()
     const player = document.getElementById('bilibili-player')
     if (!player) { style.remove(); break }
@@ -55,9 +56,8 @@ switch (url.host) {
     GM_addValueChangeListener<number>('小窗宽度', (_k, _o, newVal) => container.style.setProperty('--mini-width', `${newVal}px`))
 
     // 初始化以及监听小窗位置。直接改right和bottom值还会被改回去😡，所以初始用translate
-    GM_addStyle(`.bpx-player-container[data-screen="mini"] {
-  translate: ${84 - GM_getValue('小窗右', 52)}px ${48 - GM_getValue('小窗下', 8)}px;
-}`)
+    const miniStyle = GM_addStyle(`.bpx-player-container[data-screen="mini"] {\
+  translate: ${84 - GM_getValue('小窗右', 52)}px ${48 - GM_getValue('小窗下', 8)}px;}`)
     new MutationObserver(() => {
       // 非小窗时不处理
       if (container.dataset.screen != 'mini') return
@@ -69,17 +69,24 @@ switch (url.host) {
       GM_setValue('小窗下', Math.round(window.innerHeight - bottom))
     }).observe(container, { attributes: true, attributeFilter: ['style'] })
 
+    // 小窗选项重置
+    document.querySelector<HTMLButtonElement>(`button[data-option=重置小窗位置]`)?.addEventListener('click', () => {
+      GM_deleteValues(['小窗右', '小窗下', '小窗宽度'])
+      miniStyle.disabled = true
+      container.style.removeProperty('--mini-width')
+    })
+
     // 添加拖动调整大小的部件
     const miniResizer = document.createElement('div')
     miniResizer.className = 'bpx-player-mini-resizer'
     miniResizer.onmousedown = ev => {
+      if (ev.button !== 0) return
       ev.stopImmediatePropagation()
       ev.preventDefault()
       const resize = (ev: MouseEvent) => {
         const miniWidth = Math.max(container.offsetWidth + container.getBoundingClientRect().x - ev.x + 5, 0) // 不设为<0的无效值
         GM_setValue('小窗宽度', Math.round(miniWidth))
       }
-      if (ev.button !== 0) return
       document.addEventListener('mousemove', resize)
       document.addEventListener('mouseup', () => document.removeEventListener('mousemove', resize), { once: true })
     }
