@@ -512,6 +512,22 @@ div#i_cecream {
   max-width: none;
 }
 
+.feed-roll-btn {
+  left: calc(100% - var(--layout-padding)) !important;
+
+  .roll-btn {
+    aspect-ratio: 1/1;
+
+    >span {
+      display: none
+    }
+
+    >svg {
+      margin-bottom: 0 !important
+    }
+  }
+}
+
 .feed-card,
 .floor-single-card,
 .bili-video-card {
@@ -1117,7 +1133,7 @@ div.bili-header {
     显示观看信息: {
       fallback: true,
       callback(init) {
-        return initUpdate(styleToggle(".bpx-player-video-info{display:flex!important)}"), init, this.fallback);
+        return initUpdate(styleToggle(".bpx-player-video-info{display:flex!important}"), init, this.fallback);
       }
     },
     隐藏控件: {

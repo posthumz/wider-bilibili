@@ -104,7 +104,7 @@ const videoOptions: OptionRecord = {
   显示观看信息: {
     fallback: true,
     callback(init?: boolean) {
-      return initUpdate(styleToggle('.bpx-player-video-info{display:flex!important)}'), init, this.fallback)
+      return initUpdate(styleToggle('.bpx-player-video-info{display:flex!important}'), init, this.fallback)
     },
   },
   隐藏控件: {

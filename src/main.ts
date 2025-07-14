@@ -71,6 +71,7 @@ switch (url.host) {
       document.addEventListener('mouseup', () => document.removeEventListener('mousemove', resize), { once: true })
     }
 
+    // !important覆盖原有小窗拖动样式
     const miniStyleFormat = (rt: string, bt: string) => `.bpx-player-container[data-screen="mini"] {
   right: ${rt}px !important;
   bottom: ${bt}px !important;
