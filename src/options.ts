@@ -54,7 +54,7 @@ const videoOptions: OptionRecord = {
       return initUpdate(styleToggle(styles.upperNavigation, true), init, this.fallback)
     },
   },
-  显示标题栏: {
+  预留标题栏: {
     fallback: false,
     callback(init?: boolean) {
       return initUpdate(styleToggle(styles.reserveTitleBar), init, this.fallback)

@@ -6,9 +6,16 @@
 }
 
 /* 空间页 */
+#app,
+.header-upinfo,
+.nav-bar__main,
+.space-main,
+.bili-dyn-list {
+  max-width: none !important;
+}
+
 #app {
   margin: 0 var(--layout-padding);
-  min-width: 1120px;
 }
 
 #biliMainHeader {

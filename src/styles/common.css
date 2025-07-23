@@ -3,9 +3,36 @@ html {
   --layout-padding: 30px;
 }
 
-div.bili-header {
-  min-width: auto !important;
-  max-width: none !important;
+/* 导航栏 */
+#biliMainHeader {
+  height: auto !important;
+  margin-top: var(--player-height);
+  margin-bottom: 0;
+  position: initial;
+  visibility: initial !important;
+
+  >.bili-header {
+    min-width: auto !important;
+    max-width: none !important;
+    min-height: auto !important;
+
+    >.bili-header__bar {
+      position: relative !important;
+      height: var(--navbar-height);
+      max-width: none !important;
+    }
+  }
+
+  /* BiliBili Evolved自定义顶栏加载前，强制显示原生顶栏 */
+  &:not(:has(>.custom-navbar)) .bili-header__bar {
+    display: flex !important;
+  }
+
+  /* 自定义顶栏加载后 */
+  >.custom-navbar {
+    position: relative;
+    z-index: 3 !important;
+  }
 }
 
 /* 搜索栏 */

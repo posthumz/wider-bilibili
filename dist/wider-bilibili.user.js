@@ -131,36 +131,6 @@
   max-width: 100% !important;
 }
 
-/* 导航栏 */
-#biliMainHeader {
-  height: auto !important;
-  margin-top: var(--player-height);
-  margin-bottom: 0;
-  position: initial;
-  visibility: initial !important;
-
-  >.bili-header {
-    min-height: auto !important;
-
-    >.bili-header__bar {
-      position: relative !important;
-      height: var(--navbar-height);
-      max-width: none;
-    }
-  }
-
-  /* BiliBili Evolved自定义顶栏加载前，强制显示原生顶栏 */
-  &:not(:has(>.custom-navbar)) .bili-header__bar {
-    display: flex !important;
-  }
-
-  /* 自定义顶栏加载后 */
-  >.custom-navbar {
-    position: relative;
-    z-index: 3 !important;
-  }
-}
-
 /* 自定义顶栏加载前 */
 body>.custom-navbar {
   z-index: 0 !important;
@@ -323,9 +293,16 @@ body>.custom-navbar {
 }
 
 /* 空间页 */
+#app,
+.header-upinfo,
+.nav-bar__main,
+.space-main,
+.bili-dyn-list {
+  max-width: none !important;
+}
+
 #app {
   margin: 0 var(--layout-padding);
-  min-width: 1120px;
 }
 
 #biliMainHeader {
@@ -543,9 +520,36 @@ html {
   --layout-padding: 30px;
 }
 
-div.bili-header {
-  min-width: auto !important;
-  max-width: none !important;
+/* 导航栏 */
+#biliMainHeader {
+  height: auto !important;
+  margin-top: var(--player-height);
+  margin-bottom: 0;
+  position: initial;
+  visibility: initial !important;
+
+  >.bili-header {
+    min-width: auto !important;
+    max-width: none !important;
+    min-height: auto !important;
+
+    >.bili-header__bar {
+      position: relative !important;
+      height: var(--navbar-height);
+      max-width: none !important;
+    }
+  }
+
+  /* BiliBili Evolved自定义顶栏加载前，强制显示原生顶栏 */
+  &:not(:has(>.custom-navbar)) .bili-header__bar {
+    display: flex !important;
+  }
+
+  /* 自定义顶栏加载后 */
+  >.custom-navbar {
+    position: relative;
+    z-index: 3 !important;
+  }
 }
 
 /* 搜索栏 */
@@ -1043,7 +1047,7 @@ div.bili-header {
     <label data-option="自动高度" data-hint="播放器无上下黑边"><input type="checkbox"></label>
     <label data-option="小窗样式" data-hint="试试拉一下小窗左侧？&#10;记录小窗宽度与位置"><input type="checkbox"></label>
     <label data-option="导航栏下置"><input type="checkbox"></label>
-    <label data-option="显示标题栏"><input type="checkbox"></label>
+    <label data-option="预留标题栏"><input type="checkbox"></label>
     <label data-option="粘性导航栏"><input type="checkbox"></label>
     <label data-option="紧凑控件间距"><input type="checkbox"></label>
     <label data-option="暂停显示控件" data-hint="默认检测到鼠标活动显示控件&#10;需要一直显示请打开此选项"><input type="checkbox"></label>
@@ -1082,7 +1086,7 @@ div.bili-header {
         return initUpdate(styleToggle(styles.upperNavigation, true), init, this.fallback);
       }
     },
-    显示标题栏: {
+    预留标题栏: {
       fallback: false,
       callback(init) {
         return initUpdate(styleToggle(styles.reserveTitleBar), init, this.fallback);
