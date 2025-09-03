@@ -1,2 +1,4 @@
 pnpm build
 git add dist/wider-bilibili.user.js
+pnpm build-html
+git add dist/index.html

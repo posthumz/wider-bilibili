@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "html": "vite -c vite.config.html.ts",
+    "build-html": "vite build -c vite.config.html.ts",
     "prepare": "husky"
   },
   "devDependencies": {
