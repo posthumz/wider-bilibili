@@ -2,7 +2,7 @@ import stylistic from '@stylistic/eslint-plugin'
 import globals from "globals"
 import { configs } from "typescript-eslint"
 
-/** @type {import('eslint').Linter.Config[]} */ // @ts-expect-error idk? it works
+/** @type {import('eslint').Linter.Config[]} */
 const tsConfigs = configs.recommendedTypeChecked
 
 /** @type {import('eslint').Linter.Config[]} */

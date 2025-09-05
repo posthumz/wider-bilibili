@@ -13,17 +13,19 @@ const cleanBuild: Plugin = {
     // load css statically instead of globbing at runtime
     if (relative === 'src\\styles.ts') {
       const styles = glob('src/styles/**/*.css')
-      const entries = styles.map(style => [path.basename(style).slice(0, -4), fs.readFileSync(style, 'utf-8')])
+      const entries = styles.map(style => [path.basename(style).replace(/\.css$/, ''), fs.readFileSync(style, 'utf-8')])
       return `export default {${entries.map(([key, style]) => `${key}:\`${style}\`,`).join('\n')}}`
     }
   },
-  /** removes the _GM_* aliases */
   transform(code, id) {
     const relative = path.relative(__dirname, id)
-    if (relative.endsWith('options.html?raw')) {
-      const content = fs.readFileSync(id.replace('?raw', ''), 'utf-8')
+    // import as template string
+    // TODO: escape backticks
+    if (relative.endsWith('.html?raw')) {
+      const content = fs.readFileSync(id.replace(/\?raw$/, ''), 'utf-8')
       return `export default \`${content}\``
     }
+    // removes the _GM_* aliases
     if (path.matchesGlob(relative, 'src/*.ts'))
       return code.replace(/import \{.*?\} from "\$";?\n/s, '')
   },
@@ -37,10 +39,6 @@ export default defineConfig(() => {
       outDir: 'dist',
       target: 'es2020',
       cssMinify: false,
-    },
-    css: {
-      preprocessorOptions: {
-      },
     },
     plugins: [
       monkey({

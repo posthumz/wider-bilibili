@@ -5,9 +5,9 @@ const htmlTransform: Plugin = {
   name: 'html-transform',
   transformIndexHtml: (html, ctx) => {
     if (ctx.path === '/index.html') {
-      return html.replace(/<body>.*<\/body>/s, `<body>
-${fs.readFileSync('src/pages/options.html', 'utf-8').replace(/^/mg, '  ')}
-</body>`)
+      return html.replace(/<div id="wider-bilibili" popover>.*<\/div>/s, `<div id="wider-bilibili" popover>
+${fs.readFileSync('src/pages/options.html', 'utf-8')}
+</div>`)
     }
   },
 }

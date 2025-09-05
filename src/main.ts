@@ -9,6 +9,7 @@ import styles from './styles'
 import listenOptions, { videoOptions, timelineOptions } from './options'
 import { waitFor, observeFor, waitReady } from './utils'
 
+GM_addStyle(styles.panel)
 GM_addStyle(styles.common)
 
 const url = new URL(window.location.href)

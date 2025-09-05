@@ -1,0 +1,252 @@
+/* popover兼容性检测 */
+@supports not (selector(:popover-open)) {
+  .wb-button-group::before {
+    content: '浏览器内核版本不完全适配脚本，请考虑升级';
+    color: red;
+  }
+}
+
+.wb-button-group::before {
+  /* CSS Nesting兼容性检测 */
+  content: '浏览器内核版本不完全适配脚本，请考虑升级';
+  color: red;
+}
+
+#wider-bilibili {
+  --wb-bg: var(--Wh0, #FFF);
+  --wb-fg: var(--Ga10, #18191C);
+  --wb-white: rgb(255, 255, 255);
+  --wb-blue: 0, 174, 236;
+  --wb-pink: 255, 102, 153;
+  --wb-red: 248, 90, 84;
+
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  height: fit-content;
+  max-height: 80vh;
+  left: 0;
+  right: 0;
+  width: fit-content;
+  max-width: 80vw;
+  z-index: 114514;
+  padding: 10px;
+  border-radius: 10px;
+  margin: auto;
+  box-sizing: border-box;
+  overflow: auto;
+  flex-direction: column;
+  gap: 10px;
+
+  border: 2px solid rgba(var(--wb-blue), 0.8);
+  background-color: var(--wb-bg);
+  color: var(--wb-fg);
+  font-size: 20px;
+
+  opacity: 0.9;
+
+  &:popover-open {
+    display: flex;
+  }
+
+  &:hover {
+    opacity: 1
+  }
+
+  >header {
+    position: sticky;
+    z-index: 2;
+    top: -10px;
+    display: flex;
+    justify-content: space-between;
+    margin: -10px;
+    background-color: var(--wb-bg);
+    font-weight: bold;
+
+    &::before {
+      content: "Wider Bilibili 选项";
+      align-self: center;
+      margin-left: 10px;
+      margin-right: auto;
+    }
+  }
+
+  .wb-button-group {
+    display: flex;
+    margin-bottom: 10px;
+
+    >* {
+      height: 100%;
+    }
+  }
+
+  div.wb-button-group::before {
+    display: none;
+  }
+
+  a,
+  #wb-close {
+    padding: 4px;
+    color: var(--wb-fg);
+    display: flex;
+    font-size: 16px;
+    text-wrap: nowrap;
+    transition: opacity .1s;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.75;
+    }
+
+    &:active {
+      opacity: 0.5;
+    }
+
+    >svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+      fill-rule: evenodd;
+      clip-rule: evenodd;
+    }
+  }
+
+  #wb-close {
+    width: fit-content;
+    height: fit-content;
+    opacity: 1;
+    border-radius: 0;
+    outline: none;
+    box-shadow: none;
+
+    &:hover {
+      background-color: rgb(var(--wb-red));
+    }
+
+    &:active {
+      background-color: rgba(var(--wb-red), 0.75);
+    }
+  }
+
+  >fieldset {
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 15px;
+    background-color: rgba(127, 127, 127, 0.1);
+
+    &::before {
+      content: attr(name);
+      border-radius: 4px 4px 0 0;
+      border-bottom: 2px solid rgba(127, 127, 127, 0.1);
+      grid-column: 1 / -1;
+    }
+
+  }
+
+  [data-option]::after {
+    content: attr(data-option);
+    text-wrap: nowrap;
+  }
+
+  [data-hint]:hover::before {
+    position: absolute;
+    bottom: 110%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: fit-content;
+    padding: 3px 5px;
+    border-radius: 5px;
+    content: attr(data-hint);
+    font-size: 12px;
+    background-color: rgb(var(--wb-blue));
+    color: var(--wb-white);
+    white-space: pre-line;
+  }
+
+  label {
+    display: inline-flex;
+    gap: 10px;
+    place-items: center;
+    position: relative;
+  }
+
+  input,
+  button {
+    box-sizing: content-box;
+    margin: 0;
+    padding: 4px;
+    height: 20px;
+    font-size: 16px;
+    line-height: 1;
+    transition: .2s;
+
+    &:hover {
+      box-shadow: 0 0 8px rgb(var(--wb-blue));
+    }
+
+    &:active {
+      opacity: 0.5;
+    }
+  }
+
+  input {
+    &[type=checkbox] {
+      box-sizing: content-box;
+      border-radius: 20px;
+      min-width: 40px;
+      background-color: #ccc;
+      appearance: none;
+      cursor: pointer;
+
+      &::before {
+        content: "";
+        position: relative;
+        display: block;
+        transition: 0.3s;
+
+        height: 100%;
+        aspect-ratio: 1/1;
+        border-radius: 50%;
+        background-color: #FFF;
+      }
+
+      &:checked {
+        background-color: rgb(var(--wb-blue));
+      }
+
+      &:checked::before {
+        transform: translateX(20px);
+      }
+    }
+
+    &[type=number] {
+      width: 40px;
+      border: none;
+      border-radius: 5px;
+      outline: 2px solid rgb(var(--wb-blue));
+      background: none;
+      color: var(--wb-fg);
+      appearance: textfield;
+
+      &::-webkit-inner-spin-button {
+        appearance: none;
+      }
+    }
+  }
+
+  button {
+    border: none;
+    background: none;
+    border-radius: 5px;
+    outline: 1px solid #C9CCD0;
+
+    &:hover {
+      outline: 2px solid rgb(var(--wb-blue));
+    }
+  }
+}

@@ -136,8 +136,11 @@ const optionsFlat: OptionRecord = { ...commonOptions, ...videoOptions, ...timeli
 
 // 页面加载完成后插入设置选项
 waitReady().then(() => {
-  document.body.insertAdjacentHTML('beforeend', html)
-  const app = document.getElementById('wider-bilibili')!
+  const app = document.createElement('div')
+  app.id = 'wider-bilibili'
+  app.popover = 'auto'
+  app.innerHTML = html
+  document.body.insertAdjacentElement('beforeend', app)
 
   // 调出设置选项
   GM_registerMenuCommand('选项', () => { app.style.display = 'flex' })
@@ -151,7 +154,7 @@ waitReady().then(() => {
       if (key === comb[1] && modifiers.every(mod => comb[0].includes(mod) === ev[mod])) {
         ev.stopImmediatePropagation()
         ev.stopPropagation()
-        app.showPopover()
+        app.togglePopover()
       }
       setTimeout(addListener, 250)
     }, { once: true })

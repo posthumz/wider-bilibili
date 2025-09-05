@@ -1,6 +1,5 @@
 /* 播放器 */
 :root {
-  --navbar-height: 64px;
   --upper-nav: 0;
   --title-height: 0px;
   --reserve-height: calc(var(--upper-nav) * var(--navbar-height) + var(--title-height));
@@ -106,6 +105,11 @@
 /* 自定义顶栏加载前 */
 body>.custom-navbar {
   z-index: 0 !important;
+}
+
+/* 自定义顶栏弹出菜单样式修复 */
+.custom-navbar .popup[data-popper-placement="top"] {
+  inset: auto auto var(--navbar-height) 0px !important;
 }
 
 /* 使用 static 才能让播放器的 absolute 正确定位 */

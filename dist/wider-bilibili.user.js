@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wider Bilibili
 // @namespace    https://greasyfork.org/users/1125570
-// @version      0.4.7
+// @version      0.4.8
 // @author       posthumz
 // @description  哔哩哔哩宽屏体验
 // @license      MIT
@@ -28,7 +28,6 @@
   const styles = {
     video: `/* 播放器 */
 :root {
-  --navbar-height: 64px;
   --upper-nav: 0;
   --title-height: 0px;
   --reserve-height: calc(var(--upper-nav) * var(--navbar-height) + var(--title-height));
@@ -134,6 +133,11 @@
 /* 自定义顶栏加载前 */
 body>.custom-navbar {
   z-index: 0 !important;
+}
+
+/* 自定义顶栏弹出菜单样式修复 */
+.custom-navbar .popup[data-popper-placement="top"] {
+  inset: auto auto var(--navbar-height) 0px !important;
 }
 
 /* 使用 static 才能让播放器的 absolute 正确定位 */
@@ -463,107 +467,20 @@ div.wrapper,
     }
   }
 }`,
-    opus: `div.opus-detail {
-  width: initial;
-  margin: 0 var(--layout-padding);
-}
-
-.right-sidebar-wrap {
-  margin-left: 0;
-  right: 0;
-}`,
-    message: `#message-navbar {
-  display: none;
-}
-
-.container {
-  max-width: none !important;
-  width: auto !important;
-}
-
-.space-right-top {
-  padding-top: 0 !important;
-}`,
-    home: `/* 首页 */
-div#i_cecream {
-  max-width: none;
-}
-
-.feed-roll-btn {
-  left: calc(100% - var(--layout-padding)) !important;
-
-  .roll-btn {
-    aspect-ratio: 1/1;
-
-    >span {
-      display: none
-    }
-
-    >svg {
-      margin-bottom: 0 !important
-    }
+    panel: `/* popover兼容性检测 */
+@supports not (selector(:popover-open)) {
+  .wb-button-group::before {
+    content: '浏览器内核版本不完全适配脚本，请考虑升级';
+    color: red;
   }
 }
 
-.feed-card,
-.floor-single-card,
-.bili-video-card {
-  margin-top: 0px !important;
-}
-
-.palette-button-wrap {
-  left: initial !important;
-  right: 30px;
-}`,
-    common: `/* This overrides :root style */
-html {
-  --layout-padding: 30px;
-}
-
-/* 导航栏 */
-#biliMainHeader {
-  height: auto !important;
-  margin-top: var(--player-height);
-  margin-bottom: 0;
-  position: initial;
-  visibility: initial !important;
-
-  >.bili-header {
-    min-width: auto !important;
-    max-width: none !important;
-    min-height: auto !important;
-
-    >.bili-header__bar {
-      position: relative !important;
-      height: var(--navbar-height);
-      max-width: none !important;
-    }
-  }
-
-  /* BiliBili Evolved自定义顶栏加载前，强制显示原生顶栏 */
-  &:not(:has(>.custom-navbar)) .bili-header__bar {
-    display: flex !important;
-  }
-
-  /* 自定义顶栏加载后 */
-  >.custom-navbar {
-    position: relative;
-    z-index: 3 !important;
-  }
-}
-
-/* 搜索栏 */
-.center-search-container {
-  min-width: 0;
-}
-
-/* CSS Nesting兼容性检测 */
 .wb-button-group::before {
-  content: '内核版本不完全适配脚本，请考虑升级浏览器';
+  /* CSS Nesting兼容性检测 */
+  content: '浏览器内核版本不完全适配脚本，请考虑升级';
   color: red;
 }
 
-/* 脚本选项 */
 #wider-bilibili {
   --wb-bg: var(--Wh0, #FFF);
   --wb-fg: var(--Ga10, #18191C);
@@ -802,6 +719,101 @@ html {
     }
   }
 }`,
+    opus: `div.opus-detail {
+  width: initial;
+  margin: 0 var(--layout-padding);
+}
+
+.right-sidebar-wrap {
+  margin-left: 0;
+  right: 0;
+}`,
+    message: `#message-navbar {
+  display: none;
+}
+
+.container {
+  max-width: none !important;
+  width: auto !important;
+}
+
+.space-right-top {
+  padding-top: 0 !important;
+}`,
+    home: `/* 首页 */
+div#i_cecream {
+  max-width: none;
+}
+
+.feed-roll-btn {
+  left: calc(100% - var(--layout-padding)) !important;
+
+  .roll-btn {
+    aspect-ratio: 1/1;
+
+    >span {
+      display: none
+    }
+
+    >svg {
+      margin-bottom: 0 !important
+    }
+  }
+}
+
+.feed-card,
+.floor-single-card,
+.bili-video-card {
+  margin-top: 0px !important;
+}
+
+.palette-button-wrap {
+  left: initial !important;
+  right: 30px;
+}`,
+    common: `/* This overrides :root style */
+html {
+  --layout-padding: 30px;
+  --navbar-height: 64px;
+}
+
+/* 导航栏 */
+#biliMainHeader {
+  height: auto !important;
+  min-height: auto !important;
+  margin-top: var(--player-height);
+  margin-bottom: 0;
+  position: initial;
+  visibility: initial !important;
+
+  >.bili-header {
+    min-width: auto !important;
+    max-width: none !important;
+    min-height: auto !important;
+
+    >.bili-header__bar {
+      position: relative !important;
+      height: var(--navbar-height);
+      max-width: none !important;
+    }
+  }
+
+  /* BiliBili Evolved自定义顶栏加载前，强制显示原生顶栏 */
+  &:not(:has(>.custom-navbar)) .bili-header__bar {
+    display: flex !important;
+  }
+
+  /* 自定义顶栏加载后 */
+  >.custom-navbar {
+    position: relative;
+    z-index: 3 !important;
+  }
+}
+
+/* 搜索栏 */
+.center-search-container {
+  min-width: 0;
+}`,
     upperNavigation: `/* 导航栏上置 (默认下置) */
 :root {
   --upper-nav: 1;
@@ -1019,46 +1031,44 @@ html {
   const waitReady = () => new Promise((resolve) => {
     document.readyState === "loading" ? window.addEventListener("DOMContentLoaded", () => resolve(), { once: true }) : resolve();
   });
-  const html = `<div id="wider-bilibili" popover>
-  <header>
-    <div class="wb-button-group">
-      <a target="_blank" href="//greasyfork.org/scripts/474507">
-        <svg viewBox="0 0 96 96" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
-          <!-- Based on https://github.com/denilsonsa/denilsonsa.github.io -->
-          <circle fill="#000" r="48" cy="48" cx="48"/>
-          <path fill="#000" stroke="#000" stroke-width="4" d="M 44,29  a6.36396,6.36396 0,0,1 0,9  l36,36  a3.25,3.25 0,0,1 -6.5,6.5  l-36,-36  a6.36396,6.36396 0,0,1 -9,0  l-19,-19  a1.76777,1.76777 0,0,1 0,-2.5  l13.0,-13  a1.76777,1.76777 0,0,1 2.5,0  z"/>
-          <path fill="#fff" d="M 44,29  a6.36396,6.36396 0,0,1 0,9  l36,36  a3.25,3.25 0,0,1 -6.5,6.5  l-36,-36  a6.36396,6.36396 0,0,1 -9,0  l-19,-19  a1.76777,1.76777 0,0,1 2.5,-2.5  l14,14 4,-4 -14,-14  a1.76777,1.76777 0,0,1 2.5,-2.5  l14,14 4,-4 -14,-14  a1.76777,1.76777 0,0,1 2.5,-2.5  z"/>
-        </svg>
-      </a>
-      <a target="_blank" href="//github.com/posthumz/wider-bilibili">
-        <!-- From https://www.radix-ui.com/icons -->
-        <svg viewBox="0 0 15 15"  width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path d="M7.49933 0.25C3.49635 0.25 0.25 3.49593 0.25 7.50024C0.25 10.703 2.32715 13.4206 5.2081 14.3797C5.57084 14.446 5.70302 14.2222 5.70302 14.0299C5.70302 13.8576 5.69679 13.4019 5.69323 12.797C3.67661 13.235 3.25112 11.825 3.25112 11.825C2.92132 10.9874 2.44599 10.7644 2.44599 10.7644C1.78773 10.3149 2.49584 10.3238 2.49584 10.3238C3.22353 10.375 3.60629 11.0711 3.60629 11.0711C4.25298 12.1788 5.30335 11.8588 5.71638 11.6732C5.78225 11.205 5.96962 10.8854 6.17658 10.7043C4.56675 10.5209 2.87415 9.89918 2.87415 7.12104C2.87415 6.32925 3.15677 5.68257 3.62053 5.17563C3.54576 4.99226 3.29697 4.25521 3.69174 3.25691C3.69174 3.25691 4.30015 3.06196 5.68522 3.99973C6.26337 3.83906 6.8838 3.75895 7.50022 3.75583C8.1162 3.75895 8.73619 3.83906 9.31523 3.99973C10.6994 3.06196 11.3069 3.25691 11.3069 3.25691C11.7026 4.25521 11.4538 4.99226 11.3795 5.17563C11.8441 5.68257 12.1245 6.32925 12.1245 7.12104C12.1245 9.9063 10.4292 10.5192 8.81452 10.6985C9.07444 10.9224 9.30633 11.3648 9.30633 12.0413C9.30633 13.0102 9.29742 13.7922 9.29742 14.0299C9.29742 14.2239 9.42828 14.4496 9.79591 14.3788C12.6746 13.4179 14.75 10.7025 14.75 7.50024C14.75 3.49593 11.5036 0.25 7.49933 0.25Z"></path></svg>
-      </a>
-      <button id="wb-close" popovertarget="wider-bilibili">
-        <!-- From https://www.radix-ui.com/icons -->
-        <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><path d="M12.8536 2.85355C13.0488 2.65829 13.0488 2.34171 12.8536 2.14645C12.6583 1.95118 12.3417 1.95118 12.1464 2.14645L7.5 6.79289L2.85355 2.14645C2.65829 1.95118 2.34171 1.95118 2.14645 2.14645C1.95118 2.34171 1.95118 2.65829 2.14645 2.85355L6.79289 7.5L2.14645 12.1464C1.95118 12.3417 1.95118 12.6583 2.14645 12.8536C2.34171 13.0488 2.65829 13.0488 2.85355 12.8536L7.5 8.20711L12.1464 12.8536C12.3417 13.0488 12.6583 13.0488 12.8536 12.8536C13.0488 12.6583 13.0488 12.3417 12.8536 12.1464L8.20711 7.5L12.8536 2.85355Z"></path></svg>
-      </button>
-    </div>
-  </header>
-  <fieldset name="通用">
-    <label data-option="左右边距"><input type="number" min="0"></label>
-  </fieldset>
-  <fieldset name="播放页">
-    <label data-option="自动高度" data-hint="播放器无上下黑边"><input type="checkbox"></label>
-    <label data-option="小窗样式" data-hint="试试拉一下小窗左侧？&#10;记录小窗宽度与位置"><input type="checkbox"></label>
-    <label data-option="导航栏下置"><input type="checkbox"></label>
-    <label data-option="预留标题栏"><input type="checkbox"></label>
-    <label data-option="粘性导航栏"><input type="checkbox"></label>
-    <label data-option="紧凑控件间距"><input type="checkbox"></label>
-    <label data-option="暂停显示控件" data-hint="默认检测到鼠标活动显示控件&#10;需要一直显示请打开此选项"><input type="checkbox"></label>
-    <label data-option="显示观看信息" data-hint="在线人数/弹幕数"><input type="checkbox"></label>
-    <label data-option="隐藏控件" data-hint="默认隐藏控件区&#10;悬浮到相应位置以显示"><input type="checkbox"></label>
-    <label><button data-option="重置小窗位置"></button></label>
-  </fieldset>
-  <fieldset name="动态页">
-    <label data-option="粘性侧栏" data-hint="可能导致侧栏显示不全"><input type="checkbox"></label>
-  </fieldset>
-</div>`;
+  const html = `<header>
+  <div class="wb-button-group">
+    <a target="_blank" href="//greasyfork.org/scripts/474507">
+      <svg viewBox="0 0 96 96" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+        <!-- Based on https://github.com/denilsonsa/denilsonsa.github.io -->
+        <circle fill="#000" r="48" cy="48" cx="48"/>
+        <path fill="#000" stroke="#000" stroke-width="4" d="M 44,29  a6.36396,6.36396 0,0,1 0,9  l36,36  a3.25,3.25 0,0,1 -6.5,6.5  l-36,-36  a6.36396,6.36396 0,0,1 -9,0  l-19,-19  a1.76777,1.76777 0,0,1 0,-2.5  l13.0,-13  a1.76777,1.76777 0,0,1 2.5,0  z"/>
+        <path fill="#fff" d="M 44,29  a6.36396,6.36396 0,0,1 0,9  l36,36  a3.25,3.25 0,0,1 -6.5,6.5  l-36,-36  a6.36396,6.36396 0,0,1 -9,0  l-19,-19  a1.76777,1.76777 0,0,1 2.5,-2.5  l14,14 4,-4 -14,-14  a1.76777,1.76777 0,0,1 2.5,-2.5  l14,14 4,-4 -14,-14  a1.76777,1.76777 0,0,1 2.5,-2.5  z"/>
+      </svg>
+    </a>
+    <a target="_blank" href="//github.com/posthumz/wider-bilibili">
+      <!-- From https://www.radix-ui.com/icons -->
+      <svg viewBox="0 0 15 15"  width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path d="M7.49933 0.25C3.49635 0.25 0.25 3.49593 0.25 7.50024C0.25 10.703 2.32715 13.4206 5.2081 14.3797C5.57084 14.446 5.70302 14.2222 5.70302 14.0299C5.70302 13.8576 5.69679 13.4019 5.69323 12.797C3.67661 13.235 3.25112 11.825 3.25112 11.825C2.92132 10.9874 2.44599 10.7644 2.44599 10.7644C1.78773 10.3149 2.49584 10.3238 2.49584 10.3238C3.22353 10.375 3.60629 11.0711 3.60629 11.0711C4.25298 12.1788 5.30335 11.8588 5.71638 11.6732C5.78225 11.205 5.96962 10.8854 6.17658 10.7043C4.56675 10.5209 2.87415 9.89918 2.87415 7.12104C2.87415 6.32925 3.15677 5.68257 3.62053 5.17563C3.54576 4.99226 3.29697 4.25521 3.69174 3.25691C3.69174 3.25691 4.30015 3.06196 5.68522 3.99973C6.26337 3.83906 6.8838 3.75895 7.50022 3.75583C8.1162 3.75895 8.73619 3.83906 9.31523 3.99973C10.6994 3.06196 11.3069 3.25691 11.3069 3.25691C11.7026 4.25521 11.4538 4.99226 11.3795 5.17563C11.8441 5.68257 12.1245 6.32925 12.1245 7.12104C12.1245 9.9063 10.4292 10.5192 8.81452 10.6985C9.07444 10.9224 9.30633 11.3648 9.30633 12.0413C9.30633 13.0102 9.29742 13.7922 9.29742 14.0299C9.29742 14.2239 9.42828 14.4496 9.79591 14.3788C12.6746 13.4179 14.75 10.7025 14.75 7.50024C14.75 3.49593 11.5036 0.25 7.49933 0.25Z"></path></svg>
+    </a>
+    <button id="wb-close" popovertarget="wider-bilibili">
+      <!-- From https://www.radix-ui.com/icons -->
+      <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><path d="M12.8536 2.85355C13.0488 2.65829 13.0488 2.34171 12.8536 2.14645C12.6583 1.95118 12.3417 1.95118 12.1464 2.14645L7.5 6.79289L2.85355 2.14645C2.65829 1.95118 2.34171 1.95118 2.14645 2.14645C1.95118 2.34171 1.95118 2.65829 2.14645 2.85355L6.79289 7.5L2.14645 12.1464C1.95118 12.3417 1.95118 12.6583 2.14645 12.8536C2.34171 13.0488 2.65829 13.0488 2.85355 12.8536L7.5 8.20711L12.1464 12.8536C12.3417 13.0488 12.6583 13.0488 12.8536 12.8536C13.0488 12.6583 13.0488 12.3417 12.8536 12.1464L8.20711 7.5L12.8536 2.85355Z"></path></svg>
+    </button>
+  </div>
+</header>
+<fieldset name="通用">
+  <label data-option="左右边距"><input type="number" min="0"></label>
+</fieldset>
+<fieldset name="播放页">
+  <label data-option="自动高度" data-hint="播放器无上下黑边"><input type="checkbox"></label>
+  <label data-option="小窗样式" data-hint="试试拉一下小窗左侧？&#10;记录小窗宽度与位置"><input type="checkbox"></label>
+  <label data-option="导航栏下置"><input type="checkbox"></label>
+  <label data-option="预留标题栏"><input type="checkbox"></label>
+  <label data-option="粘性导航栏"><input type="checkbox"></label>
+  <label data-option="紧凑控件间距"><input type="checkbox"></label>
+  <label data-option="暂停显示控件" data-hint="默认检测到鼠标活动显示控件&#10;需要一直显示请打开此选项"><input type="checkbox"></label>
+  <label data-option="显示观看信息" data-hint="在线人数/弹幕数"><input type="checkbox"></label>
+  <label data-option="隐藏控件" data-hint="默认隐藏控件区&#10;悬浮到相应位置以显示"><input type="checkbox"></label>
+  <label><button data-option="重置小窗位置"></button></label>
+</fieldset>
+<fieldset name="动态页">
+  <label data-option="粘性侧栏" data-hint="可能导致侧栏显示不全"><input type="checkbox"></label>
+</fieldset>`;
   function styleToggle(s, flip = false) {
     const style = GM_addStyle(s);
     return flip ? (enable) => {
@@ -1093,8 +1103,7 @@ html {
       }
     },
     自动高度: {
-      // 也就是说，不会有上下黑边
-      fallback: true,
+fallback: true,
       callback(init) {
         const container = document.getElementsByClassName("bpx-player-container")[0];
         document.documentElement.style.setProperty("--player-height", `${container.clientHeight}px`);
@@ -1162,8 +1171,11 @@ html {
   }
   const optionsFlat = { ...commonOptions, ...videoOptions, ...timelineOptions };
   waitReady().then(() => {
-    document.body.insertAdjacentHTML("beforeend", html);
-    const app = document.getElementById("wider-bilibili");
+    const app = document.createElement("div");
+    app.id = "wider-bilibili";
+    app.popover = "auto";
+    app.innerHTML = html;
+    document.body.insertAdjacentElement("beforeend", app);
     GM_registerMenuCommand("选项", () => {
       app.style.display = "flex";
     });
@@ -1175,7 +1187,7 @@ html {
         if (key === comb[1] && modifiers.every((mod) => comb[0].includes(mod) === ev[mod])) {
           ev.stopImmediatePropagation();
           ev.stopPropagation();
-          app.showPopover();
+          app.togglePopover();
         }
         setTimeout(addListener, 250);
       }, { once: true });
@@ -1209,6 +1221,7 @@ html {
     }
     listenOptions(commonOptions);
   }).catch(console.error);
+  GM_addStyle(styles.panel);
   GM_addStyle(styles.common);
   const url = new URL(window.location.href);
   switch (url.host) {
@@ -1312,8 +1325,7 @@ html {
       console.info("宽屏模式成功启用");
       break;
     }
-    // #region 动态页
-    case "t.bilibili.com":
+case "t.bilibili.com":
       GM_addStyle(styles.t);
       listenOptions(timelineOptions);
       waitFor(() => document.getElementsByClassName("right")[0], "右侧栏").then((right) => {
@@ -1322,23 +1334,19 @@ html {
       }).catch(console.error);
       console.info("使用动态样式");
       break;
-    // #region 空间页
-    case "space.bilibili.com":
+case "space.bilibili.com":
       GM_addStyle(styles.space);
       console.info("使用空间样式");
       break;
-    // #region 消息页
-    case "message.bilibili.com":
+case "message.bilibili.com":
       GM_addStyle(styles.message);
       console.info("使用通知样式");
       break;
-    // #region 搜索页
-    case "search.bilibili.com":
+case "search.bilibili.com":
       GM_addStyle(styles.search);
       console.info("使用搜索页样式");
       break;
-    // #region 未适配页面
-    default:
+default:
       console.info(`未适配页面，仅启用通用样式: ${url.href}`);
       break;
   }
