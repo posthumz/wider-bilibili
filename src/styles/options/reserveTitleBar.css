@@ -1,3 +1,0 @@
-:root {
-  --title-height: calc(100px + (1 - var(--upper-nav)) * var(--navbar-height));
-}

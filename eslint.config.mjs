@@ -39,7 +39,7 @@ export default [
   {
     rules: {
       '@stylistic/arrow-parens': ['warn', 'as-needed'],
-      '@stylistic/brace-style': ['warn', 'stroustrup', { allowSingleLine: true }],
+      '@stylistic/brace-style': ['warn', '1tbs', { allowSingleLine: true }],
       '@stylistic/member-delimiter-style': ['warn', { multiline: { delimiter: 'none' } }],
       '@stylistic/max-statements-per-line': 'off',
       '@typescript-eslint/no-unused-expressions': 'off',

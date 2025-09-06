@@ -41,9 +41,9 @@ switch (url.host) {
     const player = document.getElementById('bilibili-player')
     if (!player) { style.remove(); break }
 
-    // 播放器内容器 (番剧页面需要额外等待)
-    const container = await waitFor(() => player.getElementsByClassName('bpx-player-container')[0], '播放器内容器') as HTMLElement
     listenOptions(videoOptions)
+    // 播放器内容器 (番剧页面需要额外等待)
+    const container = <HTMLElement> await waitFor(() => player.getElementsByClassName('bpx-player-container')[0], '播放器内容器')
     // 立即使用宽屏样式 (除非当前是小窗模式)
     if (container.getAttribute('data-screen') !== 'mini') { container.setAttribute('data-screen', 'web') }
     // 重载container的setAttribute：data-screen被设置为mini(小窗)以外的值时将其设置为web(宽屏)
@@ -73,21 +73,21 @@ switch (url.host) {
     }
 
     // !important覆盖原有小窗拖动样式
-    const miniStyleFormat = (rt: string, bt: string) => `.bpx-player-container[data-screen="mini"] {
+    const miniPositionFormat = (rt: string, bt: string) => `.bpx-player-container[data-screen="mini"] {
   right: ${rt}px !important;
   bottom: ${bt}px !important;
 }`
-    const miniStyle = GM_addStyle(miniStyleFormat(GM_getValue('小窗右', '52'), GM_getValue('小窗下', '8')))
+    const miniStyle = GM_addStyle(miniPositionFormat(GM_getValue('小窗右', '52'), GM_getValue('小窗下', '8')))
 
     // 小窗选项重置
     document.querySelector<HTMLButtonElement>(`button[data-option=重置小窗位置]`)?.addEventListener('click', () => {
       GM_deleteValues(['小窗右', '小窗下', '小窗宽度'])
-      miniStyle.textContent = miniStyleFormat('52', '8')
+      miniStyle.textContent = miniPositionFormat('52', '8')
       container.style.removeProperty('--mini-width')
     })
 
-    const videoArea = container.getElementsByClassName('bpx-player-video-area')[0] as HTMLElement
-    if (!videoArea) { console.error('页面加载错误：视频区域不存在'); break }
+    const videoArea = container.getElementsByClassName('bpx-player-video-area')[0]
+    if (!(videoArea instanceof HTMLElement)) { console.error('页面加载错误：视频区域不存在'); break }
     observeFor('bpx-player-mini-warp', videoArea).then(warp => {
       warp.appendChild(miniResizer)
       warp.addEventListener('mousedown', ev => {
@@ -100,7 +100,7 @@ switch (url.host) {
           const newBt = Math.round(Math.max(window.innerHeight - ev.y - offsetY, 0)) // 不设为<0的无效值
           GM_setValue('小窗右', newRt)
           GM_setValue('小窗下', newBt)
-          miniStyle.textContent = miniStyleFormat(String(newRt), String(newBt))
+          miniStyle.textContent = miniPositionFormat(String(newRt), String(newBt))
         }
         document.addEventListener('mousemove', onmousemove)
         document.addEventListener('mouseup', () => {
@@ -109,8 +109,8 @@ switch (url.host) {
       })
     }).catch(console.error)
 
-    const sendingBar = player.getElementsByClassName('bpx-player-sending-bar')[0] as HTMLElement
-    if (!sendingBar) { console.error('页面加载错误：发送框不存在'); break }
+    const sendingBar = player.getElementsByClassName('bpx-player-sending-bar')[0]
+    if (!(sendingBar instanceof HTMLElement)) { console.error('页面加载错误：发送框不存在'); break }
     // 等待人数加载完成，再进行弹幕框的操作
     const danmaku = (await observeFor('bpx-player-video-info', sendingBar)).parentElement
     // 播放器底中部框 (用于放置弹幕框内容)

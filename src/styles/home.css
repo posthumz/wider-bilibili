@@ -4,7 +4,10 @@ div#i_cecream {
 }
 
 .feed-roll-btn {
-  left: calc(100% - var(--layout-padding)) !important;
+  left: initial !important;
+  right: 0 !important;
+  /* at most 10px away from container; at least 10px away from page */
+  transform: translateX(min(calc(var(--layout-padding) - 10px), calc(100% + 10px))) !important;
 
   .roll-btn {
     aspect-ratio: 1/1;
@@ -14,7 +17,7 @@ div#i_cecream {
     }
 
     >svg {
-      margin-bottom: 0 !important
+      margin-bottom: 0 !important;
     }
   }
 }
@@ -22,10 +25,5 @@ div#i_cecream {
 .feed-card,
 .floor-single-card,
 .bili-video-card {
-  margin-top: 0px !important;
-}
-
-.palette-button-wrap {
-  left: initial !important;
-  right: 30px;
+  margin-top: 0 !important;
 }

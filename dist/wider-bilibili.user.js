@@ -29,9 +29,15 @@
     video: `/* 播放器 */
 :root {
   --upper-nav: 0;
-  --title-height: 0px;
-  --reserve-height: calc(var(--upper-nav) * var(--navbar-height) + var(--title-height));
+  --reserve-height-input: calc(var(--upper-nav) * var(--navbar-height));
+  --reserve-height: calc(min(var(--reserve-height-input), 25vh));
+  /* 播放器高度 = 100vh - 预留高度 */
   --player-height: calc(100vh - var(--reserve-height));
+  --player-height-record: var(--player-height);
+}
+
+#biliMainHeader {
+  margin-top: var(--player-height-record);
 }
 
 /* 播放器定位 */
@@ -76,21 +82,21 @@
   }
 }
 
-/* 限制高度上限100vh - 预留高度 */
+/* 播放器高度 */
 .bpx-player-container:not(:fullscreen) .bpx-player-video-wrap>video {
-  max-height: calc(100vh - var(--reserve-height));
+  max-height: var(--player-height);
 }
 
 /* 小窗时仍然保持播放器容器高度 */
 .bpx-docker:has(>.bpx-player-container[data-screen="mini"]) {
-  height: var(--player-height);
+  height: var(--player-height--record);
 }
 
 /* 加载时 */
 .bpx-player-container:not([data-screen="mini"]) .bpx-player-video-area:has(>.bpx-state-loading) video,
 /* 换源时 */
 .bpx-player-video-wrap>video:not([src]) {
-  /* 宽高比不详，强制占用全高 */
+  /* 宽高比不详，强制占用最大可用高度 */
   height: 100vh;
 }
 
@@ -137,7 +143,7 @@ body>.custom-navbar {
 
 /* 自定义顶栏弹出菜单样式修复 */
 .custom-navbar .popup[data-popper-placement="top"] {
-  inset: auto auto var(--navbar-height) 0px !important;
+  inset: auto auto var(--navbar-height) 0 !important;
 }
 
 /* 使用 static 才能让播放器的 absolute 正确定位 */
@@ -195,9 +201,14 @@ body>.custom-navbar {
 }
 
 /* 特殊页面 */
+.special {
+  >.special-cover {
+    max-height: var(--player-height);
+  }
 
-.special>.special-cover {
-  max-height: calc(100vh - var(--title-height));
+  .main-container {
+    margin-top: 0 !important;
+  }
 }
 
 .player-left-components {
@@ -746,7 +757,10 @@ div#i_cecream {
 }
 
 .feed-roll-btn {
-  left: calc(100% - var(--layout-padding)) !important;
+  left: initial !important;
+  right: 0 !important;
+  /* at most 10px away from container; at least 10px away from page */
+  transform: translateX(min(calc(var(--layout-padding) - 10px), calc(100% + 10px))) !important;
 
   .roll-btn {
     aspect-ratio: 1/1;
@@ -756,7 +770,7 @@ div#i_cecream {
     }
 
     >svg {
-      margin-bottom: 0 !important
+      margin-bottom: 0 !important;
     }
   }
 }
@@ -764,24 +778,22 @@ div#i_cecream {
 .feed-card,
 .floor-single-card,
 .bili-video-card {
-  margin-top: 0px !important;
-}
-
-.palette-button-wrap {
-  left: initial !important;
-  right: 30px;
+  margin-top: 0 !important;
 }`,
     common: `/* This overrides :root style */
 html {
-  --layout-padding: 30px;
+  --layout-padding-input: 30px;
   --navbar-height: 64px;
+}
+
+body {
+  --layout-padding: min(var(--layout-padding-input), 15vw);
 }
 
 /* 导航栏 */
 #biliMainHeader {
   height: auto !important;
   min-height: auto !important;
-  margin-top: var(--player-height);
   margin-bottom: 0;
   position: initial;
   visibility: initial !important;
@@ -821,7 +833,7 @@ html {
 
 #biliMainHeader {
   margin-top: 0;
-  margin-bottom: var(--player-height);
+  margin-bottom: var(--player-height-record);
   /* 播放器的 z-index 是100000 */
   z-index: 114514;
 }
@@ -841,9 +853,6 @@ html {
   height: fit-content;
   position: sticky;
   top: 72px;
-}`,
-    reserveTitleBar: `:root {
-  --title-height: calc(100px + (1 - var(--upper-nav)) * var(--navbar-height));
 }`,
     pauseShowControls: `/* 暂停显示控件 */
 .bpx-player-container.bpx-state-paused {
@@ -1014,7 +1023,7 @@ html {
   });
   const observeFor = (className, parent) => new Promise((resolve) => {
     const elem = parent.getElementsByClassName(className)[0];
-    if (elem) {
+    if (elem instanceof HTMLElement) {
       return resolve(elem);
     }
     new MutationObserver((mutations, observer) => {
@@ -1052,18 +1061,18 @@ html {
   </div>
 </header>
 <fieldset name="通用">
-  <label data-option="左右边距"><input type="number" min="0"></label>
+  <label data-option="左右边距" data-hint="单位px(不会超过15%宽度)"><input type="number" min="0"></label>
 </fieldset>
 <fieldset name="播放页">
   <label data-option="自动高度" data-hint="播放器无上下黑边"><input type="checkbox"></label>
-  <label data-option="小窗样式" data-hint="试试拉一下小窗左侧？&#10;记录小窗宽度与位置"><input type="checkbox"></label>
+  <label data-option="预留高度" data-hint="单位px(不会超过25%高度)&#10;>0时强制显示导航栏"><input type="number" min="0"></label>
   <label data-option="导航栏下置"><input type="checkbox"></label>
-  <label data-option="预留标题栏"><input type="checkbox"></label>
   <label data-option="粘性导航栏"><input type="checkbox"></label>
   <label data-option="紧凑控件间距"><input type="checkbox"></label>
-  <label data-option="暂停显示控件" data-hint="默认检测到鼠标活动显示控件&#10;需要一直显示请打开此选项"><input type="checkbox"></label>
   <label data-option="显示观看信息" data-hint="在线人数/弹幕数"><input type="checkbox"></label>
   <label data-option="隐藏控件" data-hint="默认隐藏控件区&#10;悬浮到相应位置以显示"><input type="checkbox"></label>
+  <label data-option="暂停显示控件" data-hint="默认检测到鼠标活动显示控件&#10;需要一直显示请打开此选项"><input type="checkbox"></label>
+  <label data-option="小窗样式" data-hint="试试拉一下小窗左侧？&#10;记录小窗宽度与位置"><input type="checkbox"></label>
   <label><button data-option="重置小窗位置"></button></label>
 </fieldset>
 <fieldset name="动态页">
@@ -1071,13 +1080,13 @@ html {
 </fieldset>`;
   function styleToggle(s, flip = false) {
     const style = GM_addStyle(s);
-    return flip ? (enable) => {
-      style.disabled = enable;
-    } : (enable) => {
-      style.disabled = !enable;
+    return flip ? (b) => {
+      style.disabled = b;
+    } : (b) => {
+      style.disabled = !b;
     };
   }
-  function initUpdate(update, init, fallback) {
+  function initUpdate(update, fallback, init) {
     update(init ?? fallback);
     return (_k, _o, newVal) => update(newVal ?? fallback);
   }
@@ -1085,7 +1094,7 @@ html {
     左右边距: {
       fallback: 30,
       callback(init) {
-        return initUpdate((val) => document.documentElement.style.setProperty("--layout-padding", `${val}px`), init, this.fallback);
+        return initUpdate((val) => document.documentElement.style.setProperty("--layout-padding-input", `${val}px`), this.fallback, init);
       }
     }
   };
@@ -1093,28 +1102,29 @@ html {
     导航栏下置: {
       fallback: true,
       callback(init) {
-        return initUpdate(styleToggle(styles.upperNavigation, true), init, this.fallback);
+        return initUpdate(styleToggle(styles.upperNavigation, true), this.fallback, init);
       }
     },
-    预留标题栏: {
-      fallback: false,
+    预留高度: {
+      fallback: 96,
       callback(init) {
-        return initUpdate(styleToggle(styles.reserveTitleBar), init, this.fallback);
+        return initUpdate((val) => val ? document.documentElement.style.setProperty("--reserve-height-input", `calc(var(--navbar-height) + ${val}px)`) : document.documentElement.style.removeProperty("--reserve-height-input"), this.fallback, init);
       }
     },
     自动高度: {
 fallback: true,
       callback(init) {
-        const container = document.getElementsByClassName("bpx-player-container")[0];
-        document.documentElement.style.setProperty("--player-height", `${container.clientHeight}px`);
-        const observer = new ResizeObserver((entries) => {
-          if (container.dataset.screen === "mini") return;
-          const { height } = entries[0].contentRect;
-          if (height && Math.round(height) <= window.innerHeight)
-            document.documentElement.style.setProperty("--player-height", `${height}px`);
-        });
-        observer.observe(container);
-        return initUpdate(styleToggle(styles.fixHeight, true), init, this.fallback);
+        waitFor(() => document.getElementsByClassName("bpx-player-container")[0], "播放器内容器").then((container) => {
+          new ResizeObserver((entries) => {
+            if (container.dataset.screen === "mini") return;
+            const height = Math.round(entries[0].contentRect.height);
+            if (height && height <= window.innerHeight)
+              document.documentElement.style.setProperty("--player-height-record", `${height}px`);
+            else
+              document.documentElement.style.removeProperty("--player-height-record");
+          }).observe(container);
+        }).catch(console.error);
+        return initUpdate(styleToggle(styles.fixHeight, true), this.fallback, init);
       }
     },
     小窗样式: {
@@ -1122,37 +1132,40 @@ fallback: true,
       callback(init) {
         const toggle1 = styleToggle(styles.mini);
         const toggle2 = styleToggle(".bpx-player-container{--mini-width:initial}", true);
-        return initUpdate((enable) => (toggle1(enable), toggle2(enable)), init, this.fallback);
+        return initUpdate((enable) => {
+          toggle1(enable);
+          toggle2(enable);
+        }, this.fallback, init);
       }
     },
     粘性导航栏: {
       fallback: true,
       callback(init) {
-        return initUpdate(styleToggle(styles.stickyHeader), init, this.fallback);
+        return initUpdate(styleToggle(styles.stickyHeader), this.fallback, init);
       }
     },
     紧凑控件间距: {
       fallback: true,
       callback(init) {
-        return initUpdate(styleToggle(styles.compactControls), init, this.fallback);
+        return initUpdate(styleToggle(styles.compactControls), this.fallback, init);
       }
     },
     暂停显示控件: {
       fallback: false,
       callback(init) {
-        return initUpdate(styleToggle(styles.pauseShowControls), init, this.fallback);
+        return initUpdate(styleToggle(styles.pauseShowControls), this.fallback, init);
       }
     },
     显示观看信息: {
       fallback: true,
       callback(init) {
-        return initUpdate(styleToggle(".bpx-player-video-info{display:flex!important}"), init, this.fallback);
+        return initUpdate(styleToggle(".bpx-player-video-info{display:flex!important}"), this.fallback, init);
       }
     },
     隐藏控件: {
       fallback: true,
       callback(init) {
-        return initUpdate(styleToggle(styles.hideControls), init, this.fallback);
+        return initUpdate(styleToggle(styles.hideControls), this.fallback, init);
       }
     }
   };
@@ -1160,7 +1173,7 @@ fallback: true,
     粘性侧栏: {
       fallback: false,
       callback(init) {
-        return initUpdate(styleToggle(styles.stickyAside), init, this.fallback);
+        return initUpdate(styleToggle(styles.stickyAside), this.fallback, init);
       }
     }
   };
@@ -1177,7 +1190,7 @@ fallback: true,
     app.innerHTML = html;
     document.body.insertAdjacentElement("beforeend", app);
     GM_registerMenuCommand("选项", () => {
-      app.style.display = "flex";
+      app.showPopover();
     });
     const modifiers = ["ctrlKey", "altKey", "shiftKey", "metaKey"];
     const comb = [["altKey", "shiftKey"], "W"];
@@ -1199,22 +1212,27 @@ fallback: true,
         case "checkbox":
           input.checked = init ?? option.fallback;
           input.onchange = () => GM_setValue(name, input.checked);
-          input.oncontextmenu = (e) => {
+          input.parentElement.oncontextmenu = (e) => {
             e.preventDefault();
             input.checked = option.fallback;
             GM_deleteValue(name);
           };
           break;
         case "number":
-          input.value = init ?? option.fallback;
+          input.value = String(init ?? option.fallback);
           input.oninput = () => {
             if (!input.value) {
-              input.value = option.fallback;
+              input.value = String(option.fallback);
               return GM_deleteValue(name);
             }
             const val = Number(input.value);
             if (Number.isInteger(val))
               GM_setValue(name, val);
+          };
+          input.parentElement.oncontextmenu = (e) => {
+            e.preventDefault();
+            input.value = String(option.fallback);
+            GM_deleteValue(name);
           };
           break;
       }
@@ -1247,8 +1265,8 @@ fallback: true,
         style.remove();
         break;
       }
-      const container = await( waitFor(() => player.getElementsByClassName("bpx-player-container")[0], "播放器内容器"));
       listenOptions(videoOptions);
+      const container = await( waitFor(() => player.getElementsByClassName("bpx-player-container")[0], "播放器内容器"));
       if (container.getAttribute("data-screen") !== "mini") {
         container.setAttribute("data-screen", "web");
       }
@@ -1270,18 +1288,18 @@ fallback: true,
         document.addEventListener("mousemove", resize);
         document.addEventListener("mouseup", () => document.removeEventListener("mousemove", resize), { once: true });
       };
-      const miniStyleFormat = (rt, bt) => `.bpx-player-container[data-screen="mini"] {
+      const miniPositionFormat = (rt, bt) => `.bpx-player-container[data-screen="mini"] {
   right: ${rt}px !important;
   bottom: ${bt}px !important;
 }`;
-      const miniStyle = GM_addStyle(miniStyleFormat(GM_getValue("小窗右", "52"), GM_getValue("小窗下", "8")));
+      const miniStyle = GM_addStyle(miniPositionFormat(GM_getValue("小窗右", "52"), GM_getValue("小窗下", "8")));
       document.querySelector(`button[data-option=重置小窗位置]`)?.addEventListener("click", () => {
         GM_deleteValues(["小窗右", "小窗下", "小窗宽度"]);
-        miniStyle.textContent = miniStyleFormat("52", "8");
+        miniStyle.textContent = miniPositionFormat("52", "8");
         container.style.removeProperty("--mini-width");
       });
       const videoArea = container.getElementsByClassName("bpx-player-video-area")[0];
-      if (!videoArea) {
+      if (!(videoArea instanceof HTMLElement)) {
         console.error("页面加载错误：视频区域不存在");
         break;
       }
@@ -1297,7 +1315,7 @@ fallback: true,
             const newBt = Math.round(Math.max(window.innerHeight - ev2.y - offsetY, 0));
             GM_setValue("小窗右", newRt);
             GM_setValue("小窗下", newBt);
-            miniStyle.textContent = miniStyleFormat(String(newRt), String(newBt));
+            miniStyle.textContent = miniPositionFormat(String(newRt), String(newBt));
           };
           document.addEventListener("mousemove", onmousemove);
           document.addEventListener("mouseup", () => {
@@ -1306,7 +1324,7 @@ fallback: true,
         });
       }).catch(console.error);
       const sendingBar = player.getElementsByClassName("bpx-player-sending-bar")[0];
-      if (!sendingBar) {
+      if (!(sendingBar instanceof HTMLElement)) {
         console.error("页面加载错误：发送框不存在");
         break;
       }

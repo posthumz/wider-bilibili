@@ -1,14 +1,17 @@
 /* This overrides :root style */
 html {
-  --layout-padding: 30px;
+  --layout-padding-input: 30px;
   --navbar-height: 64px;
+}
+
+body {
+  --layout-padding: min(var(--layout-padding-input), 15vw);
 }
 
 /* 导航栏 */
 #biliMainHeader {
   height: auto !important;
   min-height: auto !important;
-  margin-top: var(--player-height);
   margin-bottom: 0;
   position: initial;
   visibility: initial !important;

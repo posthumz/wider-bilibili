@@ -1,9 +1,15 @@
 /* 播放器 */
 :root {
   --upper-nav: 0;
-  --title-height: 0px;
-  --reserve-height: calc(var(--upper-nav) * var(--navbar-height) + var(--title-height));
+  --reserve-height-input: calc(var(--upper-nav) * var(--navbar-height));
+  --reserve-height: calc(min(var(--reserve-height-input), 25vh));
+  /* 播放器高度 = 100vh - 预留高度 */
   --player-height: calc(100vh - var(--reserve-height));
+  --player-height-record: var(--player-height);
+}
+
+#biliMainHeader {
+  margin-top: var(--player-height-record);
 }
 
 /* 播放器定位 */
@@ -48,21 +54,21 @@
   }
 }
 
-/* 限制高度上限100vh - 预留高度 */
+/* 播放器高度 */
 .bpx-player-container:not(:fullscreen) .bpx-player-video-wrap>video {
-  max-height: calc(100vh - var(--reserve-height));
+  max-height: var(--player-height);
 }
 
 /* 小窗时仍然保持播放器容器高度 */
 .bpx-docker:has(>.bpx-player-container[data-screen="mini"]) {
-  height: var(--player-height);
+  height: var(--player-height--record);
 }
 
 /* 加载时 */
 .bpx-player-container:not([data-screen="mini"]) .bpx-player-video-area:has(>.bpx-state-loading) video,
 /* 换源时 */
 .bpx-player-video-wrap>video:not([src]) {
-  /* 宽高比不详，强制占用全高 */
+  /* 宽高比不详，强制占用最大可用高度 */
   height: 100vh;
 }
 
@@ -109,7 +115,7 @@ body>.custom-navbar {
 
 /* 自定义顶栏弹出菜单样式修复 */
 .custom-navbar .popup[data-popper-placement="top"] {
-  inset: auto auto var(--navbar-height) 0px !important;
+  inset: auto auto var(--navbar-height) 0 !important;
 }
 
 /* 使用 static 才能让播放器的 absolute 正确定位 */
@@ -167,9 +173,14 @@ body>.custom-navbar {
 }
 
 /* 特殊页面 */
+.special {
+  >.special-cover {
+    max-height: var(--player-height);
+  }
 
-.special>.special-cover {
-  max-height: calc(100vh - var(--title-height));
+  .main-container {
+    margin-top: 0 !important;
+  }
 }
 
 .player-left-components {
