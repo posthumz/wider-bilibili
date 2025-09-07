@@ -1,33 +1,41 @@
 # Wider Bilibili
 
-## 功能
-- 播放器占据页面全宽且**允许滚动**，高度自适应
-- 调用自带`网页全屏`样式
-- 视频/首页/动态/阅读等页面调整边距
+## 基础功能
+- 播放器占据页面全宽高且**允许滚动**
+- 使用原生`网页全屏`样式
+- 视频/首页/动态/阅读等页面统一页边距
 - `Shift+Alt+W`或者在脚本菜单中调出设置面板
-- 修复B站前端的一些其他问题样式
+- 修复B站前端的一些其他问题样式（懒得列了）
 - 大部分效果基本只使用`CSS`达成，不会进行`DOM`操作
 
-## 选项
-- 视频页导航栏放在播放器上/下
-- 小窗播放器**可调节大小**，并移除非16:9视频产生的黑边 ([例如](https://www.bilibili.com/video/BV1uT4y1P7CX/))
+## 可选选项
+- 播放器高度自适应（无上下黑边）
+- 导航栏置于播放器下方
+- 小窗播放器**可调节大小、可记录移动位置**，移除非16:9视频的黑边 ([例如](https://www.bilibili.com/video/BV1uT4y1P7CX/))
+- 播放器下方可配预留标题空间
 - 播放器底栏控件调整宽度间距
-- 播放器暂停强制显示控件
-- 播放器下方预留标题栏空间
+- 播放器暂停时强制显示控件
 - 显示播放人数/弹幕数 (自带`网页全屏`下不会显示)
+- 右键选项以恢复至默认值
 
 ## 预览
-- 无，只需要想象一下可以滚动的`网页全屏`就行了
-- [装上](https://update.greasyfork.org/scripts/474507/Wider%20Bilibili.user.js)去[任意视频](https://www.bilibili.com/video/BV1uT4y1P7CX/)试试
+[装上](https://update.greasyfork.org/scripts/474507/Wider%20Bilibili.user.js)去[任意视频](https://www.bilibili.com/video/BV1uT4y1P7CX/)试试
+
+视频功能及选项预览
+![](images/功能预览.png)
+
+小窗功能预览
+![](images/小窗功能对比.png)
 
 ## 注意
-- 仅适配新版页面
+- 仅保证新版页面的适配
 - 移除了原`宽屏`/`网页全屏`按钮 (`全屏`仍保留)
 
 ## 兼容
 ### 浏览器
-- 需浏览器适配`ES2020`和[`CSS原生嵌套`](https://caniuse.com/css-nesting) (`Chromium` 120+ / `Firefox` 117+ / `Safari` 17.2+)
-- 测试仅使用`Firefox`最新版以及`Edge`最新版
+- 需浏览器适配`ES2020`、[`CSS原生嵌套`](https://caniuse.com/css-nesting)和[`popover`](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Reference/Global_attributes/popover#浏览器兼容性) (`Chromium` 120+ / `Firefox` 125+ / `Safari` 17.2+)（总之用最新版本准没错
+- 自测使用仅在`Firefox`最新版以及`Edge`最新版
+
 ### 插件
 - 兼容[`Bilibili Evolved`](https://github.com/the1812/Bilibili-Evolved)包括夜间模式和自定义顶栏在内的的大部分插件
 - 兼容[`解除B站区域限制`](https://greasyfork.org/scripts/25718)
