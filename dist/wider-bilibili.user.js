@@ -38,6 +38,11 @@
 
 #biliMainHeader {
   margin-top: var(--player-height-record);
+
+  /* BiliBili Evolved自定义顶栏加载前，强制显示原生顶栏 */
+  &:not(:has(>.custom-navbar)) .bili-header__bar {
+    display: flex !important;
+  }
 }
 
 /* 播放器定位 */
@@ -793,7 +798,7 @@ body {
 /* 导航栏 */
 #biliMainHeader {
   height: auto !important;
-  min-height: auto !important;
+  min-height: var(--navbar-height) !important;
   margin-bottom: 0;
   position: initial;
   visibility: initial !important;
@@ -808,11 +813,6 @@ body {
       height: var(--navbar-height);
       max-width: none !important;
     }
-  }
-
-  /* BiliBili Evolved自定义顶栏加载前，强制显示原生顶栏 */
-  &:not(:has(>.custom-navbar)) .bili-header__bar {
-    display: flex !important;
   }
 
   /* 自定义顶栏加载后 */
