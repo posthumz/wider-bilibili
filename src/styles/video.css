@@ -154,6 +154,10 @@ body>.custom-navbar {
   padding-top: 0 !important;
 }
 
+.plp-left-wrap {
+  padding-top: 0 !important;
+}
+
 /* 以防播放器挡住一些浮窗 */
 .playlist-container--left,
 .bilibili-player-wrap {
