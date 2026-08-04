@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wider Bilibili
 // @namespace    https://greasyfork.org/users/1125570
-// @version      0.4.8
+// @version      0.4.9
 // @author       posthumz
 // @description  哔哩哔哩宽屏体验
 // @license      MIT
@@ -52,7 +52,7 @@
   left: 0;
   right: 0;
   top: 0;
-  height: 100%;
+  height: auto;
   /* 番剧页加载时播放器会有右填充 */
   /* issues/4 */
   padding: 0 !important;
@@ -99,7 +99,7 @@
 
 /* 小窗时仍然保持播放器容器高度 */
 .bpx-docker:has(>.bpx-player-container[data-screen="mini"]) {
-  height: var(--player-height--record);
+  height: var(--player-height-record);
 }
 
 /* 加载时 */
